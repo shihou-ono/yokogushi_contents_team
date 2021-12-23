@@ -1,0 +1,90 @@
+version: '3'
+services:
+  vyos01:
+    hostname: vyos01
+    container_name: vyos01
+    build:
+      context: ./vyos
+    command:
+    - /sbin/init
+    volumes:
+    - /lib/modules:/lib/modules
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    networks:
+      mgmt_nw:
+        ipv4_address: 10.0.0.2
+      service_nw01:
+        ipv4_address: 192.168.1.252
+      service_nw02:
+        ipv4_address: 192.168.2.252
+
+  vyos02:
+    hostname: vyos02
+    container_name: vyos02
+    build:
+      context: ./vyos
+    command: /sbin/init
+    volumes:
+    - /lib/modules:/lib/modules
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    networks:
+      mgmt_nw:
+        ipv4_address: 10.0.0.3
+      service_nw01:
+        ipv4_address: 192.168.1.253
+      service_nw02:
+        ipv4_address: 192.168.2.253
+
+  host01:
+    hostname: host01
+    container_name: host01
+    build:
+      context: ./centos
+    command: /sbin/init
+    volumes:
+    - /lib/modules:/lib/modules
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    networks:
+      mgmt_nw:
+        ipv4_address: 10.0.0.4
+      service_nw01:
+        ipv4_address: 192.168.1.2
+
+  host02:
+    hostname: host02
+    container_name: host02
+    build:
+      context: ./centos
+    command: /sbin/init
+    volumes:
+    - /lib/modules:/lib/modules
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    networks:
+      mgmt_nw:
+        ipv4_address: 10.0.0.5
+      service_nw02:
+        ipv4_address: 192.168.2.2
+
+networks:
+  mgmt_nw:
+    name: mgmt_nw
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+  service_nw01:
+    name: service_nw01
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
+  service_nw02:
+    name: service_nw02
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.2.0/24

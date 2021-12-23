@@ -1,0 +1,15 @@
+set high-availability vrrp group service_nw01 interface 'eth1'
+set high-availability vrrp group service_nw01 priority '150'
+set high-availability vrrp group service_nw01 virtual-address '192.168.1.254/24'
+set high-availability vrrp group service_nw01 vrid '10'
+set high-availability vrrp group service_nw02 interface 'eth2'
+set high-availability vrrp group service_nw02 priority '150'
+set high-availability vrrp group service_nw02 virtual-address '192.168.2.254/24'
+set high-availability vrrp group service_nw02 vrid '20'
+set high-availability vrrp sync-group MAIN member 'service_nw01'
+set high-availability vrrp sync-group MAIN member 'service_nw02'
+set interfaces ethernet eth1 address '192.168.1.252/24'
+set interfaces ethernet eth1 ipv6 address no-default-link-local
+set interfaces ethernet eth2 address '192.168.2.252/24'
+set interfaces ethernet eth2 ipv6 address no-default-link-local
+set system host-name 'vyos01'

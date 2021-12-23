@@ -1,0 +1,6 @@
+show configuration commands
+show interfaces
+show interfaces ethernet eth1
+show interfaces ethernet eth2
+show ip route
+show vrrp

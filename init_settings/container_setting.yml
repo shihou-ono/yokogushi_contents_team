@@ -1,0 +1,43 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+#    - name: 'add static route host01'
+#      command: 
+#        cmd: 'route add -net 192.168.2.0 netmask 255.255.255.0 gw 192.168.1.254 eth1'
+#      when: inventory_hostname == 'host01'
+#      become: true
+#
+#    - name: 'add static route host02'
+#      command: 
+#        cmd: 'route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.2.254 eth1'
+#      when: inventory_hostname == 'host02'
+#      become: true
+
+#    - name: reterive config vyos01
+#      set_fact:
+#        vyos01_config: "{{ lookup('file', 'vyos01_config.txt').splitlines() }}"
+#      run_once: true
+#
+#    - name: reterive config vyos02
+#      set_fact:
+#        vyos02_config: "{{ lookup('file', 'vyos02_config.txt').splitlines() }}"
+#      run_once: true
+
+    - debug:
+        var: item
+      loop: "{{ lookup('file', 'vyos01_config.txt').splitlines() }}"
+      run_once: true
+
+    - name: set vyos01
+      vyos_config:
+        lines: "{{ lookup('file', 'vyos01_config.txt').splitlines() }}"
+        save: yes
+      when: inventory_hostname == 'vyos01'
+
+    - name: set vyos02
+      vyos_config:
+        lines: "{{ lookup('file', 'vyos02_config.txt').splitlines() }}"
+        save: yes
+      when: inventory_hostname == 'vyos02'
