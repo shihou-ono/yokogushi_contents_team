@@ -36,11 +36,6 @@
           name: docker
           enabled: yes
 
-      - name: 'add group docker'
-        group:
-          name: docker
-          state: present
-
       - name: 'add user to docker group'
         user:
           name: "{{ ansible_env.USER }}"
