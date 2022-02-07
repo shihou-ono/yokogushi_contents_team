@@ -1,0 +1,8 @@
+[
+    "sudo: unable to resolve host vyos: Temporary failure in name resolution",
+    "",
+    "Name          Interface      VRID  State      Priority  Last Transition",
+    "------------  -----------  ------  -------  ----------  -----------------",
+    "service_nw01  eth1             10  BACKUP          100  1m51s",
+    "service_nw02  eth2             20  BACKUP          100  1m51s"
+]

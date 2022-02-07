@@ -1,0 +1,9 @@
+---
+- name: debug_exercise1
+  hosts: vyos01
+  gather_facts: false
+  
+  tasks:
+    - name: debug_msg
+      debug:
+        msg: "Hello Ansible!"
