@@ -1,5 +1,5 @@
 ---
-- name: debug_exercise2
+- name: variable_exercise1
   hosts: vyos01
   gather_facts: false
   
