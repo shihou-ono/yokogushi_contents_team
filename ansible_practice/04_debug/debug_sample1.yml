@@ -1,0 +1,9 @@
+---
+- name: debug_sample1
+  hosts: vyos01
+  gather_facts: true
+  
+  tasks:
+    - name: debug_msg
+      debug:
+        msg: hostvars

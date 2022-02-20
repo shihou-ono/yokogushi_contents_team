@@ -189,7 +189,7 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
   ```yaml
   ---
   - name: debug_exercise1
-    hosts: vyos01
+    hosts: localhost
     gather_facts: false
 
     tasks:
@@ -206,8 +206,8 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 
 # 4-4.  演習
 
-**Q2. 「4-3. debugの実習」で使用したdebug.ymlの内容について、hosts指定をグループ名の「vyos」ではな
-　　く、「vyos01」とした理由を1つ選択してください。**
+**Q2. 「4-3. debugの実習」で使用したdebug.ymlの内容について、hosts指定をグループ名の「vyos」
+　　ではなく、「vyos01」とした理由を1つ選択してください。**
 
   ```yaml
   ---
@@ -246,7 +246,204 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 
 # 4-4.  演習
 
-**Q4. playbookを実行した際に`「"msg": "APC"」`と表示させるplaybookを作成しなさい。**
+**Q4. playbookを実行した際に`「"msg": "APC"」`と表示させるplaybookを作成し、実行しなさい。**
+
+---
+
+# 4-4.  演習
+
+**A1. 以下のplaybookを実行した際に表示される`「"msg":【 】」`の【 】として表示される文字を1つ選択して
+　　ください。**
+
+  ```yaml
+  ---
+  - name: debug_exercise1
+    hosts: localhost
+    gather_facts: false
+
+    tasks:
+     - name: debug_msg
+       debug:
+  ```
+
+~~1. Hello World!~~
+**2. "Hello World!"**
+~~3. " "~~
+~~4. "debug_msg"~~
+
+---
+
+# 4-4.  演習
+
+debugモジュールは「msg」というパラメータを省略すると、デフォルトの「"Hello World!"」が出力される。
+実際の出力結果を以下に記載。
+
+<br>
+
+  ```yaml
+  PLAY [debug_exercise1] ****************************************************************
+
+  TASK [debug_msg] **********************************************************************
+  ok: [vyos01] => {
+      "msg": "Hello world!"  # <- 「"Hello World!"」と出力されている
+  }
+
+  PLAY RECAP ****************************************************************************
+  vyos01 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
+  ```
+
+
+
+---
+
+# 4-4.  演習
+
+**A2. 「4-3. debugの実習」で使用したdebug.ymlの内容について、hosts指定をグループ名の「vyos」
+　　ではなく、「vyos01」とした理由を1つ選択してください。**
+
+  ```yaml
+  ---
+  - name: debug
+    hosts: vyos01  # <- なぜ「vyos」ではなく「vyos01」？
+    gather_facts: false
+
+    tasks:
+      - name: debug_msg
+        debug:
+          msg: “Hello Ansible!” 
+  ```
+~~1. msg内容を表示する際には、グループ名指定をすることはできないから~~
+~~2. vyos01にmsg内容を表示するための設定を投入しているから~~
+**3. msgの内容がグループ名で定義された機器の数だけ表示されてしまうから**
+~~4. 特に意味はなく、グループ名でもホスト名でも表示は変わらない~~
+
+---
+
+# 4-4.  演習
+
+`tasks`配下の実行内容は`hosts`で指定した機器の数だけ実行するため、`vyos`を指定してしまうと
+`vyos01`と`vyos02`の2台が当てはまり、以下のように2行で出力されてしまう。
+
+<br>
+
+  ```yaml
+  PLAY [debug] ***********************************************************************
+
+  TASK [debug_msg] *******************************************************************
+  ok: [vyos01] => {
+      "msg": "Hello Ansible!"  # <------ 2行出力されている
+  }                            #    |
+  ok: [vyos02] => {            #    |
+      "msg": "Hello Ansible!"  # <--
+  }
+
+  PLAY RECAP *************************************************************************
+  vyos01 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
+  vyos02 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
+  ```
+
+---
+
+# 4-4.  演習
+
+**A3. 次のplaybookを実行した場合に`「"msg":【 】」`の【 】として表示される文字を1つ選択してください。
+　　また、以下2点の注意点に気をつけること。**
+- playbookの中身は`cat`もしくは`vim`コマンドで確認する
+- playbook実行する際にはインベントリファイルの階層に気をつける
+
+<br>
+
+  ```
+  /home/ec2-user/yokogushi_contents_team/ansible_practice/04_debug/debug_exercise3.yml
+  ```
+1. **“Hello APC!”**
+2. ~~“Hello APC!,Hello APC!”~~
+3. ~~“Hello APC!”,“Hello APC!”~~
+4. ~~“VARIABLE IS NOT DEFINED!”~~
+
+---
+
+# 4-4.  演習
+
+`cat`コマンドでplaybookの中身を確認すると、以下の内容であることが確認できる。
+
+<br>
+
+  ```yaml
+  [ec2-user@ip-xx-xx-xx-xx 04_debug]$ cat debug_exercise3.yml
+  ---
+  - name: debug_exercise3
+    hosts: vyos
+    gather_facts: false
+  
+    tasks:
+      - name: debug_msg
+        debug:
+          msg: "Hello APC!"
+        run_once: true
+  ```
+
+---
+
+# 4-4.  演習
+
+**A3. インベントリファイルがplaybookと同じ階層にないため、指定する際には相対パスもしくは
+　　絶対パスで指定する。以下はその実行例と出力結果である。**
+
+<br>
+
+  ```yaml
+  [ec2-user@ip-xx-xx-xx-xx 04_debug]$ ansible-playbook -i ../inventory.ini debug_exercise3.yml
+  
+  PLAY [debug_exercise3] ********************************************************************
+
+  TASK [debug_msg] **************************************************************************
+  ok: [vyos01] => {
+      "msg": "Hello APC!"  # <- 「"Hello APC!"」と出力されている
+  }
+
+  PLAY RECAP ********************************************************************************
+  vyos01 : ok=1   changed=0   unreachable=0   failed=0   skipped=0   rescued=0   ignored=0
+  ```
+
+---
+
+# 4-4.  演習
+
+**A4. playbookを実行した際に`「"msg": "APC"」`と表示させるplaybookを作成し、実行しなさい。**
+<br>
+
+以下にplaybook作成例を記載。`hosts`や`name`部分については任意である。
+  ```yaml
+  ---
+  - name: debug_exercise4
+    hosts: localhost
+    gather_facts: false
+
+    tasks:
+      - name: debug_msg
+        debug:
+          msg: “APC” 
+  ```
+
+---
+
+# 4-4.  演習
+
+前スライドで作成したplaybookの実行例を以下に記載する。
+<br>
+
+  ```yaml
+  PLAY [debug_exercise4] *******************************************************************
+
+  TASK [debug_msg] *************************************************************************
+  ok: [localhost] => {
+      "msg": "APC"  # <- 「"APC"」と出力されている
+  }
+
+  PLAY RECAP *******************************************************************************
+  localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0 
+  ```
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 - name: debug_exercise1
-  hosts: vyos01
+  hosts: localhost
   gather_facts: false
   
   tasks:

@@ -1,9 +1,9 @@
 ---
-- name: debug
-  hosts: vyos01
+- name: debug_exercise4
+  hosts: localhost
   gather_facts: false
   
   tasks:
     - name: debug_msg
       debug:
-        msg:
+        msg: "APC"

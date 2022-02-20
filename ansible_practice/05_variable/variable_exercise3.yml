@@ -1,12 +1,11 @@
 ---
-- name: variable_exercise1
+- name: variable_exercise3
   hosts: localhost
   gather_facts: false
   
   tasks:
     - set_fact:
-        HelIo: "Hello Ansible!"
+        test_hostname: "vyos01"
 
     - debug:
-        var: Hello
-
+        var: test_hostname
