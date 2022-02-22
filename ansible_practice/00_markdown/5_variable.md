@@ -211,6 +211,7 @@ vyos01のホスト情報を収集したい時には以下のようにコマン�
 ```yaml
 $ ansible -i inventory.ini vyos01 -m setup
 ```
+
 ※1：インベントリファイルのある階層にて実行するときのコマンド
 ★出力例も載せるべきか★
 
@@ -248,14 +249,13 @@ $ ansible -i inventory.ini vyos01 -m setup
 [vyos]
 vyos01 ansible_host=10.0.0.2
 vyos02 ansible_host=10.0.0.3
- 
+
 [vyos:vars]                       # <-vyosグループで指定されたホストへの接続で使用するvarsを定義
 ansible_network_os=vyos
 ansible_connection=network_cli
 ansible_user=vyos
 ansible_password=vyos               
 ```
-
 
 ---
 
@@ -517,9 +517,9 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ```
 
 1. “VARIABLE IS NOT DEFINED!”
-2. "Hello"
-3. "Hello Ansible!"
-4. "error"
+1. "Hello"
+1. "Hello Ansible!"
+1. "error"
 
 ---
 
@@ -543,9 +543,9 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ```
 
 1. Hello Ansible!
-2. "Hello Ansible!"
-3. "error"
-4. "variable_exercise2"
+1. "Hello Ansible!"
+1. "error"
+1. "variable_exercise2"
 
 ---
 
@@ -575,10 +575,10 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
         var: Hello
 ```
 
-**1. “VARIABLE IS NOT DEFINED!”**
-~~2. "Hello"~~
-~~3. "Hello Ansible!"~~
-~~4. "error"~~
+1. **“VARIABLE IS NOT DEFINED!”**
+1. ~~"Hello"~~
+1. ~~"Hello Ansible!"~~
+1. ~~"error"~~
 
 ---
 
@@ -643,10 +643,10 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
         var: ansible_play_name
 ```
 
-~~1. Hello Ansible!~~
-~~2. "Hello Ansible!"~~
-~~3. "error"~~
-**4. "variable_exercise2"**
+1. ~~Hello Ansible!~~
+1. ~~"Hello Ansible!"~~
+1. ~~"error"~~
+1. **"variable_exercise2"**
 
 ---
 
