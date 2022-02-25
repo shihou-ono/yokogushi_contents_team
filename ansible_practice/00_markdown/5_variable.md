@@ -102,8 +102,9 @@ varは「variable(変数)」の略で、`vars`とは変数を集めておく場�
 
 <br>
 
-↓横地さんのブログ
-https://tekunabe.hatenablog.jp/entry/2018/12/15/ansible_group_vars_dir
+`group_vars`について横地さんが記事にされているため紹介する。ブログの内容は[こちら](https://tekunabe.hatenablog.jp/entry/2018/12/15/ansible_group_vars_dir)をクリック。
+
+
 
 ---
 
@@ -117,7 +118,7 @@ Tasksセクションで変数定義をしたい時に使用するパラメータ
 ---
 - name: variable_sample
   hosts: vyos01
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - name: test
@@ -136,12 +137,12 @@ Tasksセクションで変数定義をしたい時に使用するパラメータ
 | 変数の種類 | 説明 |
 | :----- | :---------------------- | 
 | マジック変数  | ユーザが直接設定することのできない変数。<br>Ansibleがシステム内の状態を反映してこの変数を常に上書きしている。 |
-| ファクト変数  | 現在実行中のホストに関連する情報(inventory_hostname)を含む変数。<br>playbook内で`gather_facts: false`を指定した場合は使用不可。 |
+| ファクト変数  | 現在実行中のホストに関連する情報(inventory_hostname)を含む変数。<br>playbook内で`gather_facts: no`を指定した場合は使用不可。 |
 | 接続変数 | ターゲットホストへのアクション実行方法を具体的に設定する時に使用。 |
 
 <br>
 
-https://docs.ansible.com/ansible/2.9_ja/reference_appendices/special_variables.html
+変数についてのAnsibleの公式ドキュメントは[こちら](https://docs.ansible.com/ansible/2.9_ja/reference_appendices/special_variables.html)
 
 ---
 
@@ -180,14 +181,6 @@ https://docs.ansible.com/ansible/2.9_ja/reference_appendices/special_variables.h
 | :----- | :---------------------- | 
 | `hostvars` | ターゲットホストのファクトを集約して格納した変数。 |
 
-<br>
-
-`gather_facts: true` の場合、`hostvars` には、ターゲットホストのファクトが格納される。
-
-`gather_facts: false` だと、値は空になる（未定義ではない）。
-　→ただし、インベントリファイルやansible.cfgファイルでターゲットホストに関する変数を
-　　指定している場合は値は空ではない。★要確認★
-
 ---
 
 # 5-2. 変数の説明
@@ -201,19 +194,7 @@ https://docs.ansible.com/ansible/2.9_ja/reference_appendices/special_variables.h
 
 | 変数名 | 説明 |
 | :----- | :---------------------- | 
-| `ansible_facts` | `setup`モジュールを使用して収集されたターゲットホスト情報が格納される。 |
-
-<br>
-
-**`setup`モジュール使用例：**
-vyos01のホスト情報を収集したい時には以下のようにコマンド※1を使用する。
-
-```yaml
-$ ansible -i inventory.ini vyos01 -m setup
-```
-
-※1：インベントリファイルのある階層にて実行するときのコマンド
-★出力例も載せるべきか★
+| `ansible_facts` | `gather_facts: no` の場合はターゲットホストのファクト情報が格納されない。`gather_facts: no` であっても、未定義ではなく、値は空になる。 |
 
 ---
 
@@ -232,8 +213,7 @@ $ ansible -i inventory.ini vyos01 -m setup
 | `ansible_connection` | ターゲットホストへの接続方式。 |
 | `ansible_user` | SSH接続するときのユーザ情報。 |
 | `ansible_password` | SSH接続するときのパスワード情報。 |
-
-
+| `become` | root権限昇格の有無。`yes`を指定することで昇格する。 |
 
 ---
 
@@ -267,7 +247,7 @@ ansible_password=vyos
 1. Varsセクションにて`vars`を使用して変数定義を行い、変数の中身をdebugで出力する
 2. `set_fact`を使用して変数定義を行い、変数の中身をdebugで出力する
 3. マジック変数の中身をdebugで出力する
-4. `setup`モジュールを使用してファクト変数の中身をdebugで出力する
+4. ファクト変数の中身の一部をdebugで出力する
 <br>
 
 ---
@@ -283,7 +263,7 @@ $ vi variable_sample1.yml
 ---
 - name: variable_sample1
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   vars:
     test1: "Hello Ansible!"  # <-「test1」という変数に「Hello Ansible!」という文字列を定義
@@ -329,7 +309,7 @@ $ vi variable_sample2.yml
 ---
 - name: variable_sample2
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - name: test2
@@ -379,7 +359,7 @@ $ vi variable_sample3.yml
 ---
 - name: variable_sample3
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - name: debug
@@ -413,57 +393,28 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 # 5-3. 変数の実習
 
-## 4. `setup`モジュールを使用してファクト変数の中身をdebugで出力する
+## 4. ファクト変数の中身の一部をdebugで出力する
 
-まずは`setup`モジュールでファクト変数の中身を取得する。
+以下のplaybookを作成する。
 
 ```yaml
-$ ansible -i inventory.ini vyos01 -m setup
-```
-
-以下に`setup`モジュールの出力結果を記載。
-```yaml
-vyos01 | SUCCESS => {
-    "ansible_facts": {
-        "ansible_all_ipv4_addresses": [
-            "192.168.1.1",
-            "192.168.2.1",
-
------------------(snip)-----------------
-
-    },
-    "changed": false
-}
-```
-
 ---
-
-# 5-3. 変数の実習
-
-以下のように`setup`モジュールで取得したファクト変数の中身を確認するためのplaybookを作成。
-
-```yaml
-$ vi variable_sample4.yml
----
-- name: variable_sample4
-  hosts: vyos01
-  gather_facts: true  # <-ファクト変数を使用するときは「true」にする
-  
+- name: variable_sample4-1
+  hosts: vyos01 
+                            # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
   tasks:
     - name: debug
       debug:
-        var: ansible_facts  # <-ファクト変数をdebugで出力
+        var: ansible_facts  # <-「ansible_facts」の中身を出力
 ```
 
 ---
 
 # 5-3. 変数の実習
 
-以下は作成したplaybookを実行/出力例である。★serupモジュール分が格納されていない件について確認★
+以下は作成したplaybookを実行/出力例である。
 
 ```yaml
-$ ansible-playbook -i inventory.ini variable_sample4.yml 
-
 PLAY [variable_sample4] ********************************************************************************************
 
 TASK [Gathering Facts] *********************************************************************************************
@@ -475,11 +426,12 @@ ok: [vyos01]
 
 TASK [debug] *******************************************************************************************************
 ok: [vyos01] => {
-    "ansible_facts": {
+    "ansible_facts": {       # <-「ansible_facts」の中身全てを出力すると量が多すぎる
         "discovered_interpreter_python": "/usr/bin/python",
         "net_api": "cliconf",
+        "net_commits": [
 
------------------------------------------------(snip)-----------------------------------------------
+---------------------------------(snip)---------------------------------
 
         "net_hostname": "vyos01",
         "net_neighbors": {},
@@ -497,6 +449,51 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ---
 
+# 5-3. 変数の実習
+
+`ansible_facts`の中身全てを出力すると膨大な量があったため、今回は`ansible_facts`に格納されているディクショナリの中の`net_hostname`の値(value)を取り出してみる。以下はそのplaybookである。
+
+```yaml
+---
+- name: variable_sample4-2
+  hosts: vyos01 
+                            # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
+  tasks:
+    - name: debug
+      debug:
+        var: ansible_facts.net_hostname  # <-「ansible_facts」の中身を出力
+```
+
+---
+
+# 5-3. 変数の実習
+
+以下は作成したplaybookを実行/出力例である。
+
+<br>
+
+```yaml
+PLAY [variable_sample4] *****************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************
+[WARNING]: Ignoring timeout(10) for vyos_facts
+[WARNING]: default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards
+[WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at /usr/bin/python, but future
+installation of another Python interpreter could change this.
+See https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
+ok: [vyos01]
+
+TASK [debug] ****************************************************************************************************
+ok: [vyos01] => {
+    "ansible_facts.net_hostname": "vyos01"  # <-想定通りの出力になっていることを確認
+}
+
+PLAY RECAP ******************************************************************************************************
+vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0 
+```
+
+---
+
 # 5-4.  演習
 
 **Q1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"Hello":【 】」の【 】として表示される文字列を
@@ -506,7 +503,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ---
 - name: variable_exercise1
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
@@ -532,7 +529,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ---
 - name: variable_exercise2
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
@@ -565,7 +562,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ```yaml
 - name: variable_exercise1
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
@@ -612,7 +609,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ```yaml
 - name: variable_exercise1
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
@@ -633,7 +630,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ---
 - name: variable_exercise2
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
@@ -683,7 +680,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ---
 - name: variable_exercise2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
@@ -706,7 +703,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ---
 - name: variable_exercise3
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
