@@ -1,7 +1,7 @@
 ---
 - name: variable_sample1
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   vars:
     test1: "Hello Ansible!"

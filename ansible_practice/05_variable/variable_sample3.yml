@@ -1,7 +1,7 @@
 ---
 - name: variable_sample3
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - name: debug

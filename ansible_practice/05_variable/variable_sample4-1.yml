@@ -1,0 +1,8 @@
+---
+- name: variable_sample4
+  hosts: vyos01 
+  
+  tasks:
+    - name: debug
+      debug:
+        var: ansible_facts

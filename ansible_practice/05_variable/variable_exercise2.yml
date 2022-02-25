@@ -1,7 +1,7 @@
 ---
 - name: variable_exercise2
   hosts: localhost
-  gather_facts: false
+  gather_facts: no
   
   tasks:
     - set_fact:
