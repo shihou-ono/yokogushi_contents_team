@@ -26,6 +26,8 @@ paginate: true
 | msg  | 記載した文字列を表示する。<br>"{{ 変数名 }}" とすると、変数の中身を表示可能。<br>省略するとデフォルトの"Hello world!"が出力される。 |
 | var  | 変数の中身を表示する。 |
 
+<br>
+
 https://docs.ansible.com/ansible/2.9/modules/debug_module.html
 
 ---
@@ -113,7 +115,7 @@ playbook実行時中に「Hello Ansible!」という文字を1行だけ表示さ
 ```yaml
 PLAY [debug_sample1] *******************************************************************************
 
-TASK [debug_msg] ***********************************************************************************
+TASK [debug] ***************************************************************************************
 ok: [vyos01] => {
     "msg": "Hello Ansible!"  # <-「Hello Ansible!」という文字が出力されている
 }
@@ -137,7 +139,7 @@ $ vi debug_sample1.yml
   gather_facts: false
 
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: “Hello Ansible!”  # <- msgの内容は文字列なので「""」で囲う
 ```
@@ -173,7 +175,7 @@ $ ansible-playbook -i inventory.ini debug_sample1.yml
 
 PLAY [debug_sample1] ********************************************************
 
-TASK [debug_msg] ************************************************************
+TASK [debug] ****************************************************************
 ok: [vyos01] => {
     "msg": "Hello Ansible!"  # <- 目的通りの文字が出力されていることを確認
 }
@@ -186,7 +188,7 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 
 # 4-4.  演習
 
-**Q1. 以下のplaybookを実行した際に表示される`「"msg":【 】」`の【 】として表示される文字を1つ選択して
+**Q1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"msg":【 】」の【 】として表示される文字を1つ選択して
 　　ください。**
 
 ```yaml
@@ -196,14 +198,14 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
   gather_facts: false
 
   tasks:
-   - name: debug_msg
+   - name: debug
      debug:
 ```
 
 1. Hello World!
 1. "Hello World!"
 1. " "
-1. "debug_msg"
+1. "debug"
 
 ---
 
@@ -219,7 +221,7 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
   gather_facts: false
 
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: “Hello Ansible!” 
 ```
@@ -233,7 +235,7 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 
 # 4-4.  演習
 
-**Q3. 次のplaybookを実行した場合に`「"msg":【 】」`の【 】として表示される文字を1つ選択してください。**
+**Q3. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"msg":【 】」の【 】として表示される文字を1つ選択してください。**
 
 <br>
 
@@ -252,13 +254,13 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 
 # 4-4.  演習
 
-**Q4. playbookを実行した際に`「"msg": "APC"」`と表示させるplaybookを作成し、実行しなさい。**
+**Q4. playbookを実行した場合に、`TASK [debug]`にて「"msg": "APC"」と表示させるplaybookを作成し、実行しなさい。**
 
 ---
 
 # 4-4.  演習
 
-**A1. 以下のplaybookを実行した際に表示される`「"msg":【 】」`の【 】として表示される文字を1つ選択して
+**A1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"msg":【 】」の【 】として表示される文字を1つ選択して
 　　ください。**
 
 ```yaml
@@ -268,14 +270,14 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
   gather_facts: false
 
   tasks:
-   - name: debug_msg
+   - name: debug
      debug:
 ```
 
 1. ~~Hello World!~~
 1. **"Hello World!"**
 1. ~~" "~~
-1. ~~"debug_msg"~~
+1. ~~"debug"~~
 
 ---
 
@@ -289,7 +291,7 @@ debugモジュールは「msg」というパラメータを省略すると、デ
 ```yaml
 PLAY [debug_exercise1] ****************************************************************
 
-TASK [debug_msg] **********************************************************************
+TASK [debug] **************************************************************************
 ok: [vyos01] => {
     "msg": "Hello world!"  # <- 「"Hello World!"」と出力されている
 }
@@ -312,7 +314,7 @@ vyos01 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
   gather_facts: false
 
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: “Hello Ansible!” 
 ```
@@ -334,7 +336,7 @@ vyos01 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ```yaml
 PLAY [debug_sample1] ***************************************************************
 
-TASK [debug_msg] *******************************************************************
+TASK [debug] ***********************************************************************
 ok: [vyos01] => {
     "msg": "Hello Ansible!"  # <------ 2行出力されている
 }                            #    |
@@ -351,7 +353,7 @@ vyos02 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 # 4-4.  演習
 
-**A3. 次のplaybookを実行した場合に`「"msg":【 】」`の【 】として表示される文字を1つ選択してください。**
+**A3. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"msg":【 】」の【 】として表示される文字を1つ選択してください。**
 
 <br>
 
@@ -382,7 +384,7 @@ $ cat debug_exercise3.yml
   gather_facts: false
 
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: "Hello APC!"
       run_once: true
@@ -401,7 +403,7 @@ $ ansible-playbook -i inventory.ini debug_exercise3.yml
 
 PLAY [debug_exercise3] ********************************************************************
 
-TASK [debug_msg] **************************************************************************
+TASK [debug] ******************************************************************************
 ok: [vyos01] => {
     "msg": "Hello APC!"  # <- 「"Hello APC!"」と出力されている
 }
@@ -414,7 +416,7 @@ vyos01 : ok=1   changed=0   unreachable=0   failed=0   skipped=0   rescued=0   i
 
 # 4-4.  演習
 
-**A4. playbookを実行した際に`「"msg": "APC"」`と表示させるplaybookを作成し、実行しなさい。**
+**A4. playbookを実行した場合に、`TASK [debug]`にて「"msg": "APC"」と表示させるplaybookを作成し、実行しなさい。**
 <br>
 
 以下にplaybook作成例を記載。`hosts`や`name`部分については任意である。
@@ -425,7 +427,7 @@ vyos01 : ok=1   changed=0   unreachable=0   failed=0   skipped=0   rescued=0   i
   gather_facts: false
 
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: “APC” 
 ```
@@ -440,7 +442,7 @@ vyos01 : ok=1   changed=0   unreachable=0   failed=0   skipped=0   rescued=0   i
 ```yaml
 PLAY [debug_exercise4] *******************************************************************
 
-TASK [debug_msg] *************************************************************************
+TASK [debug] *****************************************************************************
 ok: [localhost] => {
     "msg": "APC"  # <- 「"APC"」と出力されている
 }

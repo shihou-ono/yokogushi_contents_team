@@ -1,9 +1,9 @@
 ---
 - name: debug_sample1
   hosts: vyos01
-  gather_facts: true
+  gather_facts: false
   
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
-        msg: hostvars
+        msg: “Hello Ansible!”

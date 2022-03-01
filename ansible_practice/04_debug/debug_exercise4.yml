@@ -4,6 +4,6 @@
   gather_facts: false
   
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: "APC"

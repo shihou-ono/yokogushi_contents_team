@@ -59,7 +59,6 @@ $ python3
 
 変数は任意の値を定義することが多いが、デフォルトで定義されているものも存在する。
 playbookにおいて任意の値を定義する方法は以下の2つである。
-★varsとset_factの違いも記載するべきか★
 
 - `vars`で定義
 - `set_fact`で定義
@@ -76,7 +75,7 @@ varは「variable(変数)」の略で、`vars`とは変数を集めておく場�
 # 5-2. 変数の説明
 
 以下にplaybook内のVarsセクションにてよく使用される`vars`について紹介する。下記のパラメータにより
-定義された変数はTasksセクションで使用することができる。★パラメータではなくkey？？★
+定義された変数はTasksセクションで使用することができる。
 
 <br>
 
@@ -164,8 +163,6 @@ Tasksセクションで変数定義をしたい時に使用するパラメータ
 | `playbook_dir` | 現在実行されているplaybookのディレクトリパス。 |
 | `inventory_dir` | インベントリファイルのディレクトリパス。 |
 
-★出力例も実習で全て載せるべきか★
-
 ---
 
 # 5-2. 変数の説明
@@ -213,7 +210,7 @@ Tasksセクションで変数定義をしたい時に使用するパラメータ
 | `ansible_connection` | ターゲットホストへの接続方式。 |
 | `ansible_user` | SSH接続するときのユーザ情報。 |
 | `ansible_password` | SSH接続するときのパスワード情報。 |
-| `become` | root権限昇格の有無。`yes`を指定することで昇格する。 |
+| `become` | root権限昇格の有無。`false`を指定することで昇格する。 |
 
 ---
 
@@ -263,15 +260,15 @@ $ vi variable_sample1.yml
 ---
 - name: variable_sample1
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   vars:
-    test1: "Hello Ansible!"  # <-「test1」という変数に「Hello Ansible!」という文字列を定義
+    test: "Hello Ansible!"  # <-「test1」という変数に「Hello Ansible!」という文字列を定義
 
   tasks:
     - name: debug
       debug:
-        var: test1  # <-Varsセクションで定義した「test1」の変数の中身を出力
+        var: test  # <-Varsセクションで定義した「test1」の変数の中身を出力
 ```
 
 ---
@@ -289,7 +286,7 @@ PLAY [variable_sample1] ********************************************************
 
 TASK [debug] ***************************************************************************************
 ok: [localhost] => {
-    "test1": "Hello Ansible!"  # <-想定通りの出力を確認
+    "test": "Hello Ansible!"  # <-想定通りの出力を確認
 }
 
 PLAY RECAP *****************************************************************************************
@@ -309,16 +306,16 @@ $ vi variable_sample2.yml
 ---
 - name: variable_sample2
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
-    - name: test2
+    - name: variable definition
       set_fact:                   
         test: "Hello Ansible!"  # <-「set_fact」を使用して「test2」という変数に「Hello Ansible!」という文字列を定義
 
     - name: debug
       debug:
-        var: test2  # <-「set_fact」で定義した「test2」の変数の中身を出力
+        var: test  # <-「set_fact」で定義した「test2」の変数の中身を出力
 ```
 
 ---
@@ -334,7 +331,7 @@ $ ansible-playbook -i ../inventory.ini variable_sample2.yml
 
 PLAY [variable_sample2] ********************************************************************************************************
 
-TASK [test2] *******************************************************************************************
+TASK [test] ********************************************************************************************
 ok: [localhost]
 
 TASK [debug] *******************************************************************************************
@@ -359,7 +356,7 @@ $ vi variable_sample3.yml
 ---
 - name: variable_sample3
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - name: debug
@@ -503,7 +500,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ---
 - name: variable_exercise1
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - set_fact:
@@ -529,7 +526,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ---
 - name: variable_exercise2
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - set_fact:
@@ -562,7 +559,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ```yaml
 - name: variable_exercise1
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - set_fact:
@@ -609,7 +606,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ```yaml
 - name: variable_exercise1
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - set_fact:
@@ -680,7 +677,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ---
 - name: variable_exercise2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - set_fact:
@@ -703,7 +700,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ---
 - name: variable_exercise3
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   
   tasks:
     - set_fact:

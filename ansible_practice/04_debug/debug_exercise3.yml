@@ -4,7 +4,7 @@
   gather_facts: false
   
   tasks:
-    - name: debug_msg
+    - name: debug
       debug:
         msg: "Hello APC!"
       run_once: true
