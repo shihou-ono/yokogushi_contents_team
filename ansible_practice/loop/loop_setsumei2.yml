@@ -1,0 +1,11 @@
+
+
+tasks:
+  - name: add users2
+    user:
+      name: "{{ item.name }}"
+      state: present
+      groups: "{{ item.groups }}"
+    loop:
+      - { name: 'testuser1', groups: 'testgroup1' }
+      - { name: 'testuser2', groups: 'testgroup2' }

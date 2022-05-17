@@ -1,0 +1,6 @@
+
+
+  tasks:
+    - name: show commands
+      vyos_command:
+        commands: show interfaces

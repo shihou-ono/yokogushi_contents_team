@@ -1,0 +1,7 @@
+
+
+  tasks:
+    - name: set interfaces
+      vyos_config:
+        lines: 
+        - set interfaces ethernet eth1 disable
