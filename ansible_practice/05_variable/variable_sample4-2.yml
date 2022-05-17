@@ -1,7 +1,7 @@
 ---
 - name: variable_sample4
-  hosts: vyos01 
-  
+  hosts: vyos01
+
   tasks:
     - name: debug
       debug:

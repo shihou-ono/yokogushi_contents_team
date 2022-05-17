@@ -2,7 +2,7 @@
 - name: debug_exercise1
   hosts: localhost
   gather_facts: false
-  
+
   tasks:
     - name: debug
       debug:

@@ -2,10 +2,12 @@
 - name: variable_exercise3
   hosts: localhost
   gather_facts: false
-  
+
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         test_hostname: "vyos01"
 
-    - debug:
+    - name: debug
+      debug:
         var: test_hostname

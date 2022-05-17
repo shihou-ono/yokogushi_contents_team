@@ -2,12 +2,12 @@
 - name: variable_sample2
   hosts: localhost
   gather_facts: false
-  
+
   tasks:
     - name: variable definition
       set_fact:
         test: "Hello Ansible!"
 
-    - name: debug 
+    - name: debug
       debug:
         var: test

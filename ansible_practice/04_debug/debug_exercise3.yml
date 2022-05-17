@@ -2,7 +2,7 @@
 - name: debug_exercise3
   hosts: vyos
   gather_facts: false
-  
+
   tasks:
     - name: debug
       debug:

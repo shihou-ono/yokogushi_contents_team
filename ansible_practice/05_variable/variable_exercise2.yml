@@ -2,10 +2,12 @@
 - name: variable_exercise2
   hosts: localhost
   gather_facts: false
-  
+
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         ansible_play_name: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: ansible_play_name
