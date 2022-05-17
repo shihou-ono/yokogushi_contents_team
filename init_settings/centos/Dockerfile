@@ -1,11 +1,10 @@
 From centos:7
-Run yum update -y && install -y \ 
-    openssh-server \
-    openssh-clients \
-    traceroute \
- && install -y \
+Run yum update -y && yum install -y \ 
     epel-release \
-    hping3 \
+    net-tools \
+    openssh-clients \
+    openssh-server \
+    traceroute \
  && yum clean all \
  && rm -rf /var/cache/yum/*    
 Run sed -e 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config

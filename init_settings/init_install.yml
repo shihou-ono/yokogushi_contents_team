@@ -25,15 +25,10 @@
             - docker
           state: latest
 
-
       - name: 'Start service docker'
         service:
           name: docker
           state: started
-
-      - name: 'enable service docker'
-        service:
-          name: docker
           enabled: yes
 
       - name: 'add user to docker group'
