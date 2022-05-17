@@ -1,0 +1,11 @@
+---
+- name: loop_practice
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: chmod text
+      file: path={{ playbook_dir }}/{{ item }}.txt mode=777
+      loop:
+        - test1
+        - test2

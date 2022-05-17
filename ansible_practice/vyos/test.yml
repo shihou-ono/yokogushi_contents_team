@@ -1,0 +1,19 @@
+---
+- name: vyos_exam3
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: debug ip route
+      debug:
+        var: user
+      vars:
+        user: 西野桃子
+    - debug:
+        var: user
+      vars:
+        user: nishino momoko
+    - debug:
+        var: user
+      vars:
+        user: playbook_dir
