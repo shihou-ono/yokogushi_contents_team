@@ -1,45 +1,43 @@
 ---
-  - name: change priority of vrrp
-    vyos_config:
-      lines: 
-        - "set high-availability vrrp group service_nw01 priority {{ priority }}"
-        - "set high-availability vrrp group service_nw02 priority {{ priority }}"
-      save: yes
-    when: inventory_hostname == 'vyos01'
+- name: change priority of vrrp
+  vyos_config:
+    lines:
+      - "set high-availability vrrp group service_nw01 priority {{ priority }}"
+      - "set high-availability vrrp group service_nw02 priority {{ priority }}"
+    save: true
+  when: inventory_hostname == 'vyos01'
 
-  - name: rollback if invalid state
-    block:
-      - name: wait until change state
-        vyos_command:
-          commands: 'show vrrp'
-        register: result
-        until: result.stdout | select("search", state) | list | length | bool
-        retries: 3
-        delay: 5
-        when: inventory_hostname == 'vyos01'
+- name: rollback if invalid state
+  block:
+    - name: wait until change state
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
+      until: result.stdout | select("search", state) | list | length | bool
+      retries: 3
+      delay: 5
+      when: inventory_hostname == 'vyos01'
 
-    rescue:
-      - name: rollback
-        vyos_config:
-          lines: 
-            - "set high-availability vrrp group service_nw01 priority {{ rollback_priority }}"
-            - "set high-availability vrrp group service_nw02 priority {{ rollback_priority }}"
-          save: yes
-        vars:
-          rollback_priority: "{{ (priority - 200) | abs }}"
-        when: inventory_hostname == 'vyos01'
+  rescue:
+    - name: rollback
+      vyos_config:
+        lines:
+          - "set high-availability vrrp group service_nw01 priority {{ rollback_priority }}"
+          - "set high-availability vrrp group service_nw02 priority {{ rollback_priority }}"
+        save: true
+      vars:
+        rollback_priority: "{{ (priority - 200) | abs }}"
+      when: inventory_hostname == 'vyos01'
 
-      - name: check after rollback
-        vyos_command:
-          commands: 'show vrrp'
-        register: result
+    - name: check after rollback
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
 
-      - name: debug vrrp status
-        debug:
-          var: result.stdout_lines
-      - name: debug vrrp status
-        debug:
-          msg: "{{ ansible_play_name }} is failed and config is rollbacked"
-        failed_when: true
-
-       
+    - name: debug vrrp status
+      debug:
+        var: result.stdout_lines
+    - name: debug vrrp status
+      debug:
+        msg: "{{ ansible_play_name }} is failed and config is rollbacked"
+      failed_when: true

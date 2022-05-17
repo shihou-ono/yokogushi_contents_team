@@ -1,20 +1,21 @@
 ---
-  - name: reterive show commands
-    set_fact:
-      show_commands: "{{ lookup('file', 'show_commands.txt').splitlines() }}"
+- name: reterive show commands
+  set_fact:
+    show_commands: "{{ lookup('file', 'show_commands.txt').splitlines() }}"
 
-  - name: show commands
-    vyos_command:
-      commands: "{{ item }}"
-    loop: "{{ show_commands }}"
-    register: result
+- name: show commands
+  vyos_command:
+    commands: "{{ item }}"
+  loop: "{{ show_commands }}"
+  register: result
 
-  - name: debug {{ before_or_after }} status
-    debug:
-      var: result.results | json_query("[?item=='show vrrp'].stdout_lines[0]")
+- name: debug {{ before_or_after }} status
+  debug:
+    var: result.results | json_query("[?item=='show vrrp'].stdout_lines[0]")
 
-  - name: output_{{ before_or_after }}
-    copy:
-      content: "{{ item['stdout_lines'][0] | to_nice_json }}"
-      dest: "{{ dirpath }}/{{ before_or_after }}/{{ inventory_hostname }}/{{ item['item'] | regex_replace(' ','_') }}.log"
-    loop: "{{ result.results }}"
+- name: output_{{ before_or_after }}
+  copy:
+    content: "{{ item['stdout_lines'][0] | to_nice_json }}"
+    dest: "{{ dirpath }}/{{ before_or_after }}/{{ inventory_hostname }}/{{ item['item'] | regex_replace(' ','_') }}.log"
+    mode: 0644
+  loop: "{{ result.results }}"
