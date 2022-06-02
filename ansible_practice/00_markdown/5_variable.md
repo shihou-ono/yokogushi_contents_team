@@ -236,6 +236,77 @@ ansible_password=vyos
 
 ---
 
+# 5-2. 変数の説明
+
+## registerモジュール
+
+
+ansibleモジュールの一つで、実行タスクの様々な結果を格納する`registerモジュール`というものがある。
+主な使用方法は、実行結果を`registerモジュール`で変数に詰めて、その変数の内容から処理を変えたりエラーメッセージを出力するなど多岐にわたる。以下はplaybook作成例である。
+
+
+
+```yaml
+---
+- name: variable_sample
+  hosts: vyos01
+  gather_facts: false
+  
+  tasks:
+    - name: get show version
+      vyos_command:
+        commands: 'show version'
+      register: result              # <-vyos_commandで取得したshowコマンドをresultという変数へ格納
+
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"            
+```
+
+---
+
+# 5-2. 変数の説明
+
+<br>
+<br>
+
+前ページのplaybook実行例を以下に記載。
+
+```yaml 
+PLAY [variable_sample] ************************************************************************************************************
+
+TASK [get show version] ************************************************************************************************************
+ok: [vyos01]
+
+TASK [debug result] ****************************************************************************************************************
+ok: [vyos01] => {
+    "msg": [
+        "Version:          VyOS 1.4-rolling-202108071508",      # <-取得したshowコマンドの結果が表示されている
+        "Release Train:    sagitta",
+        "",
+        "Built by:         vyos_bld@ae1b2315b0ae",
+        "Built on:         Sat 07 Aug 2021 15:08 UTC",
+        "Build UUID:       e7077035-649b-47d4-8eb2-cd6f1fc399cc",
+        "Build Commit ID:  4f6c9346247bd6",
+        "",
+        "Architecture:     x86_64",
+        "Boot via:         installed image",
+        "System type:      Xen HVM guest",
+        "",
+        "Hardware vendor:  Xen",
+        "Hardware model:   HVM domU",
+        "Hardware S/N:     ec248bf0-f7a1-3f1a-e76d-4dc0168b8dc4",
+        "Hardware UUID:    ec248bf0-f7a1-3f1a-e76d-4dc0168b8dc4",
+        "",
+        "Copyright:        VyOS maintainers and contributors"
+    ]
+}
+
+PLAY RECAP *************************************************************************************************************************
+vyos01                     : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+---
 # 5-3. 変数の実習
 
 以下の目的を達成するためのplaybookをそれぞれ作成してみる。
@@ -553,6 +624,14 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 # 5-4.  演習
 
+**Q4. vyos01から`show vrrp`の結果を取得し、registerモジュールを使用して取得結果を出力させる
+　　playbookを作成してください。**
+
+
+---
+
+# 5-4.  演習
+
 **A1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"Hello":【 】」の【 】として表示される文字列を
 　　1つ選択してください**
 
@@ -731,6 +810,60 @@ ok: [localhost] => {
 
 PLAY RECAP *****************************************************************************************
 localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0 
+```
+
+---
+
+# 5-4.  演習
+
+**A4. vyos01から`show vrrp`の結果を取得し、registerモジュールを使用して取得結果を出力させる
+　　playbookを作成してください。**
+
+以下に例として要件を満たすplaybookを記載。
+
+```yaml
+---
+- name: variable_exercise4
+  hosts: vyos01
+  gather_facts: false
+  
+  tasks:
+    - name: get show vrrp
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
+
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"
+```
+
+---
+
+# 5-4.  演習
+
+実際の出力結果を以下に記載。
+
+```yaml
+
+PLAY [variable_exercise4] **************************************************************************
+
+TASK [get show vrrp] *******************************************************************************
+ok: [vyos01]
+
+TASK [debug result] ********************************************************************************
+ok: [vyos01] => {
+    "msg": [
+        "Name          Interface      VRID  State      Priority  Last Transition",
+        "------------  -----------  ------  -------  ----------  -----------------",
+        "service_nw01  eth1             10  MASTER          150  1h20m44s",
+        "service_nw02  eth2             20  MASTER          150  1h20m44s"
+    ]
+}
+
+PLAY RECAP *****************************************************************************************
+vyos01  : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0   
+
 ```
 
 ---
