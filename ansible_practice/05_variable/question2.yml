@@ -1,0 +1,14 @@
+---
+- name: Anser04
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show vrrp
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
+
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"

@@ -1,0 +1,9 @@
+---
+- name: vyos01
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: debug
+      debug:
+        var: inventory_hostname
