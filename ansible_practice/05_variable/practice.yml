@@ -1,0 +1,13 @@
+---
+- name: hello
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    -
+      set_fact: 
+        test: 'vyos1'
+
+    - name: debug
+      debug:
+        var: test

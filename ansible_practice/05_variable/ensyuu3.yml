@@ -1,0 +1,14 @@
+---
+- name: ensyuu3
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get_vrrp
+      vyos_command:
+        commands: ["show vrrp","show ver","show configuration commands"]
+      register: result
+
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"

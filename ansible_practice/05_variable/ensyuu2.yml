@@ -1,0 +1,11 @@
+---
+- name: ensyuu2
+  hosts: localhost
+  gather_facts: false
+  vars:
+    test: "vyos01"
+
+  tasks:
+    - name: debug
+      debug:
+        var: test

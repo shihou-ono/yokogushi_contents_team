@@ -10,4 +10,4 @@
 
     - name: debug
       debug:
-        var: Hello
+        var: vyos01

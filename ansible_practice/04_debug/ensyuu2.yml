@@ -1,0 +1,9 @@
+---
+- name: debug_sample1
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: debug
+      debug:
+        msg: “APC!”
