@@ -5,7 +5,9 @@
 
   tasks:
     - name: chmod text
-      file: path={{ playbook_dir }}/{{ item }}.txt mode=777
+      file:
+        path: "{{ playbook_dir }}/{{ item }}.txt"
+        mode: "0777"
       loop:
         - test1
         - test2

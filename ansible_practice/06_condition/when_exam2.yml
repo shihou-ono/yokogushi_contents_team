@@ -14,4 +14,4 @@
         - 140
         - 233
         - 350
-      when: item < 26
+      when: "'3' in item | str"
