@@ -1,0 +1,11 @@
+---
+- name: variable_sample1
+  hosts: localhost
+  gather_facts: false
+  vars:
+    test: "vyos1q"
+
+  tasks:
+    - name: debug
+      debug:
+        var: test

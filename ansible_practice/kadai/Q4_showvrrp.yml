@@ -1,0 +1,12 @@
+---
+- name: variable_sample
+hosts: vyos01
+gather_facts: false
+tasks:
+- name: get show version
+vyos_command:
+commands: 'show version'
+register: result # <-vyos_commandで取得したshowコマンドをresultという変数へ格納
+- name: debug result
+debug:
+msg: "{{ result.stdout_lines[0] }}"

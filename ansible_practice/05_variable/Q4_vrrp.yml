@@ -1,0 +1,14 @@
+---
+- name: vyos01 show vrrp
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show vrrp
+      vyos_command:
+        commands: show vrrp
+      register: result
+
+    - name: debug show vrrp
+      debug:
+        var: result.stdout_lines
