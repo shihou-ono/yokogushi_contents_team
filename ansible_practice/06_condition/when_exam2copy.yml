@@ -1,0 +1,17 @@
+---
+- name: command
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: when/loop
+      debug:
+        var: item
+      loop:
+        - 3
+        - 10
+        - 25
+        - 140
+        - 233
+        - 350
+      when: item is "***"
