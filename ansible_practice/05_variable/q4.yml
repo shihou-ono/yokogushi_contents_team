@@ -1,0 +1,13 @@
+- name: variable_sample1
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get show vrrp
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
+
+    - name: debug
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"
