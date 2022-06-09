@@ -1,0 +1,33 @@
+---
+  - name: loop_exam4
+    hosts: vyos01
+    gather_facts: false
+    become: true
+  
+    tasks:
+      - name: user check
+        vyos_command:
+          commands: show system login users
+        register: result
+  
+      - name: before users
+        debug:
+          var: result.stdout_lines
+  
+      - name: add users
+        vyos_config:
+          lines: "set system login user {{ item.name }} authentication plaintext-password {{ item.password }}"
+        loop:
+          - {name: 'guest1', password: 'pass1'}
+          - {name: 'guest2', password: 'pass2'}
+          - {name: 'guest3', password: 'pass3'}
+  
+      - name: user check
+        vyos_command:
+          commands: show system login users
+        register: result
+  
+      - name: after users
+        debug:
+          var: result.stdout_lines
+  
