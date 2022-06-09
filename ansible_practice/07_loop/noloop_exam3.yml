@@ -1,0 +1,23 @@
+---
+- name: loop_exam3
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: create data1.txt
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/data1.txt
+        state: touch
+        mode: '644'
+
+    - name: create data2.txt
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/data2.txt
+        state: touch
+        mode: '644'
+
+    - name: create data3.txt
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/data3.txt
+        state: touch
+        mode: '644'

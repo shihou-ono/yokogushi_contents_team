@@ -1,0 +1,61 @@
+---
+- name: when_exam1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    # - name: debug
+    #   debug:
+    #     var: when_test or not_test
+    #   vars:
+    #     when_test: "this_is_a_test_of_when"
+    #     not_test: "this_is_not_a_test"
+
+    # - name: debug
+    #   debug:
+    #     msg: "OK"
+    #   vars:
+    #     blank_test: ""
+    #   when: blank_test
+
+    # - name: debug
+    #   debug:
+    #     msg: "OK"
+    #   vars:
+    #     space_test: 'aaa'
+    #   when: space_test
+
+    # - name: debug
+    #   debug:
+    #     var: false or not_test
+    #   vars:
+    #     when_test: "this_is_a_test_of_when"
+    #     not_test: "this_is_not_a_test"
+
+    - name: debug
+      debug:
+        msg: "ok"
+      when: test == "this_is_a_test_of_when" or "this_is_not_a_test"
+      vars:
+        test: "this_is_a_test"
+
+    - name: debug
+      debug:
+        msg: "ok"
+      when: test == "this_is_a_test_of_when" or ""
+      vars:
+        test: "this_is_a_test"
+
+    - name: debug
+      debug:
+        msg: "ok"
+      when: test == "this_is_a_test_of_when"
+      vars:
+        test: "this_is_a_test"
+
+    - name: debug
+      debug:
+        msg: "ok"
+      when: "this_is_not_a_test"
+      vars:
+        test: "this_is_a_test"
