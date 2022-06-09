@@ -1,0 +1,10 @@
+---
+- name: variable_exerceise2
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - set_fact:
+        ansible_play_name: "Hello Ansible!"
+    - debug:
+        var: ansible_play_name

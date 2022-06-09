@@ -1,0 +1,30 @@
+---
+    - name: vyos_practice
+      hosts: vyos
+      gather_facts: false
+    
+      tasks:
+        - name: show configuration before
+          vyos_command:
+            commands: show configuration commands
+          register: result
+        
+        - name: debug configuration before
+          debug:
+            var: result.stdout_lines
+        
+        - name: set interface description
+          vyos_config:
+            lines:
+              - set interfaces ethernet eth1 description service_nw001
+              - set interfaces ethernet eth2 description service_nw002
+        
+        - name: show configuration after
+          vyos_command:
+            commands: show configuration commands
+          register: result
+    
+        - name: debug configuration after
+          debug:
+            var: result.stdout_lines
+

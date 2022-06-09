@@ -1,0 +1,14 @@
+---
+    - name: vyos_practice
+      hosts: vyos
+      gather_facts: false
+    
+      tasks:
+        - name: show ip route
+          vyos_command:
+            commands: show ip route
+          register: result
+          
+        - name: debug login user before
+          debug:
+            var: result.stdout_lines 

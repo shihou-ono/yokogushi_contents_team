@@ -1,0 +1,9 @@
+---
+- name: vyos1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: debug
+      debug:
+        var: ansible_play_name

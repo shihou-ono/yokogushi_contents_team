@@ -1,0 +1,14 @@
+---
+- name: variable_exerceise4
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get show vrrp command
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
+    
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"
