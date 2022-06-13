@@ -1,33 +1,33 @@
 ---
-- name: when_exam4
-  hosts: vyos1
+- name: ensyuu_condition2
+  hosts: vyos
   gather_facts: false
 
   tasks:
-    - name: show commands
+    - name: get_vrrp
       vyos_command:
-        commands: show interfacess
+        commands: ["show vrrrp","show ver","show configuration commands"]
       ignore_errors: true
       register: result
       when: inventory_hostname == 'vyos01'
 
     - name: debug result
       debug:
-        var: result.stdout_lines
+        msg: ok
       when:
         - inventory_hostname == 'vyos01'
         - result is succeeded
 
-    - name: debug result OK message
+    - name: debug result
       debug:
-        msg: OK!
+        msg: "{{ result.stdout_lines[0] }}"
       when:
         - inventory_hostname == 'vyos01'
         - result is succeeded
 
-    - name: debug result NG message
+    - name: debug result
       debug:
-        msg: NG!
+        msg: ng
       when:
         - inventory_hostname == 'vyos01'
         - result is failed
