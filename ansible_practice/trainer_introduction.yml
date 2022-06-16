@@ -1,0 +1,32 @@
+---
+- name: "trainer introduction"
+  hosts: localhost
+  gather_facts: false
+  vars:
+    trainer:
+      name: "小野志峰"
+      age: 39
+      hire_date: 2019-06-01
+      hobby: 
+        music:
+          - "writing songs"
+          - "singing"
+          - "playing instruments in bands"
+        drinking:
+          - "beer"
+          - "Japanese sake"
+          - "tequila"
+          - "and so on"
+
+  tasks:
+    - name: "debug name"
+      debug:
+        msg: "{{ trainer.name }}"
+
+    - name: "debug hobby"
+      debug:
+        msg: "{{ trainer.hobby }}"
+
+    - name: "debug hobby"
+      debug:
+        msg: "{{ trainer.hobby.music[2] }}"

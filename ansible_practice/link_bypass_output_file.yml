@@ -1,0 +1,59 @@
+---
+- name: link_bypass
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: "make dir"
+      file:
+        path: "./{{ inventory_hostname }}"
+        state: "directory"
+        mode: "0744"
+      register: mkdir_result
+
+    - name: "show configuration"
+      vyos_command:
+        commands: "show configuration commands"
+      register: result
+
+    - name: "output pre_config to file"
+      copy:
+        content: "{{ result.stdout[0] }}"
+        dest: "{{ mkdir_result.path }}/pre_config.log"
+
+    - name: "show vrrp"
+      vyos_command:
+        commands: "show vrrp"
+      register: result
+
+    - name: "output pre_show_vrrp to file"
+      copy:
+        content: "{{ result.stdout[0] }}"
+        dest: "{{ mkdir_result.path }}/pre_show_vrrp.log"
+
+    - name: change priority of vrrp
+      vyos_config:
+        lines:
+          - "set high-availability vrrp group service_nw01 priority '50'"
+          - "set high-availability vrrp group service_nw02 priority '50'"
+      when: inventory_hostname == 'vyos01'
+
+    - name: "show configuration"
+      vyos_command:
+        commands: "show configuration commands"
+      register: result
+
+    - name: "output post_config to file"
+      copy:
+        content: "{{ result.stdout[0] }}"
+        dest: "{{ mkdir_result.path }}/post_config.log"
+
+    - name: "show vrrp"
+      vyos_command:
+        commands: "show vrrp"
+      register: result
+
+    - name: "output post_show_vrrp to file"
+      copy:
+        content: "{{ result.stdout[0] }}"
+        dest: "{{ mkdir_result.path }}/post_show_vrrp.log"
