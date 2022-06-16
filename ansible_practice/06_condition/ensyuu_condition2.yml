@@ -4,30 +4,36 @@
   gather_facts: false
 
   tasks:
-    - name: get_vrrp
+    - name: show ip route
       vyos_command:
-        commands: ["show vrrrp","show ver","show configuration commands"]
+        commands: "{{ item }}"
+      loop:
+        - "show vrrrp"
+        - "show ver"
+        - "show configuration commands"
       ignore_errors: true
       register: result
       when: inventory_hostname == 'vyos01'
 
     - name: debug result
       debug:
-        msg: ok
-      when:
-        - inventory_hostname == 'vyos01'
-        - result is succeeded
+        var: item.stdout_lines
+      loop: "{{ result.results }}"
+      when: item is succeeded
+    #   when:
+    #     - inventory_hostname == 'vyos01'
+    #     - result is succeeded
 
-    - name: debug result
-      debug:
-        msg: "{{ result.stdout_lines[0] }}"
-      when:
-        - inventory_hostname == 'vyos01'
-        - result is succeeded
+    # - name: debug result
+    #   debug:
+    #     msg: "{{ result.stdout_lines[2] }}"
+    #   when:
+    #     - inventory_hostname == 'vyos01'
+    #     - result is succeeded
 
-    - name: debug result
-      debug:
-        msg: ng
-      when:
-        - inventory_hostname == 'vyos01'
-        - result is failed
+    # - name: debug result
+    #   debug:
+    #     msg: ng
+    #   when:
+    #     - inventory_hostname == 'vyos01'
+    #     - result is failed

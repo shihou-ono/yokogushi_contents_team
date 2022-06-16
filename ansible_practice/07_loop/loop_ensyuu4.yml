@@ -2,10 +2,10 @@
 - name: loop_eensyuu4
   hosts: vyos01
   gather_facts: false
-  become: true
+
 
   tasks:
-    - name: user check
+    - name: user
       vyos_command:
         commands: show system login users
       register: result
@@ -23,8 +23,13 @@
         - {name: 'guest1', password: 'pass1'}
         - {name: 'guest2', password: 'pass2'}
         - {name: 'guest3', password: 'pass3'}
+      register: result
 
-    - name: user check
+    - name: debug loop
+      debug:
+       var: result.sdtout_lines
+
+    - name: user
       vyos_command:
         commands: show system login users
       register: result
