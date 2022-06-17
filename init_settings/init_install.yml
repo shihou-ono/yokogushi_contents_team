@@ -4,15 +4,16 @@
 
   tasks:
 
-    - name: 'install apps'
+    - name: "install apps"
+      become: true
       block:
 
-      - name: 'yum update'
+      - name: "yum update"
         yum:
-          name: '*'
+          name: "*"
           state: latest
 
-      - name: 'install apps'
+      - name: "install apps"
         yum:
           name:
             - epel-release
@@ -25,64 +26,61 @@
             - docker
           state: latest
 
-      - name: 'Start service docker'
+      - name: "Start service docker"
         service:
           name: docker
           state: started
-          enabled: yes
+          enabled: true
 
-      - name: 'add user to docker group'
+      - name: "add user to docker group"
         user:
           name: "{{ ansible_env.USER }}"
           groups: docker
-          append: yes
+          append: true
 
-      become: true
-
-    - name: 'make venv'
+    - name: "make venv"
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+        venv_dir: "{{ ansible_env.HOME }}/venv"
       block:
 
-      - name: 'pip update'
+      - name: "pip update"
         pip:
           name: pip
           state: latest
 
-      - name: 'install virtualenv'
+      - name: "install virtualenv"
         pip:
           name: virtualenv
           executable: pip3
 
-      - name: 'Create Python3-virtual environment folder'
+      - name: "Create Python3-virtual environment folder"
         file:
           name: "{{ venv_dir }}"
           state: directory
 
-      - name: 'make venv'
+      - name: "make venv"
         pip:
           virtualenv: "{{ venv_dir }}"
           virtualenv_command: "{{ ansible_env.HOME }}/.local/bin/virtualenv"
           virtualenv_python: python3.7
           requirements: "{{ playbook_dir }}/requirements.txt"
 
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
-        venv_dir: "{{ ansible_env.HOME }}/venv"
-
-    - name: 'list dotfiles'
+    - name: "list dotfiles"
       find:
-        paths: '{{ playbook_dir }}/dotfiles'
-        hidden: yes
+        paths: "{{ playbook_dir }}/dotfiles"
+        hidden: true
       register: file_list
 
-    - name: 'make link'
+    - name: "make link"
       file:
         src: "{{ item.path }}"
         path: "{{ ansible_env.HOME }}/{{ item.path | basename }}"
         state: link
-        force: yes
+        force: true
       with_items: "{{ file_list.files }}"
 
-    - name: 'cp ansible.cfg to home'
+    - name: "cp ansible.cfg to home"
       copy:
         src: "{{ playbook_dir }}/ansible.cfg"
         dest: "{{ ansible_env.HOME }}/.ansible.cfg"
