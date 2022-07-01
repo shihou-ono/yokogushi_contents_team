@@ -1,12 +1,12 @@
 ---
-- name: loop_eensyuu3
+- name: loop_ensyuu3
   hosts: localhost
   gather_facts: false
 
   tasks:
     - name: create text
       file:
-        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/loop/{{ item }}.txt
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/{{ item }}.txt
         state: touch
         mode: '644'
       loop:

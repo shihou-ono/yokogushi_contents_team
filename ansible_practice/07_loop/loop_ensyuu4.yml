@@ -17,19 +17,14 @@
     - name: add users
       vyos_config:
         lines:
-          - set system login user "{ item.name }"
-          - set system login user "{{ item.name }}" authentication plaintex-password "{{ item.password }}"
+          - set system login user "{{ item.name }}"
+          - set system login user "{{ item.name }}" authentication plaintext-password "{{ item.password }}"
       loop:
-        - {name: 'guest1', password: 'pass1'}
-        - {name: 'guest2', password: 'pass2'}
-        - {name: 'guest3', password: 'pass3'}
-      register: result
+        - {name: 'guest1', password: 'user1'}
+        - {name: 'guest2', password: 'user1'}
+        - {name: 'guest3', password: 'user1'}
 
-    - name: debug loop
-      debug:
-       var: result.sdtout_lines
-
-    - name: user
+    - name: after user
       vyos_command:
         commands: show system login users
       register: result
