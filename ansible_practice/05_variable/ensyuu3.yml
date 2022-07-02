@@ -1,6 +1,6 @@
 ---
 - name: ensyuu3
-  hosts: vyos01
+  hosts: vyos
   gather_facts: false
 
   tasks:
@@ -12,3 +12,5 @@
     - name: debug result
       debug:
         msg: "{{ result.stdout_lines[0] }}"
+      ignore_errors: true
+      when: inventory_hostname == vyos1
