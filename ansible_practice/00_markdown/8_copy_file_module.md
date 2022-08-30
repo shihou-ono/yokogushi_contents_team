@@ -1,21 +1,5 @@
----
-marp: true
-theme: apc_confidential
-size: 16:9
----
-<!--
-class: title
--->
-
 # 8. copy/file module
-
 ---
-
-<!--
-class: slide
-paginate: true
--->
-
 # 8-1. copy moduleとは？
 
 - ファイル/ディレクトリをコピーする際に使用します
