@@ -1,12 +1,5 @@
 # vyosを触ってみよう
 
----
-
-<!--
-class: slide
-paginate: true
--->
-
 # vyosとは
 Wikipediaを貼る
 
