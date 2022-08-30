@@ -1,20 +1,4 @@
----
-marp: true
-theme: apc_confidential
-size: 16:9
----
-<!--
-class: title
--->
-
 # 6. 条件分岐
-
----
-
-<!--
-class: slide
-paginate: true
--->
 
 # 6-1. 条件分岐をさせるためには？
 
