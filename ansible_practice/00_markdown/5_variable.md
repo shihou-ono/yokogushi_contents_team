@@ -1,20 +1,4 @@
----
-marp: true
-theme: apc_confidential
-size: 16:9
----
-<!--
-class: title
--->
-
 # 5. 変数
-
----
-
-<!--
-class: slide
-paginate: true
--->
 
 # 5-1. 変数とは？
 
