@@ -1,21 +1,6 @@
----
-marp: true
-theme: apc_confidential
-size: 16:9
----
-<!--
-class: title
--->
 
 # 7. loop ディレクティブ
-
 ---
-
-<!--
-class: slide
-paginate: true
--->
-
 # 7-1. loop ディレクティブとは？
 
 ■同一のタスクを複数回実行したい、繰り返したいときに使用する。
