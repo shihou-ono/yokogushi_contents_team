@@ -1,12 +1,3 @@
----
-marp: true
-theme: apc_confidential
-size: 16:9
----
-<!--
-class: title
--->
-
 # vyosを触ってみよう
 
 ---
