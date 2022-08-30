@@ -1,12 +1,5 @@
 # 4. debug module
 
----
-
-<!--
-class: slide
-paginate: true
--->
-
 # 4-1. debug moduleとは？
 
 - playbookのデバッグをしたいときに使用する
