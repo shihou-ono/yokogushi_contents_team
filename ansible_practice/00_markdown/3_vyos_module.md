@@ -95,7 +95,7 @@ vyos_configでログインユーザーを追加する。
 「show system login user」の実行結果を確認すると、ログインユーザー「test_vyos」が追加されていることが確認できる。
 ```yaml
 ---
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini vyos/vyos_practice1.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini vyos/vyos_sample_1.yml 
 
 PLAY [set login user] **********************************************************************************************************
 
@@ -280,9 +280,9 @@ vyos02                     : ok=5    changed=1    unreachable=0    failed=0    s
 ---
 上記playbookの実行結果は以下です。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini vyos/vyos_exam3.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini vyos/vyos_exam_3.yml 
 
-PLAY [vyos_exam3] *************************************************************************************************************************
+PLAY [vyos_exam_3] *************************************************************************************************************************
 
 TASK [show interface] *********************************************************************************************************************
 [WARNING]: Platform linux on host vyos02 is using the discovered Python interpreter at /usr/bin/python, but future installation of another
@@ -370,9 +370,9 @@ vyos02                     : ok=2    changed=0    unreachable=0    failed=0    s
 ---
 上記playbookの実行結果は以下です。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini vyos/vyos_exam4.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini vyos/vyos_exam_4.yml 
 
-PLAY [vyos_exam4] *************************************************************************************************************************
+PLAY [vyos_exam_4] *************************************************************************************************************************
 
 TASK [show interface] *********************************************************************************************************************
 [WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at /usr/bin/python, but future installation of another
