@@ -336,9 +336,9 @@ $ vi variable_sample_1.yml
 <br>
 
 ```yaml
-$ ansible-playbook -i inventory.ini variable_sample1.yml 
+$ ansible-playbook -i inventory.ini variable_sample_1.yml 
 
-PLAY [variable_sample1] ****************************************************************************
+PLAY [variable_sample_1] ****************************************************************************
 
 TASK [debug] ***************************************************************************************
 ok: [localhost] => {
@@ -383,11 +383,11 @@ $ vi variable_sample_2.yml
 <br>
 
 ```yaml
-$ ansible-playbook -i ../inventory.ini variable_sample2.yml 
+$ ansible-playbook -i ../inventory.ini variable_sample_2.yml 
 
-PLAY [variable_sample2] ********************************************************************************************************
+PLAY [variable_sample_2] ********************************************************************************************************
 
-TASK [test] ********************************************************************************************
+TASK [variable definition] ********************************************************************************************
 ok: [localhost]
 
 TASK [debug] *******************************************************************************************
@@ -408,7 +408,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 以下のplaybookを作成する。
 
 ```yaml
-$ vi variable_sample3.yml
+$ vi variable_sample_3.yml
 ---
 - name: variable_sample_3
   hosts: localhost
@@ -429,13 +429,13 @@ $ vi variable_sample3.yml
 <br>
 
 ```yaml
-$ ansible-playbook -i ../inventory.ini variable_sample3.yml 
+$ ansible-playbook -i ../inventory.ini variable_sample_3.yml 
 
-PLAY [variable_sample3] **************************************************************************************************
+PLAY [variable_sample_3] **************************************************************************************************
 
 TASK [debug] *************************************************************************************************************
 ok: [localhost] => {
-    "ansible_play_name": "variable_sample3"  # <-「ansible_play_name」に格納されたplaybookの名前が出力されていることを確認
+    "ansible_play_name": "variable_sample_3"  # <-「ansible_play_name」に格納されたplaybookの名前が出力されていることを確認
 }
 
 PLAY RECAP ***************************************************************************************************************
@@ -468,7 +468,7 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 以下は作成したplaybookを実行/出力例である。
 
 ```yaml
-PLAY [variable_sample4] ********************************************************************************************
+PLAY [variable_sample_4-1] ********************************************************************************************
 
 TASK [Gathering Facts] *********************************************************************************************
 [WARNING]: Ignoring timeout(10) for vyos_facts
@@ -526,7 +526,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 <br>
 
 ```yaml
-PLAY [variable_sample4] *****************************************************************************************
+PLAY [variable_sample_4-2] *****************************************************************************************
 
 TASK [Gathering Facts] ******************************************************************************************
 [WARNING]: Ignoring timeout(10) for vyos_facts
@@ -554,7 +554,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ```yaml
 ---
-- name: variable_exercise1
+- name: variable_exam_1
   hosts: localhost
   gather_facts: false
   
@@ -721,7 +721,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 <br>
 
 ```yaml
-PLAY [variable_exercise2] ******************************************************************************
+PLAY [variable_exam_2] ******************************************************************************
 
 TASK [set_fact] ****************************************************************************************
 ok: [localhost]
@@ -791,7 +791,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 <br>
 
 ```yaml
-PLAY [variable_exercise3] ****************************************************************************************************
+PLAY [variable_exam_3] ****************************************************************************************************
 
 TASK [set_fact] ************************************************************************************
 ok: [localhost]
@@ -839,7 +839,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 
-PLAY [variable_exercise4] **************************************************************************
+PLAY [variable_exam_4] **************************************************************************
 
 TASK [get show vrrp] *******************************************************************************
 ok: [vyos01]
@@ -860,11 +860,3 @@ vyos01  : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignore
 ```
 
 ---
-
-<!--
-class: backcover
-paginate: true
--->
-
-[1]: https://blog-and-destroy.com/21376
-[2]: https://blog-and-destroy.com/25199
