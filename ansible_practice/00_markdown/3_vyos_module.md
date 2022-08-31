@@ -61,7 +61,7 @@ vyos_commandで現在のログインユーザーのリストを確認、
 vyos_configでログインユーザーを追加する。
 ```yaml
 ---
-- name: vyos_practice
+- name: vyos_sample_1
   hosts: vyos
   gather_facts: false
 
