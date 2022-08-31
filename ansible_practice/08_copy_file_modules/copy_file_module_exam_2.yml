@@ -13,11 +13,11 @@
 
   - name: copy configure file
     copy:
-      src: /home/ec2-user/yokogushi_contents_team/ansible_practice/yamamoto/vyos_config.txt
+      src: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_copy_file_modules/{{ inventory_hostname }}.log
       dest: "{{ directory_info.path }}"
       mode: 0655
 
   - name: delete file
     file:
-      path: /home/ec2-user/yokogushi_contents_team/ansible_practice/yamamoto/vyos_config.txt
+      path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_copy_file_modules/{{ inventory_hostname }}.log
       state: absent

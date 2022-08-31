@@ -12,6 +12,6 @@
 
     - name: save configuration
       copy:
-        content: "{{ result_configure.stdout[0] }}"
-        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/yamamoto/vyos_config.txt
+        content: "{{ result_config.stdout[0] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_copy_file_modules/{{ inventory_hostname }}.log
         mode: 0644
