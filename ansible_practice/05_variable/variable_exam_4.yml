@@ -1,5 +1,5 @@
 ---
-- name: variable_exercise4
+- name: variable_exam_4
   hosts: vyos01
   gather_facts: false
   

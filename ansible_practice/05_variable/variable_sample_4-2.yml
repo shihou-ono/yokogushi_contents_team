@@ -1,5 +1,5 @@
 ---
-- name: variable_sample4
+- name: variable_sample_4-2
   hosts: vyos01
 
   tasks:

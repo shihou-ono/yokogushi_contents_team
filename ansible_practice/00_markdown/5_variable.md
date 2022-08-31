@@ -312,9 +312,9 @@ vyos01                     : ok=2    changed=0    unreachable=0    failed=0    s
 以下のplaybookを作成する。
 
 ```yaml
-$ vi variable_sample1.yml
+$ vi variable_sample_1.yml
 ---
-- name: variable_sample1
+- name: variable_sample_1
   hosts: localhost
   gather_facts: false
   
@@ -358,9 +358,9 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 以下のplaybookを作成する。
 
 ```yaml
-$ vi variable_sample2.yml
+$ vi variable_sample_2.yml
 ---
-- name: variable_sample2
+- name: variable_sample_2
   hosts: localhost
   gather_facts: false
   
@@ -410,7 +410,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 ```yaml
 $ vi variable_sample3.yml
 ---
-- name: variable_sample3
+- name: variable_sample_3
   hosts: localhost
   gather_facts: false
   
@@ -452,7 +452,7 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_sample4-1
+- name: variable_sample_4-1
   hosts: vyos01 
                             # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
   tasks:
@@ -508,7 +508,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ```yaml
 ---
-- name: variable_sample4-2
+- name: variable_sample_4-2
   hosts: vyos01 
                             # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
   tasks:
@@ -580,15 +580,17 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ```yaml
 ---
-- name: variable_exercise2
+- name: variable_exam_2
   hosts: localhost
   gather_facts: false
   
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         ansible_play_name: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: ansible_play_name
 ```
 
@@ -621,15 +623,17 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 　　1つ選択してください**
 
 ```yaml
-- name: variable_exercise1
+- name: variable_exam_1
   hosts: localhost
   gather_facts: false
   
   tasks:
-    - set_fact:
+    - name: set_fact
+    set_fact:
         HelIo: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: Hello
 ```
 
@@ -668,7 +672,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 <br>
 
 ```yaml
-- name: variable_exercise1
+- name: variable_exam_1
   hosts: localhost
   gather_facts: false
   
@@ -689,15 +693,17 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise2
+- name: variable_exam_2
   hosts: localhost
   gather_facts: no
   
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         ansible_play_name: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: ansible_play_name
 ```
 
@@ -739,7 +745,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
+- name: variable_exam_2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
   hosts: localhost
   gather_facts: false
   
@@ -762,15 +768,17 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise3
+- name: variable_exam_3
   hosts: localhost
   gather_facts: false
   
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         test_hostname: "vyos01"  # <-「set_fact」を使用して「test」という変数に「vyos01」という文字列を定義
 
-    - debug:
+    - name: debug
+      debug:
         var: test_hostname  # <-「set_fact」で定義した「test」の変数の中身を出力
 ```
 
@@ -808,7 +816,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise4
+- name: variable_exam_4
   hosts: vyos01
   gather_facts: false
   
