@@ -1,5 +1,5 @@
 ---
-- name: loop_exam2
+- name: loop_exam_2
   hosts: vyos01
   gather_facts: false
 
@@ -14,4 +14,4 @@
 
     - name: debug result
       debug:
-        var: result.results|map(attribute='stdout_lines')| list
+        var: result.results|map(attribute='stdout_lines') | list

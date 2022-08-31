@@ -1,5 +1,5 @@
 ---
-- name: loop_practice
+- name: loop_sample_1
   hosts: localhost
   gather_facts: false
 

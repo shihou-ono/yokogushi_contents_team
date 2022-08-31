@@ -17,10 +17,6 @@ loopのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/us
 
 ---
 
-<!--
-class: slide
-paginate: true
--->
 # 7-2. loop ディレクティブの説明
 ## 標準ループ
 以下は、繰り返しのタスクを行う場合のplaybookである。
@@ -102,10 +98,10 @@ total 4
 test1.txt、test2.txtのパーミッションを777に変更する。
 
 ```yaml
-$ vi loop_practice.yml
+$ vi loop_sample_1.yml
 
 ---
-- name: loop_practice
+- name: loop_sample_1
   hosts: localhost
   gather_facts: false
 
@@ -121,11 +117,11 @@ $ vi loop_practice.yml
 ### 3.playbookを実行
 ok=1 change=1 であることを確認。(正常に実行され、問題なく変更できたこと)
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_1.yml
+(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_sample_1.yml
 [WARNING]: provided hosts list is empty, only localhost is available. Note that
 the implicit localhost does not match 'all'
 
-PLAY [chmod_file] **************************************************************
+PLAY [loop_sample_1] **************************************************************
 
 TASK [chmod text] **************************************************************
 changed: [localhost] => (item=test1)
@@ -156,10 +152,10 @@ total 4
 ### Q1 以下のplaybookを実行した時、出力結果はどうなるでしょうか。実際に作成してみてください。
 ```yaml
 ---
-- name: loop_exam1
+- name: loop_exam_1
   hosts: localhost
   gather_facts: false
-  become: yes
+  become: true
 
 tasks:
   - name: add users
@@ -176,7 +172,7 @@ tasks:
 ### Q2 以下のplaybookを実行したとき、実行結果はどうなるでしょうか。<br>実際に作成してみてください。
 ```yaml
 ---
-- name: loop_exam2
+- name: loop_exam_2
   hosts: vyos01
   gather_facts: false
 
@@ -191,7 +187,7 @@ tasks:
 
     - name: debug result
       debug:
-        var: result.results|map(attribute='stdout_lines')|list
+        var: result.results|map(attribute='stdout_lines') | list
 ```
 
 ---
@@ -208,10 +204,10 @@ tasks:
 
 ### A1.以下のような実行結果になります。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_exam1.yml 
+(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_exam_1.yml 
 [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
 
-PLAY [add user] ********************************************************************************************************************
+PLAY [loop_exam_1] ********************************************************************************************************************
 
 TASK [add users] *******************************************************************************************************************
 changed: [localhost] => (item=taro)
@@ -233,9 +229,9 @@ hanako:x:1008:1010::/home/hanako:/bin/bash
 ### A2.以下のような実行結果になります。
 show version,show interfaceの実行結果が表示されます。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook -i /home/ec2-user/yokogushi_contents_team/ansible_practice/inventory.ini loop_exam2.yml 
+(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook -i /home/ec2-user/yokogushi_contents_team/ansible_practice/inventory.ini loop_exam_2.yml 
 
-PLAY [command] ****************************************************************************************
+PLAY [loop_exam_2] ****************************************************************************************
 
 TASK [show commands] **********************************************************************************
 ok: [vyos01] => (item=show version)
@@ -293,7 +289,7 @@ vyos01                     : ok=2    changed=0    unreachable=0    failed=0    s
 ### A3.playbookの例は以下です。(これだけが正解ではありません)
 ```yaml
 ---
-- name: loop_exam3
+- name: loop_exam_3
   hosts: localhost
   gather_facts: false
 
@@ -302,6 +298,7 @@ vyos01                     : ok=2    changed=0    unreachable=0    failed=0    s
       file: 
         path: /home/ec2-user/yokogushi_contents_team/ansible_practice/loop/{{ item }}.txt
         state: touch
+        mode: '644'
       loop: 
         - data1
         - data2
@@ -311,11 +308,11 @@ vyos01                     : ok=2    changed=0    unreachable=0    failed=0    s
 ---
 以下ような実行結果になります。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_exam2_pre.yml 
+(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_exam_3.yml 
 [WARNING]: provided hosts list is empty, only localhost is available. Note that
 the implicit localhost does not match 'all'
 
-PLAY [create file] *************************************************************
+PLAY [loop_exam_3] *************************************************************
 
 TASK [create text] *************************************************************
 changed: [localhost] => (item=data1)
@@ -339,7 +336,7 @@ total 28
 ### A4.playbookの例は以下です。(これだけが正解ではありません)
 ```yaml
 ---
-- name: loop_exam4
+- name: loop_exam_4
   hosts: vyos01
   gather_facts: false
   become: true
@@ -377,9 +374,9 @@ total 28
 ---
 以下ような実行結果になります。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook -i/home/ec2-user/yokogushi_contents_team/ansible_practice/inventory.ini loop_exam3.yml 
+(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook -i/home/ec2-user/yokogushi_contents_team/ansible_practice/inventory.ini loop_exam_4.yml 
 
-PLAY [add user] ****************************************************************
+PLAY [loop_exam_4] ****************************************************************
 
 TASK [user check] **************************************************************
 [WARNING]: Platform linux on host vyos01 is using the discovered Python

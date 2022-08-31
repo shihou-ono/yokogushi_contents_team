@@ -1,5 +1,5 @@
 ---
-- name: loop_exam4
+- name: loop_exam_4
   hosts: vyos01
   gather_facts: false
   become: true
@@ -20,9 +20,9 @@
         configured_password: "{{ item.password }}"
         state: present
       loop:
-        - {name: 'guest1', password: 'pass1'}
-        - {name: 'guest2', password: 'pass2'}
-        - {name: 'guest3', password: 'pass3'}
+        - { name: 'guest1', password: 'pass1' }
+        - { name: 'guest2', password: 'pass2' }
+        - { name: 'guest3', password: 'pass3' }
 
     - name: user check
       vyos_command:

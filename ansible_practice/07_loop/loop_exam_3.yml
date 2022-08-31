@@ -1,5 +1,5 @@
 ---
-- name: loop_exam3
+- name: loop_exam_3
   hosts: localhost
   gather_facts: false
 
