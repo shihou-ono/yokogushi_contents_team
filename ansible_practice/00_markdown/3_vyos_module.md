@@ -170,7 +170,7 @@ vyos02                     : ok=5    changed=1    unreachable=0    failed=0    s
 ### Q1 以下のplaybookの空欄に当てはまるものは何でしょう。
 ```yaml
 ---
-- name: vyos_exam1
+- name: vyos_module_exam_1
   hosts: vyos
   gather_facts: false
 
@@ -190,7 +190,7 @@ vyos02                     : ok=5    changed=1    unreachable=0    failed=0    s
 ### Q2 以下のplaybookの空欄に当てはまるものは何でしょう。
 ```yaml
 ---
-- name: vyos_exam2
+- name: vyos_module_exam_2
   hosts: vyos
   gather_facts: false
 
@@ -224,7 +224,7 @@ vyos02                     : ok=5    changed=1    unreachable=0    failed=0    s
 以下が正しいplaybookになります。
 ```yaml
 ---
-- name: vyos_exam1
+- name: vyos_module_exam_1
   hosts: vyos
   gather_facts: false
 
@@ -245,7 +245,7 @@ vyos02                     : ok=5    changed=1    unreachable=0    failed=0    s
 以下が正しいplaybookになります。
 ```yaml
 ---
-- name: vyos_exam2
+- name: vyos_module_exam_2
   hosts: vyos
   gather_facts: false
 
@@ -263,7 +263,7 @@ vyos02                     : ok=5    changed=1    unreachable=0    failed=0    s
 ### A3.playbookの例は以下です。(これだけが正解ではありません)
 ```yaml
 ---
-- name: vyos_exam3
+- name: vyos_module_exam_3
   hosts: vyos
   gather_facts: false
 
@@ -338,7 +338,7 @@ vyos02                     : ok=2    changed=0    unreachable=0    failed=0    s
 ### A4.playbookの例は以下です。(これだけが正解ではありません)
 ```yaml
 ---
-- name: vyos_exam4
+- name: vyos_module_exam_4
   hosts: vyos
   gather_facts: false
 

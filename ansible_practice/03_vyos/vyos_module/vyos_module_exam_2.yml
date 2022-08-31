@@ -1,5 +1,5 @@
 ---
-- name: vyos_exam2
+- name: vyos_module_exam_2
   hosts: vyos
   gather_facts: false
 
