@@ -13,10 +13,6 @@
 
 ---
 
-<!--
-class: slide
-paginate: true
--->
 # 6-2. whenディレクティブの説明
 
 主に以下の条件式を用いて、whenディレクティブを使用する。
@@ -100,47 +96,6 @@ ansible_os_family in ['RedHat',CentOS] | ターゲットノードのOSが、リ�
 リストにRedHatがあったとき、httpをインストールするという内容になっている。
 
 ---
-<!-- - タスクの結果に応じて、実行するタスクを選択する場合
-playbookは以下のようになる。
-```yaml
-  tasks:
-  - name: task.ifconfig 
-    command: ifconfig
-    register: result
-    ignore_errors: True
-  
-  - name: success.message
-    debug:
-      msg: OK!
-    when: result is succeeded
-
-  - name: skip.message
-    debug:
-      msg: SKIP!
-    when: result is skipped
-  
-  - name: fail.message
-    debug:
-      msg: ERROR!
-    when: result is failed
-```
-
----
-
-| 項目 | 説明 |
-| :-----: | :------------------------------------------------------------------------------------------------------------ |
-ignore_errors: True | エラーがあっても、無視してplaybookを実行し続ける
-when: result is succeeded| タスクの実行結果が成功した時、文字列"OK!"を出力|
-when: result is skipped | タスクの実行結果がスキップされていた時、<br>文字列"SKIP!"を出力
-when: result is failed| タスクの実行結果が失敗していた時、<br>文字列"ERROR!"を出力
-
-このplaybookは、「ifconfig」を実行して
-正常に実行された時は"OK!"を出力
-skipされた時は"SKIP!"を出力
-正常に実行されなかった時は"ERROR!"を出力する
-という内容になっている。
-
---- -->
 
 # 6-3. whenディレクティブの実習(ハンズオン)
 - 目的
@@ -170,7 +125,7 @@ when: inventory_hostname == 'vyos01' で、vyos01のみタスクを実行する�
 $ vi when_practice.yml
 
 ---
-- name: when_practice
+- name: when_sample_1
   hosts: vyos
   gather_facts: false
 
@@ -190,9 +145,9 @@ $ vi when_practice.yml
 ### 3.playbookを実行
 vyos01はOK=2、vyos02はOK=1,skipped=1であることを確認。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini when/when_practice.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini when/when_sample_1.yml 
 
-PLAY [command] ****************************************************************************************************************************
+PLAY [when_sample_1] ****************************************************************************************************************************
 
 TASK [show commands] **********************************************************************************************************************
 skipping: [vyos02]
@@ -235,10 +190,10 @@ vyos02                     : ok=1    changed=0    unreachable=0    failed=0    s
 ### Q1 以下のplaybookを実行した時、出力結果はどうなるでしょうか。実際に作成してみてください。
 ```yaml
 ---
-- name: when_exam1
+- name: when_exam_1
   hosts: localhost
   gather_facts: false
-  become: yes
+  become: true
 
   tasks:
     - name: add user
@@ -246,7 +201,7 @@ vyos02                     : ok=1    changed=0    unreachable=0    failed=0    s
         name: jon
         state: present
       register: result
-      ignore_errors: True
+      ignore_errors: true
   
     - name: debug result OK
       debug:
@@ -304,10 +259,10 @@ vyos02                     : ok=1    changed=0    unreachable=0    failed=0    s
 変数を登録し、変数の内容によって条件を指定することも出来ます。詳細は[こちら](https://docs.ansible.com/ansible/2.9_ja/user_guide/playbooks_conditionals.html)
 
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook when/when_exam1.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook when/when_exam_1.yml 
 [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
 
-PLAY [command] ****************************************************************************************************************************
+PLAY [when_exam_1] ****************************************************************************************************************************
 
 TASK [add user] ***************************************************************************************************************************
 changed: [localhost]
@@ -374,7 +329,7 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 ### A3.playbookの例は以下です。(これだけが正解ではありません)
 ```yaml
 ---
-- name: when_exam3
+- name: when_exam_3
   hosts: all
   gather_facts: false
 
@@ -408,10 +363,10 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 
 上記playbookの実行結果は以下です。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini when/when_exam3.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini when/when_exam_3.yml 
 
 
-PLAY [when_exam3] *************************************************************************************************************************************
+PLAY [when_exam_3] *************************************************************************************************************************************
 
 TASK [vyos show ip route] *****************************************************************************************************************************
 skipping: [host01]
@@ -518,7 +473,7 @@ vyos01だけに「show interfaces」を実行し、実行結果の内容を出�
 
 ```yaml
 ---
-- name: when_exam4
+- name: when_exam_4
   hosts: vyos
   gather_facts: false
 
@@ -526,7 +481,7 @@ vyos01だけに「show interfaces」を実行し、実行結果の内容を出�
     - name: show commands
       vyos_command:
         commands: show interfacess
-      ignore_errors: True
+      ignore_errors: true
       register: result
       when: inventory_hostname == 'vyos01'
 
@@ -555,9 +510,9 @@ vyos01だけに「show interfaces」を実行し、実行結果の内容を出�
 ---
 上記playbookの実行結果は以下です。
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini when/when_exam4.yml 
+(venv) [ec2-user@ip-172-31-44-135 ansible_practice]$ ansible-playbook -i inventory.ini when/when_exam_4.yml 
 
-PLAY [when_exam3] *************************************************************************************************************************
+PLAY [when_exam_4] *************************************************************************************************************************
 
 TASK [show commands] **********************************************************************************************************************
 skipping: [vyos02]

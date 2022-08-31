@@ -1,5 +1,5 @@
 ---
-- name: when_practice
+- name: when_sample_1
   hosts: vyos
   gather_facts: false
 

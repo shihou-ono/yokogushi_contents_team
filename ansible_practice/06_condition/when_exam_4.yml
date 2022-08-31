@@ -1,5 +1,5 @@
 ---
-- name: when_exam4
+- name: when_exam_4
   hosts: vyos
   gather_facts: false
 

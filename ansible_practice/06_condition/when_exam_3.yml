@@ -1,17 +1,29 @@
 ---
-- name: when_exam3
-  hosts: vyos
+- name: when_exam_3
+  hosts: all
   gather_facts: false
 
   tasks:
-    - name: show commands
+    - name: vyos show ip route
       vyos_command:
         commands: show ip route
       register: result
-      ignore_errors: true
-      when: inventory_hostname == 'vyos01' in ['vyos01','vyos02','vyos03']
+      when: inventory_hostname in groups['vyos']
 
-    - name: debug result
+    - name: vyos debug result
       debug:
         var: result.stdout_lines
-      when: inventory_hostname == 'vyos01' in ['vyos01','vyos02','vyos03']
+      when: inventory_hostname in groups['vyos']
+
+    - name: centos7 route
+      command: route
+      register: result
+      when: inventory_hostname in groups['centos7']
+
+    - name: centos7 debug result
+      debug:
+        var: result.stdout_lines
+      when: inventory_hostname in groups['centos7']
+
+
+

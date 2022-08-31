@@ -1,5 +1,5 @@
 ---
-- name: when_exam1
+- name: when_exam_1
   hosts: localhost
   gather_facts: false
   become: true
