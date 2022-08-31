@@ -119,7 +119,7 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 $ vi debug_sample1.yml
 
 ---
-- name: debug_sample1
+- name: debug_sample_1
   hosts: vyos01
   gather_facts: false
 
@@ -250,7 +250,7 @@ vyos01: ok=1 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
 
 ```yaml
 ---
-- name: debug_exercise1
+- name: debug_exam_1
   hosts: localhost
   gather_facts: false
 
@@ -364,7 +364,7 @@ vyos02 : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 ```yaml
 $ cat debug_exercise3.yml
 ---
-- name: debug_exercise3
+- name: debug_exam_3
   hosts: vyos
   gather_facts: false
 
@@ -407,14 +407,14 @@ vyos01 : ok=1   changed=0   unreachable=0   failed=0   skipped=0   rescued=0   i
 以下にplaybook作成例を記載。`hosts`や`name`部分については任意である。
 ```yaml
 ---
-- name: debug_exercise4
+- name: debug_exam_4
   hosts: localhost
   gather_facts: false
 
   tasks:
     - name: debug
       debug:
-        msg: “APC” 
+        msg: "APC"
 ```
 
 ---

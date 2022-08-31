@@ -1,5 +1,5 @@
 ---
-- name: debug_exercise3
+- name: debug_exam_3
   hosts: vyos
   gather_facts: false
 

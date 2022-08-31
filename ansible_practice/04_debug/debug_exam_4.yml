@@ -1,5 +1,5 @@
 ---
-- name: debug_exercise4
+- name: debug_exam_4
   hosts: localhost
   gather_facts: false
 
