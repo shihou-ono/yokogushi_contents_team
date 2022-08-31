@@ -1,0 +1,32 @@
+---
+- name: link_bypass_back
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: make directory
+      import_role:
+        name: make_directory
+
+    - name: get show commands before
+      import_role:
+        name: get_show_commands
+      vars:
+        before_or_after: "before"
+
+    - name: assertion
+      import_role:
+        name: assert_link_bypass_back
+
+    - name: increase priority
+      import_role:
+        name: change_priority
+      vars:
+        priority: 150
+        state: "MASTER"
+
+    - name: get show commands after
+      import_role:
+        name: get_show_commands
+      vars:
+        before_or_after: "after"

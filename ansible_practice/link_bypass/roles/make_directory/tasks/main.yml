@@ -1,0 +1,17 @@
+---
+- name: make dirpath
+  set_fact:
+    dirpath: "{{ playbook_dir }}/{{ now(false, '%Y%m%d%H%M%S') }}_{{ ansible_play_name }}"
+  run_once: true
+
+- name: make directory to store the results before
+  file:
+    path: "{{ dirpath }}/before/{{ inventory_hostname }}"
+    state: directory
+    mode: 0644
+
+- name: make directory to store the results after
+  file:
+    path: "{{ dirpath }}/after/{{ inventory_hostname }}"
+    state: directory
+    mode: 0644

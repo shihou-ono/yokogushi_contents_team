@@ -1,0 +1,29 @@
+---
+- name: set flags vyos01
+  set_fact:
+    is_invalid_vrrp: '{{ result_vrrp | select("search", "FAULT|BACKUP") | list | length | bool }}'
+  vars:
+    result_vrrp: "{{ result.results | json_query(\"[?item=='show vrrp'].stdout[0]\") }}"
+  when: inventory_hostname == 'vyos01'
+
+- name: set flags vyos02
+  set_fact:
+    is_invalid_vrrp: '{{ result_vrrp | select("search", "FAULT|MASTER") | list | length | bool }}'
+    is_eth1_down: '{{ result_eth1 | select("search", "state DOWN") | list | length | bool }}'
+    is_eth2_down: '{{ result_eth2 | select("search", "state DOWN") | list | length | bool }}'
+  vars:
+    result_vrrp: "{{ result.results | json_query(\"[?item=='show vrrp'].stdout[0]\") }}"
+    result_eth1: "{{ result.results | json_query(\"[?item=='show interfaces ethernet eth1'].stdout[0]\") }}"
+    result_eth2: "{{ result.results | json_query(\"[?item=='show interfaces ethernet eth2'].stdout[0]\") }}"
+  when: inventory_hostname == 'vyos02'
+
+- name: assert before {{ ansible_play_name }}
+  assert:
+    that:
+      - not hostvars['vyos01'].is_invalid_vrrp
+      - not hostvars['vyos02'].is_invalid_vrrp
+      - not hostvars['vyos02'].is_eth1_down
+      - not hostvars['vyos02'].is_eth2_down
+    fail_msg: "stop {{ ansible_play_name }}"
+    success_msg: "start {{ ansible_play_name }}"
+  run_once: true

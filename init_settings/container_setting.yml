@@ -3,26 +3,19 @@
   gather_facts: no
 
   tasks:
-    - name: 'add static route host01'
+    - name: 'add static route to host'
       command: 
-        cmd: 'route add -net 192.168.2.0 netmask 255.255.255.0 gw 192.168.1.254 eth1'
-      when: inventory_hostname == 'host01'
+        cmd: "{{ route_add_command[inventory_hostname] }}"
       become: true
+      vars:
+        route_add_command:
+          host01: 'route add -net 192.168.2.0 netmask 255.255.255.0 gw 192.168.1.254 eth1'
+          host02: 'route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.2.254 eth1'
+      when: inventory_hostname in groups['centos7']
 
-    - name: 'add static route host02'
-      command: 
-        cmd: 'route add -net 192.168.1.0 netmask 255.255.255.0 gw 192.168.2.254 eth1'
-      when: inventory_hostname == 'host02'
-      become: true
-
-    - name: set vyos01
+    - name: set vyos
       vyos_config:
-        lines: "{{ lookup('file', 'vyos01_config.txt').splitlines() }}"
+        src: "{{ inventory_hostname }}_config.txt"
         save: yes
-      when: inventory_hostname == 'vyos01'
+      when: inventory_hostname in groups['vyos']
 
-    - name: set vyos02
-      vyos_config:
-        lines: "{{ lookup('file', 'vyos02_config.txt').splitlines() }}"
-        save: yes
-      when: inventory_hostname == 'vyos02'
