@@ -1,0 +1,17 @@
+---
+- name: test
+  hosts: vyos
+  gather_facts: no
+
+  vars:
+    template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/parse_test/vyos_show_vrrp.template"
+
+  tasks:
+    - name: show commands
+      vyos_command:
+        commands: show vrrp
+      register: result
+
+    - name: debug
+      debug:
+        msg: "{{ result.stdout[0] | parse_cli_textfsm(template_file) }}"

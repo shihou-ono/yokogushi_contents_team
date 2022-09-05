@@ -1,0 +1,9 @@
+Value NAME (\w+)
+Value INTF (\w+)
+Value VRID (\d+)
+Value STATE (\w+)
+Value PRIORITY (\d+)
+Value TRANSITION (\w+)
+
+Start
+  ^${NAME}\s+${INTF}\s+${VRID}\s+${STATE}\s+${PRIORITY}\s+${TRANSITION}$$ -> Record
