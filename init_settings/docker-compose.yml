@@ -1,7 +1,7 @@
 version: '3'
 services:
   vyos01:
-    hostname: vyos01
+    hostname: vyos
     container_name: vyos01
     build:
       context: ./vyos
@@ -20,7 +20,7 @@ services:
         ipv4_address: 192.168.2.252
 
   vyos02:
-    hostname: vyos02
+    hostname: vyos
     container_name: vyos02
     build:
       context: ./vyos

@@ -1,0 +1,23 @@
+---
+- name: when_exam_1
+  hosts: localhost
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: add user
+      user:
+        name: jon
+        state: present
+      register: result
+      ignore_errors: true
+
+    - name: debug result OK
+      debug:
+        msg: add user OK!
+      when: result is succeeded
+
+    - name: debug result ERROR
+      debug:
+        msg: add user ERROR!
+      when: result is failed

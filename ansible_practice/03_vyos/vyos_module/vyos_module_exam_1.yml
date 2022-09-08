@@ -1,0 +1,9 @@
+---
+- name: vyos_module_exam_1
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: show login user before
+      ■■■■■■:
+        commands: show interfaces

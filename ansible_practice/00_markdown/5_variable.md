@@ -1,20 +1,5 @@
----
-marp: true
-theme: apc_confidential
-size: 16:9
----
-<!--
-class: title
--->
-
 # 5. 変数
-
 ---
-
-<!--
-class: slide
-paginate: true
--->
 
 # 5-1. 変数とは？
 
@@ -236,6 +221,77 @@ ansible_password=vyos
 
 ---
 
+# 5-2. 変数の説明
+
+## registerモジュール
+
+
+ansibleモジュールの一つで、実行タスクの様々な結果を格納する`registerモジュール`というものがある。
+主な使用方法は、実行結果を`registerモジュール`で変数に詰めて、その変数の内容から処理を変えたりエラーメッセージを出力するなど多岐にわたる。以下はplaybook作成例である。
+
+
+
+```yaml
+---
+- name: variable_sample
+  hosts: vyos01
+  gather_facts: false
+  
+  tasks:
+    - name: get show version
+      vyos_command:
+        commands: 'show version'
+      register: result              # <-vyos_commandで取得したshowコマンドをresultという変数へ格納
+
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"            
+```
+
+---
+
+# 5-2. 変数の説明
+
+<br>
+<br>
+
+前ページのplaybook実行例を以下に記載。
+
+```yaml 
+PLAY [variable_sample] ************************************************************************************************************
+
+TASK [get show version] ************************************************************************************************************
+ok: [vyos01]
+
+TASK [debug result] ****************************************************************************************************************
+ok: [vyos01] => {
+    "msg": [
+        "Version:          VyOS 1.4-rolling-202108071508",      # <-取得したshowコマンドの結果が表示されている
+        "Release Train:    sagitta",
+        "",
+        "Built by:         vyos_bld@ae1b2315b0ae",
+        "Built on:         Sat 07 Aug 2021 15:08 UTC",
+        "Build UUID:       e7077035-649b-47d4-8eb2-cd6f1fc399cc",
+        "Build Commit ID:  4f6c9346247bd6",
+        "",
+        "Architecture:     x86_64",
+        "Boot via:         installed image",
+        "System type:      Xen HVM guest",
+        "",
+        "Hardware vendor:  Xen",
+        "Hardware model:   HVM domU",
+        "Hardware S/N:     ec248bf0-f7a1-3f1a-e76d-4dc0168b8dc4",
+        "Hardware UUID:    ec248bf0-f7a1-3f1a-e76d-4dc0168b8dc4",
+        "",
+        "Copyright:        VyOS maintainers and contributors"
+    ]
+}
+
+PLAY RECAP *************************************************************************************************************************
+vyos01                     : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+---
 # 5-3. 変数の実習
 
 以下の目的を達成するためのplaybookをそれぞれ作成してみる。
@@ -256,9 +312,9 @@ ansible_password=vyos
 以下のplaybookを作成する。
 
 ```yaml
-$ vi variable_sample1.yml
+$ vi variable_sample_1.yml
 ---
-- name: variable_sample1
+- name: variable_sample_1
   hosts: localhost
   gather_facts: false
   
@@ -280,9 +336,9 @@ $ vi variable_sample1.yml
 <br>
 
 ```yaml
-$ ansible-playbook -i inventory.ini variable_sample1.yml 
+$ ansible-playbook -i inventory.ini variable_sample_1.yml 
 
-PLAY [variable_sample1] ****************************************************************************
+PLAY [variable_sample_1] ****************************************************************************
 
 TASK [debug] ***************************************************************************************
 ok: [localhost] => {
@@ -302,9 +358,9 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 以下のplaybookを作成する。
 
 ```yaml
-$ vi variable_sample2.yml
+$ vi variable_sample_2.yml
 ---
-- name: variable_sample2
+- name: variable_sample_2
   hosts: localhost
   gather_facts: false
   
@@ -327,11 +383,11 @@ $ vi variable_sample2.yml
 <br>
 
 ```yaml
-$ ansible-playbook -i ../inventory.ini variable_sample2.yml 
+$ ansible-playbook -i ../inventory.ini variable_sample_2.yml 
 
-PLAY [variable_sample2] ********************************************************************************************************
+PLAY [variable_sample_2] ********************************************************************************************************
 
-TASK [test] ********************************************************************************************
+TASK [variable definition] ********************************************************************************************
 ok: [localhost]
 
 TASK [debug] *******************************************************************************************
@@ -352,9 +408,9 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 以下のplaybookを作成する。
 
 ```yaml
-$ vi variable_sample3.yml
+$ vi variable_sample_3.yml
 ---
-- name: variable_sample3
+- name: variable_sample_3
   hosts: localhost
   gather_facts: false
   
@@ -373,13 +429,13 @@ $ vi variable_sample3.yml
 <br>
 
 ```yaml
-$ ansible-playbook -i ../inventory.ini variable_sample3.yml 
+$ ansible-playbook -i ../inventory.ini variable_sample_3.yml 
 
-PLAY [variable_sample3] **************************************************************************************************
+PLAY [variable_sample_3] **************************************************************************************************
 
 TASK [debug] *************************************************************************************************************
 ok: [localhost] => {
-    "ansible_play_name": "variable_sample3"  # <-「ansible_play_name」に格納されたplaybookの名前が出力されていることを確認
+    "ansible_play_name": "variable_sample_3"  # <-「ansible_play_name」に格納されたplaybookの名前が出力されていることを確認
 }
 
 PLAY RECAP ***************************************************************************************************************
@@ -396,7 +452,7 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_sample4-1
+- name: variable_sample_4-1
   hosts: vyos01 
                             # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
   tasks:
@@ -412,7 +468,7 @@ localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 以下は作成したplaybookを実行/出力例である。
 
 ```yaml
-PLAY [variable_sample4] ********************************************************************************************
+PLAY [variable_sample_4-1] ********************************************************************************************
 
 TASK [Gathering Facts] *********************************************************************************************
 [WARNING]: Ignoring timeout(10) for vyos_facts
@@ -452,7 +508,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ```yaml
 ---
-- name: variable_sample4-2
+- name: variable_sample_4-2
   hosts: vyos01 
                             # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
   tasks:
@@ -470,7 +526,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 <br>
 
 ```yaml
-PLAY [variable_sample4] *****************************************************************************************
+PLAY [variable_sample_4-2] *****************************************************************************************
 
 TASK [Gathering Facts] ******************************************************************************************
 [WARNING]: Ignoring timeout(10) for vyos_facts
@@ -498,7 +554,7 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ```yaml
 ---
-- name: variable_exercise1
+- name: variable_exam_1
   hosts: localhost
   gather_facts: false
   
@@ -524,15 +580,17 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 ```yaml
 ---
-- name: variable_exercise2
+- name: variable_exam_2
   hosts: localhost
   gather_facts: false
   
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         ansible_play_name: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: ansible_play_name
 ```
 
@@ -553,19 +611,29 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
 
 # 5-4.  演習
 
+**Q4. vyos01から`show vrrp`の結果を取得し、registerモジュールを使用して取得結果を出力させる
+　　playbookを作成してください。**
+
+
+---
+
+# 5-4.  演習
+
 **A1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"Hello":【 】」の【 】として表示される文字列を
 　　1つ選択してください**
 
 ```yaml
-- name: variable_exercise1
+- name: variable_exam_1
   hosts: localhost
   gather_facts: false
   
   tasks:
-    - set_fact:
+    - name: set_fact
+    set_fact:
         HelIo: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: Hello
 ```
 
@@ -604,7 +672,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 <br>
 
 ```yaml
-- name: variable_exercise1
+- name: variable_exam_1
   hosts: localhost
   gather_facts: false
   
@@ -625,15 +693,17 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise2
+- name: variable_exam_2
   hosts: localhost
   gather_facts: no
   
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         ansible_play_name: "Hello Ansible!"
 
-    - debug:
+    - name: debug
+      debug:
         var: ansible_play_name
 ```
 
@@ -651,7 +721,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 <br>
 
 ```yaml
-PLAY [variable_exercise2] ******************************************************************************
+PLAY [variable_exam_2] ******************************************************************************
 
 TASK [set_fact] ****************************************************************************************
 ok: [localhost]
@@ -675,7 +745,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
+- name: variable_exam_2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
   hosts: localhost
   gather_facts: false
   
@@ -698,15 +768,17 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ```yaml
 ---
-- name: variable_exercise3
+- name: variable_exam_3
   hosts: localhost
   gather_facts: false
   
   tasks:
-    - set_fact:
+    - name: set_fact
+      set_fact:
         test_hostname: "vyos01"  # <-「set_fact」を使用して「test」という変数に「vyos01」という文字列を定義
 
-    - debug:
+    - name: debug
+      debug:
         var: test_hostname  # <-「set_fact」で定義した「test」の変数の中身を出力
 ```
 
@@ -719,7 +791,7 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 <br>
 
 ```yaml
-PLAY [variable_exercise3] ****************************************************************************************************
+PLAY [variable_exam_3] ****************************************************************************************************
 
 TASK [set_fact] ************************************************************************************
 ok: [localhost]
@@ -735,10 +807,56 @@ localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  igno
 
 ---
 
-<!--
-class: backcover
-paginate: true
--->
+# 5-4.  演習
 
-[1]: https://blog-and-destroy.com/21376
-[2]: https://blog-and-destroy.com/25199
+**A4. vyos01から`show vrrp`の結果を取得し、registerモジュールを使用して取得結果を出力させる
+　　playbookを作成してください。**
+
+以下に例として要件を満たすplaybookを記載。
+
+```yaml
+---
+- name: variable_exam_4
+  hosts: vyos01
+  gather_facts: false
+  
+  tasks:
+    - name: get show vrrp
+      vyos_command:
+        commands: 'show vrrp'
+      register: result
+
+    - name: debug result
+      debug:
+        msg: "{{ result.stdout_lines[0] }}"
+```
+
+---
+
+# 5-4.  演習
+
+実際の出力結果を以下に記載。
+
+```yaml
+
+PLAY [variable_exam_4] **************************************************************************
+
+TASK [get show vrrp] *******************************************************************************
+ok: [vyos01]
+
+TASK [debug result] ********************************************************************************
+ok: [vyos01] => {
+    "msg": [
+        "Name          Interface      VRID  State      Priority  Last Transition",
+        "------------  -----------  ------  -------  ----------  -----------------",
+        "service_nw01  eth1             10  MASTER          150  1h20m44s",
+        "service_nw02  eth2             20  MASTER          150  1h20m44s"
+    ]
+}
+
+PLAY RECAP *****************************************************************************************
+vyos01  : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0   
+
+```
+
+---
