@@ -1,0 +1,13 @@
+---
+- name: loop_cfexam01
+  hosts: localhost
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: chmod text
+      file: path=/home/ec2-user/home/ec2-user/yokogushi_contents_team/ansible_practice/loop
+      loop:
+        - data.1
+        - data.2
+        - data.3
