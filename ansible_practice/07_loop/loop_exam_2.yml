@@ -1,0 +1,17 @@
+---
+- name: loop_exam_2
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show commands
+      vyos_command:
+        commands: "{{ item }}"
+      loop:
+        - show version
+        - show interfaces
+      register: result
+
+    - name: debug result
+      debug:
+        var: result.results|map(attribute='stdout_lines') | list

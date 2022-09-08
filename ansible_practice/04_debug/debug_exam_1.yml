@@ -1,0 +1,8 @@
+---
+- name: debug_exam_1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: debug
+      debug:

@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: false
+
+  tasks:
+    - name: register vyos config
+      vyos_command:
+        commands:
+          - show configuration commands
+      register: result_config
+
+    - name: save configuration
+      copy:
+        content: "{{ result_config.stdout[0] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_copy_file_modules/{{ inventory_hostname }}.log
+        mode: 0644

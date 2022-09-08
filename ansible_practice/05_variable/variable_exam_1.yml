@@ -1,0 +1,13 @@
+---
+- name: variable_exam_1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set_fact
+      set_fact:
+        HelIo: "Hello Ansible!"
+
+    - name: debug
+      debug:
+        var: Hello
