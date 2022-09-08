@@ -1,0 +1,10 @@
+---
+- name: debug_exam_3
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: debug
+      debug:
+        msg: "Hello APC!"
+      run_once: true

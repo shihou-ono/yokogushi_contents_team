@@ -1,9 +1,0 @@
----
-- name: variable_sample3
-  hosts: localhost
-  gather_facts: false
-
-  tasks:
-    - name: debug
-      debug:
-        var: ansible_play_name
