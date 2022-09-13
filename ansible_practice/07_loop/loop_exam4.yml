@@ -31,4 +31,4 @@
 
     - name: after users
       debug:
-        var: result.stdout_lines
+        var: result.stdout_lines[0]

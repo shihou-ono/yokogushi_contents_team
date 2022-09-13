@@ -1,0 +1,63 @@
+---
+- name: loop_eensyuu4
+  hosts: localhost
+  gather_facts: false
+
+
+  tasks:
+
+    - name: set flag
+      set_fact:
+        flag: 
+
+    - name: debug flag
+      debug:
+        msg: "{{ flag | ternary('flag is true', 'flag is false', 'flag is null') }}"
+
+
+
+    # - name: user
+    #   vyos_command:
+    #     commands:
+    #       - show system login users
+    #       - show configuration commands
+    #   register: result
+
+    # - name: before users
+    #   debug:
+    #     var: result.stdout_lines 
+
+    # - name: set_password
+    #   set_fact:
+    #     password: "{{ 'user1' | password_hash('sha512', 'kitamura') }}"
+        # password: "{{ 'user1' | password_hash('sha512', 'kitamura') }}"
+
+    # - name: result_password
+    #   debug:
+    #     var: password
+    
+
+    # - name: 
+    #   debug:
+    #     msg: "set system login user guest4 authentication encrypted-password '{{ password }}'" 
+
+
+
+    # - name: add users
+    #   vyos_config:
+    #     lines:
+    #       - "set system login user guest4"
+    #       - "set system login user guest4 authentication encrypted-password '{{ password }}'"
+    #   vars: 
+    #     password: "{{ 'user1' | password_hash('sha512', 'kitamura') }}"
+
+    # - name: user
+    #   vyos_command:
+    #     commands:
+    #       - show system login users
+    #       - show configuration commands
+    #   register: result
+
+    # - name: after users
+    #   debug:
+    #     var: result.stdout_lines

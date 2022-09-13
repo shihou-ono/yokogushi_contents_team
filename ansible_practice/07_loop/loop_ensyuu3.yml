@@ -6,9 +6,9 @@
   tasks:
     - name: create text
       file:
-        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/{{ item }}.txt
+        path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/{{ item }}.txt"
         state: touch
-        mode: '644'
+        mode: 0644
       loop:
         - data1
         - data2

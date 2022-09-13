@@ -1,4 +1,4 @@
 Name          Interface      VRID  State      Priority  Last Transition
 ------------  -----------  ------  -------  ----------  -----------------
-service_nw01  eth1             10  MASTER          150  2h36m51s
-service_nw02  eth2             20  MASTER          150  2h36m51s
+service_nw01  eth1             10  MASTER          150  1h27m13s
+service_nw02  eth2             20  MASTER          150  1h27m13s

@@ -6,7 +6,8 @@
   tasks:
     - name: vyos show ip route
       vyos_command:
-        commands: show ip route
+        commands:
+          cmd:  show ip route
       register: result
       when: inventory_hostname in groups['vyos']
 
@@ -16,7 +17,8 @@
       when: inventory_hostname in groups['vyos']
     
     - name: centos7 route
-      command: route
+      command: 
+        cmd: route
       register: result
       when: inventory_hostname in groups['centos7']
 
