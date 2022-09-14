@@ -1,0 +1,38 @@
+---
+<<<<<<< HEAD:ansible_practice/06_condition/when_exam4.yml
+- name: when_exam4
+  hosts: vyos1
+=======
+- name: when_exam_4
+  hosts: vyos
+>>>>>>> d1bcd317119a676121184f7dcc9f53b326e3b913:ansible_practice/06_condition/when_exam_4.yml
+  gather_facts: false
+
+  tasks:
+    - name: show commands
+      vyos_command:
+        commands: show interfacess
+      ignore_errors: true
+      register: result
+      when: inventory_hostname == 'vyos01'
+
+    - name: debug result
+      debug:
+        var: result.stdout_lines
+      when:
+        - inventory_hostname == 'vyos01'
+        - result is succeeded
+
+    - name: debug result OK message
+      debug:
+        msg: OK!
+      when:
+        - inventory_hostname == 'vyos01'
+        - result is succeeded
+
+    - name: debug result NG message
+      debug:
+        msg: NG!
+      when:
+        - inventory_hostname == 'vyos01'
+        - result is failed

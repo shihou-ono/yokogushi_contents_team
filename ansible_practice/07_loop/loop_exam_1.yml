@@ -1,0 +1,14 @@
+---
+- name: loop_exam_1
+  hosts: localhost
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: add users
+      user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - taro
+        - hanako
