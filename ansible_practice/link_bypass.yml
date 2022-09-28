@@ -18,15 +18,15 @@
       import_role:
         name: assert_link_bypass
 
-    - name: decrease priority
-      import_role:
-        name: change_priority
-      vars:
-        priority: 50
-        state: "BACKUP"
+    # - name: decrease priority
+    #   import_role:
+    #     name: change_priority
+    #   vars:
+    #     priority: 50
+    #     state: "BACKUP"
 
-    - name: get show commands after
-      import_role:
-        name: get_show_commands
-      vars:
-        before_or_after: "after"
+    # - name: get show commands after
+    #   import_role:
+    #     name: get_show_commands
+    #   vars:
+    #     before_or_after: "after"

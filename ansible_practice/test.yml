@@ -1,0 +1,14 @@
+---
+- name: link_bypass
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: show commands
+      vyos_command:
+        commands: show vrrp
+      register: result
+ 
+    - name: debug
+      debug:
+        msg: "{{ result }}"

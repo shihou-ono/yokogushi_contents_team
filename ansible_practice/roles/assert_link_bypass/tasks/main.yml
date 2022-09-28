@@ -1,22 +1,30 @@
 ---
-  - name: show commands
-    vyos_command:
-      commands: show vrrp
-    register: result
- 
-  - name: set flags vyos
-    set_fact:
-      vrrp_state: "{{ vrrp_state | default ([]) + [item['STATE']] }}"
-    loop: "{{ parse_show_vrrp }}"
-    vars:
-      parse_show_vrrp: "{{ result.stdout[0] | parse_cli_textfsm(template_file) }}"
-      template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/roles/assert_link_bypass/files/vyos_show_vrrp.template"
+- name: debug
+  debug:
+    msg: "{{ result.results }}"
 
-  - name: assert before {{ ansible_play_name }}
-    assert:
-      that:
-        - hostvars['vyos01'].vrrp_state == ["MASTER","MASTER"]
-        - hostvars['vyos02'].vrrp_state == ["BACKUP","BACKUP"]
-      fail_msg: "stop {{ ansible_play_name }}"
-      success_msg: "start {{ ansible_play_name }}"
-    run_once: true
+- name: set flags vyos01
+  set_fact:
+    parse_show_vrrp: "{{ result_vrrp.stdout[0] | parse_cli_textfsm(template_file) }}"
+  vars:
+    result_vrrp: "{{ result.results | json_query(\"[?item=='show vrrp'].stdout[0]\") }}"
+    template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/roles/assert_link_bypass/files/vyos_show_vrrp.template"
+  when: inventory_hostname == 'vyos01'
+
+- name: debug
+  debug:
+    msg: "{{ parse_show_vrrp }}"
+
+# - name: set flags vyos01
+#   set_fact:
+#     vrrp_state: "{{ vrrp_state | default ([]) + [item['STATE']] }}"
+#   loop: "{{ parse_show_vrrp }}"
+
+# - name: assert before {{ ansible_play_name }}
+#   assert:
+#     that:
+#       - hostvars['vyos01'].vrrp_state == ["MASTER","MASTER"]
+#       #- hostvars['vyos02'].vrrp_state == ["BACKUP","BACKUP"]
+#     fail_msg: "stop {{ ansible_play_name }}"
+#     success_msg: "start {{ ansible_play_name }}"
+#   run_once: true
