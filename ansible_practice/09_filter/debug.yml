@@ -1,0 +1,19 @@
+---
+- name: debug_filter
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: check_type
+      debug:
+        msg: Type of "{{ item | type_debug }}"
+      loop: "{{ variables }}"
+      vars:
+        variables:
+        - 1
+        - 0.9
+        - "abc"
+        - [1,2,3]
+        - key: vall
+
+
