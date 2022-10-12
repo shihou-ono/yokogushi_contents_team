@@ -1,0 +1,17 @@
+---
+- name: default_exam
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: default1
+      file:
+        dest: "{{ item.path }}"
+        state: touch
+        mode: "{{ item.mode | default(omit) }}"
+      loop:
+      - path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/09_filter/test1.txt"
+        mode: "777"
+      - path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/09_filter/test2.txt"
+    
+    

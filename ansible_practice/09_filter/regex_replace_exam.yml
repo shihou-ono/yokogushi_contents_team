@@ -1,0 +1,9 @@
+---
+- name: regex_replace
+  hosts: localhost
+  gather_facts: false
+ 
+  tasks:
+  - name: regex
+    debug:
+      msg:  "{{ 'foobar' | regex_replace('^f.*o(.*)$', '\\1') }}"

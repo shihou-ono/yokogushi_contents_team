@@ -1,0 +1,30 @@
+---
+- name: ternary
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show_config
+      set_fact:
+        show_with_conf:
+          - show configuration commands
+          - show vrrp
+        show_without_conf:
+          - show vrrp
+
+    - name: config
+      vyos_config:
+        lines:
+        - set high-availability vrrp group service_nw01 priority '150'
+      register: result_config
+
+    - name: exec_show_commands
+      vyos_command: 
+        commands: "{{ show_command }}"
+      vars:
+        show_command: "{{ result_config.changed | ternary(show_with_conf, show_without_conf) }}"
+      register: result
+
+    - name: debug_result
+      debug:
+        var: result.stdout_lines

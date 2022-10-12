@@ -1,0 +1,14 @@
+---
+- name: ternary_exam
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set flag
+      set_fact:
+        flag: 
+
+
+    - name: debug flag
+      debug:
+        msg: "{{ flag | ternary('flag is true', 'flag is false', 'flag is null') }}"
