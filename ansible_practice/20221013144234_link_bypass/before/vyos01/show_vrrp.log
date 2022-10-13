@@ -1,0 +1,6 @@
+[
+    "Name          Interface      VRID  State      Priority  Last Transition",
+    "------------  -----------  ------  -------  ----------  -----------------",
+    "service_nw01  eth1             10  MASTER          150  4h33m41s",
+    "service_nw02  eth2             20  MASTER          150  4h33m41s"
+]

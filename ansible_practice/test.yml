@@ -6,9 +6,9 @@
   tasks:
     - name: show commands
       vyos_command:
-        commands: show vrrp
+        commands: show interfaces | match 'Interface|eth1|eth2'
       register: result
- 
+
     - name: debug
       debug:
         msg: "{{ result }}"

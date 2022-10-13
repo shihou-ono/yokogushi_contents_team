@@ -4,12 +4,15 @@
   gather_facts: no
 
   vars:
-    template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/parse_test/vyos_show_vrrp.template"
+    template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/parse_test/vyos_show_int.template"
 
   tasks:
     - name: show commands
       vyos_command:
-        commands: show vrrp
+        commands: show interfaces | match 'eth(1|2)'
+        # commands: 
+        #   - show interfaces | match 'eth1'
+        #   - show interfaces | match 'eth2'
       register: result
 
     - name: debug

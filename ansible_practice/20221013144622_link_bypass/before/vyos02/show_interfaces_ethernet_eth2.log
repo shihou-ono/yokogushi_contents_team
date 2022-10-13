@@ -1,0 +1,11 @@
+[
+    "eth2@if26: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default ",
+    "    link/ether 02:42:c0:a8:02:fd brd ff:ff:ff:ff:ff:ff link-netnsid 0",
+    "    inet 192.168.2.253/24 brd 192.168.2.255 scope global eth2",
+    "       valid_lft forever preferred_lft forever",
+    "",
+    "    RX:   bytes  packets  errors  dropped  overrun       mcast",
+    "         900700    16674       0        0        0           0",
+    "    TX:   bytes  packets  errors  dropped  carrier  collisions",
+    "            108        2       0        0        0           0"
+]

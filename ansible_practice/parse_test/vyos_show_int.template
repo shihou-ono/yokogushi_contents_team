@@ -1,0 +1,8 @@
+Value INTF (\w+)
+Value ADDRESS (\S+)
+Value STATE (.+)
+#Value DESCRI (.+)
+
+Start
+  ^${INTF}\s+${ADDRESS}\s+${STATE}$$ -> Record
+#  ^${INTF}\s+${ADDRESS}\s+${STATE}\s+${DESCRI}$$ -> Record
