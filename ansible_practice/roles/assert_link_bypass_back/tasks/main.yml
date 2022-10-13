@@ -1,22 +1,40 @@
 ---
-  - name: show commands
-    vyos_command:
-      commands: show vrrp
-    register: result
- 
-  - name: set flags vyos
-    set_fact:
-      vrrp_state: "{{ vrrp_state | default ([]) + [item['STATE']] }}"
-    loop: "{{ parse_show_vrrp }}"
-    vars:
-      parse_show_vrrp: "{{ result.stdout[0] | parse_cli_textfsm(template_file) }}"
-      template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/roles/assert_link_bypass_back/files/vyos_show_vrrp.template"
+- name: set result_vrrp
+  set_fact:
+    result_vrrp: "{{ result.results | json_query(\"[?item=='show vrrp'].stdout[0]\") }}"
 
-  - name: assert before {{ ansible_play_name }}
-    assert:
-      that:
-        - hostvars['vyos01'].vrrp_state == ["BACKUP","BACKUP"]
-        - hostvars['vyos02'].vrrp_state == ["MASTER","MASTER"]
-      fail_msg: "stop {{ ansible_play_name }}"
-      success_msg: "start {{ ansible_play_name }}"
-    run_once: true
+- name: get show interface
+  vyos_command:
+    commands: show interfaces | match 'eth(1|2)'
+  register: show_int_result
+
+- name: set flags vrrp
+  set_fact:
+    vrrp_state: "{{ vrrp_state | default ([]) + [item['STATE']] }}"
+  loop: "{{ parse_show_vrrp }}"
+  vars:
+    vrrp_template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/roles/assert_link_bypass/files/vyos_show_vrrp.template"
+    parse_show_vrrp: "{{ result_vrrp[0] | parse_cli_textfsm(vrrp_template_file) }}"
+
+- name: set flags interface
+  set_fact:
+    int_state: "{{ int_state | default ([]) + [item['STATE']] }}"
+  loop: "{{ parse_show_int }}"
+  vars:
+    int_template_file: "/home/ec2-user/yokogushi_contents_team/ansible_practice/roles/assert_link_bypass/files/vyos_show_int.template"
+    parse_show_int: "{{ show_int_result.stdout[0] | parse_cli_textfsm(int_template_file) }}"
+
+# 「show interfaces | match 'eth(1|2)'」で取得した結果を["u/u","u/u"]のようにきれいにparseすることができない
+# - name: debug
+#   debug:
+#     msg: "{{ int_state }}"
+
+- name: assert before {{ ansible_play_name }}
+  assert:
+    that:
+      - hostvars['vyos01'].vrrp_state == ["BACKUP","BACKUP"]
+      - hostvars['vyos02'].vrrp_state == ["MASTER","MASTER"]
+      - hostvars['vyos01'].int_state == ["u/u  ","u/u"]
+    fail_msg: "stop {{ ansible_play_name }}"
+    success_msg: "start {{ ansible_play_name }}"
+  run_once: true
