@@ -10,10 +10,8 @@
       loop: "{{ variables }}"
       vars:
         variables:
-        - 1
-        - 0.9
-        - "abc"
-        - [1,2,3]
-        - key: vall
-
-
+          - 1
+          - 0.9
+          - "abc"
+          - [1, 2, 3]
+          - key: value

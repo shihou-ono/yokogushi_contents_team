@@ -9,29 +9,28 @@
 
   tasks:
   
-    # - name: before show vrf
-    #   vyos_command:
-    #     commands: "show {{ item.vrf }}"
-    #   loop: 
-    #     - vrf: 'vrf'
-    #     - vrf_name: '{{ vrf | default[test1] }}'
-    #   register: result
+    - name: before show vrf
+      vyos_command:
+        commands: "show vrf {{ item.vrf | default(omit) }}"
+      register: result
 
-    # - name: debug result
-    #   debug:
-    #     var: result.results | list
+    - name: debug result
+      debug:
+        var: result.stdout_lines
 
-    # - name: config
-    #   vyos_config:
-    #     lines:
-    #     - set vrf name test1
-    #     - set vrf name test1 table 100
+    - name: config
+      vyos_config:
+        lines:
+          - set vrf name test1
+          - set vrf name test1 table 100
 
-    # - name: after show vrf
-    #   vyos_command:
-    #     commands: "show vrf name test1"
-    #   register: result
+    - name: after show vrf
+      vyos_command:
+        commands: "show vrf {{ item.vrf | default(omit) }}"
+      loop:
+        - vrf: "test1"
+      register: result
 
-    # - name: debug result
-    #   debug:
-    #     msg: "{{ result.stdout_lines[0] }}"
+    - name: debug result
+      debug:
+        var: result.stdout_lines

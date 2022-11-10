@@ -1,0 +1,21 @@
+---
+- name: debug_ensyuu
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set_fact
+      set_fact:
+        test_str: "123"
+
+    - name: before_change_int
+      debug:
+        var: test_str | type_debug 
+
+    - name: after_change_int
+      debug:
+        var: test_str | int | type_debug 
+
+    - name: after_int
+      debug:
+        var: test_str | int + 1

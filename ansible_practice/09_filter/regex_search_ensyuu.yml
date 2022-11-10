@@ -1,0 +1,19 @@
+---
+- name: regex
+  hosts: localhost
+  gather_facts: false
+  vars:
+    interfaces:
+      - name: "ge-0/0/0"
+        description: "to_WAN(kddi)"
+      - name: "ge-0/0/1"
+        description: "to_LAN"
+
+  tasks:
+    - name: regex_search
+      debug:
+        msg: "this description is {{ flag | ternary('invalid', 'valid') }}"
+      vars:
+        flag: "{{ item.description | regex_search('([^0-9a-zA-Z_]).') }}"
+      loop:
+        "{{ interfaces }}"

@@ -3,10 +3,10 @@
   hosts: localhost
   gather_facts: false
   vars:
-    sample_data: |
-      - test1
-      - test2
-      - test3
+    sample:
+       test1
+       test2
+       test3
   tasks:
     - name: "search"
       debug:
@@ -15,4 +15,4 @@
         - "test2"
         - "exam1"
       when:
-        - sample_data | regex_search(item)
+        - sample | regex_search(item)

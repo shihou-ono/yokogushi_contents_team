@@ -15,7 +15,7 @@
     - name: config
       vyos_config:
         lines:
-        - set high-availability vrrp group service_nw01 priority '150'
+        - set high-availability vrrp group service_nw01 priority '100'
       register: result_config
 
     - name: exec_show_commands
