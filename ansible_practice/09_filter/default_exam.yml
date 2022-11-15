@@ -4,35 +4,14 @@
   gather_facts: false
 
   tasks:
-
-    - name: debug fruits
-      debug:
-        var: item.color | default("green")
-      vars:
-        fruits:
-          - banana:
-            color: "yellow"
-            hardness: "soft"
-          - melon:
-            color: 
-            hardness: "middle"
-      loop: "{{ fruits }}"
-  # - debug:
-  #     var: item | default("green")
-  #   vars:
-  #     fruits:
-  #       - banana: "yellow"
-  #       - melon:
-  #   loop: "{{ fruits }}"
-
-    # - name: default1
-    #   file:
-    #     dest: "{{ item.path }}"
-    #     state: touch
-    #     mode: "{{ item.mode | default(666) }}"
-    #   loop:
-    #   - path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/09_filter/test1.txt"
-    #     mode: "664"
-    #   - path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/09_filter/test2.txt"
+    - name: default1
+      file:
+        dest: "{{ item.path }}"
+        state: touch
+        mode: "{{ item.mode | default(666) }}"
+      loop:
+      - path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/09_filter/test1.txt"
+        mode: "664"
+      - path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/09_filter/test2.txt"
     
     

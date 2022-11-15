@@ -6,4 +6,4 @@
   tasks:
   - name: regex
     debug:
-      msg:  "{{ 'foobar' | regex_replace('^f.*o(.*)$', '\\1') }}"
+      msg:  "{{ 'foobar' | regex_replace('^f.*(.*)$', '\\1') }}"

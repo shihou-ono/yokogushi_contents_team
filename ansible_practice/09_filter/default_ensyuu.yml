@@ -27,10 +27,12 @@
     - name: after show vrf
       vyos_command:
         commands: "show vrf {{ item.vrf | default(omit) }}"
-      loop:
-        - vrf: "test1"
+      vars:
+        vrf_name:
+          - vrf: "test1"
       register: result
 
     - name: debug result
       debug:
         var: result.stdout_lines
+        ##vrf名定義しているがコマンド出力がうまくいかない

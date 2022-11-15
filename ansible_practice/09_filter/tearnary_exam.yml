@@ -6,7 +6,7 @@
   tasks:
     - name: set flag
       set_fact:
-        flag: 
+        flag: ''
 
 
     - name: debug flag
