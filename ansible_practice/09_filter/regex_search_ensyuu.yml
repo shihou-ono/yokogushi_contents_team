@@ -2,6 +2,7 @@
 - name: regex
   hosts: localhost
   gather_facts: false
+  
   vars:
     interfaces:
       - name: "ge-0/0/0"

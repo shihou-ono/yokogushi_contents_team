@@ -3,10 +3,6 @@
   hosts: vyos01
   gather_facts: false
 
-  vars:
-    vrf_name:
-      - test1
-
   tasks:
   
     - name: before show vrf
@@ -35,4 +31,4 @@
     - name: debug result
       debug:
         var: result.stdout_lines
-        ##vrf名定義しているがコマンド出力がうまくいかない
+        ##omitだとできなかった。

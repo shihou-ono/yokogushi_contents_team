@@ -6,27 +6,16 @@
   tasks:
     - name: set_fact
       set_fact:
-          test_int: 123
+        test_str: "123"
 
-    - name: check_type
+    - name: before_change_int
       debug:
-        var: test_int | type_debug 
+        var: test_str | type_debug 
 
-    # - name: check_type
-    #   debug:
-    #     var: test_int | type_debug 
-    # - name: set_fact
-    #   set_fact:
-    #     test_str: "123"
+    - name: after_change_int
+      debug:
+        var: test_str | int | type_debug 
 
-    # - name: before_change_int
-    #   debug:
-    #     var: test_str | type_debug 
-
-    # - name: after_change_int
-    #   debug:
-    #     var: test_str | int | type_debug 
-
-    # - name: after_int
-    #   debug:
-    #     var: test_str | int + 1
+    - name: after_int
+      debug:
+        var: test_str | int + 1

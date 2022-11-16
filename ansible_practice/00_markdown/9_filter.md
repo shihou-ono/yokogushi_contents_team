@@ -264,5 +264,230 @@ PLAY RECAP *********************************************************************
 localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
+# 6-4. filterの演習
+
+<br>
+
+### Q1 以下のplaybookを実行した時、出力結果はどうなるでしょうか。実際に作成してみてください。
+
+```yaml
+---
+- name: debug_ensyuu
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set_fact
+      set_fact:
+        test_str: "123"
+
+    - name: before_change_int
+      debug:
+        var: test_str | type_debug 
+
+    - name: after_change_int
+      debug:
+        var: test_str | int | type_debug 
+
+    - name: after_int
+      debug:
+        var: test_str | int + 1
+```
+
+---
+
+### Q2 以下の条件でplaybookを作成して下さい。
+
+- 以下の変数を定義する。
+<br>
+```yml
+interfaces:
+      - name: "ge-0/0/0"
+        description: "to_WAN(kddi)"
+      - name: "ge-0/0/1"
+        description: "to_LAN"
+```
+- regex_searchを使用して、descriptionに"文字","数字","_"以外がつかわれている場合は"invalid"それ以外の場合は"valid"と表示されること。
+
+---
+
+### Q3 以下の条件でplaybookを作成して下さい。
+
+vrrp groupe service_nw01のpriorityを100に変更する。
+
+ ternaryフィルターを使用して、configに変更があった場合は以下のコマンドを
+<br>
+- show configuration commands
+<br>
+- show vrrp
+
+変更がなかった場合は以下のコマンドの結果が出力されるようにする。
+<br>
+- show vrrp
+
+---
+
+### A1.以下のような実行結果になります。
 
 
+```yaml
+PLAY [debug_ensyuu] ********************************************************************************************************************************************************
+
+TASK [set_fact] ************************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [before_change_int] ***************************************************************************************************************************************************
+ok: [localhost] => {
+    "test_str | type_debug": "AnsibleUnicode"
+}
+
+TASK [after_change_int] ****************************************************************************************************************************************************
+ok: [localhost] => {
+    "test_str | int | type_debug": "int"
+}
+
+TASK [after_int] ***********************************************************************************************************************************************************
+ok: [localhost] => {
+    "test_str | int + 1": "124"
+}
+
+PLAY RECAP *****************************************************************************************************************************************************************
+localhost                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
+
+### A2.例は以下です。(これだけが正解ではありません)
+
+```yaml
+---
+- name: regex
+  hosts: localhost
+  gather_facts: false
+  
+  vars:
+    interfaces:
+      - name: "ge-0/0/0"
+        description: "to_WAN(kddi)"
+      - name: "ge-0/0/1"
+        description: "to_LAN"
+
+  tasks:
+    - name: regex_search
+      debug:
+        msg: "this description is {{ flag | ternary('invalid', 'valid') }}"
+      vars:
+        flag: "{{ item.description | regex_search('([^0-9a-zA-Z_]).') }}"
+      loop:
+        "{{ interfaces }}"
+```
+
+上記playbookの実行結果は以下です。
+```yaml
+PLAY [regex] ***************************************************************************************************************************************************************
+
+TASK [regex_search] ********************************************************************************************************************************************************
+ok: [localhost] => (item={'name': 'ge-0/0/0', 'description': 'to_WAN(kddi)'}) => {
+    "msg": "this description is invalid"
+}
+ok: [localhost] => (item={'name': 'ge-0/0/1', 'description': 'to_LAN'}) => {
+    "msg": "this description is valid"
+}
+
+PLAY RECAP *****************************************************************************************************************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
+### A3.例は以下です。(これだけが正解ではありません)
+
+```yaml
+---
+- name: ternary
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show_config
+      set_fact:
+        show_with_conf:
+          - show configuration commands
+          - show vrrp
+        show_without_conf:
+          - show vrrp
+
+    - name: config
+      vyos_config:
+        lines:
+        - set high-availability vrrp group service_nw01 priority '100'
+      register: result_config
+
+    - name: exec_show_commands
+      vyos_command: 
+        commands: "{{ show_command }}"
+      vars:
+        show_command: "{{ result_config.changed | ternary(show_with_conf, show_without_conf) }}"
+      register: result
+
+    - name: debug_result
+      debug:
+        var: result.stdout_lines
+```
+
+上記playbookの実行結果は以下です。
+
+```yaml
+PLAY [ternary] *************************************************************************************************************************************************************
+
+TASK [show_config] *********************************************************************************************************************************************************
+ok: [vyos01]
+
+TASK [config] **************************************************************************************************************************************************************
+[WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could change
+this. See https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
+changed: [vyos01]
+
+TASK [exec_show_commands] **************************************************************************************************************************************************
+ok: [vyos01]
+
+TASK [debug_result] ********************************************************************************************************************************************************
+ok: [vyos01] => {
+    "result.stdout_lines": [
+        [
+            "set high-availability vrrp group service_nw01 interface 'eth1'",
+            "set high-availability vrrp group service_nw01 priority '100'",
+            "set high-availability vrrp group service_nw01 virtual-address '192.168.1.254/24'",
+            "set high-availability vrrp group service_nw01 vrid '10'",
+            "set high-availability vrrp group service_nw02 interface 'eth2'",
+            "set high-availability vrrp group service_nw02 priority '150'",
+            "set high-availability vrrp group service_nw02 virtual-address '192.168.2.254/24'",
+            "set high-availability vrrp group service_nw02 vrid '20'",
+            "set high-availability vrrp sync-group MAIN member 'service_nw01'",
+            "set high-availability vrrp sync-group MAIN member 'service_nw02'",
+            "set interfaces ethernet eth1 address '192.168.1.252/24'",
+            "set interfaces ethernet eth1 ipv6 address no-default-link-local",
+            "set interfaces ethernet eth2 address '192.168.2.252/24'",
+            "set interfaces ethernet eth2 ipv6 address no-default-link-local",
+            "set service ssh",
+            "set system config-management commit-revisions '100'",
+            "set system console device ttyS0 speed '115200'",
+            "set system host-name 'vyos01'",
+            "set system login user vyos authentication encrypted-password '$6$QxPS.uk6mfo$9QBSo8u1FkH16gMyAVhus6fU3LOzvLR9Z9.82m3tiHFAxTtIkhaZSWssSgzt4v4dGAL8rhVQxTg0oAG9/q11h/'",
+            "set system login user vyos authentication plaintext-password ''",
+            "set system ntp server time1.vyos.net",
+            "set system ntp server time2.vyos.net",
+            "set system ntp server time3.vyos.net",
+            "set system syslog global facility all level 'info'",
+            "set system syslog global facility protocols level 'debug'",
+            "set vrf name test1 table '100'"
+        ],
+        [
+            "Name          Interface      VRID  State      Priority  Last Transition",
+            "------------  -----------  ------  -------  ----------  -----------------",
+            "service_nw01  eth1             10  MASTER          100  23s",
+            "service_nw02  eth2             20  MASTER          150  23s"
+        ]
+    ]
+}
+
+PLAY RECAP *****************************************************************************************************************************************************************
+vyos01                     : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
