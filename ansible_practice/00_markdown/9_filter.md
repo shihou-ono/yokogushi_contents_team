@@ -4,37 +4,69 @@
 # 9-1. filterとは？
 
 - 主に変数等にパイプで繋げて値を整形するもの。
-- filterには多くの種類があるが今回取り扱うのはいかに示すfilterに限定する。
+- filterには多くの種類があるが今回取り扱うのは以下に示すfilterに限定する。
 
 
 | パラメータ | 説明  |
 | :----- | :----- |
-| type_debug | 変数の型 ( 変数に設定した値の型 ) をチェックしたり、変数に設定された値を強制的に別の型に変換します。 |
-| default | 変数が未定義のとき、変数に設定する既定値を設定します。 |
-| regex_search | 正規表現で文字列を検索する際に使用します。 |
-| regex_replace | 正規表現を使用して文字列のテキストを置換します。　|
-| tearnary | true, false, nullに応じてそれぞれ別の値を返す。 　|
+| type_debug | 変数の型 ( 変数に設定した値の型 ) をチェックする。 |
+| default | 変数が未定義のとき、変数に設定する既定値を設定する。 |
+| regex_search | 正規表現で文字列を検索する際に使用する。 |
+| regex_replace | 正規表現を使用して文字列を置換する。　|
+| ternary | true, false, nullに応じてそれぞれ指定した値を返す。 　|
 
 ---
 
 # 6-2. filterの説明
 
 ## ■type_debug
+このplaybookは変数に入っている値の型を確認する内容になっている。
 
 ---
 - type_debugを用いて変数の型をチェックします。
 playbookは以下のようになる。
 ```yaml
- tasks:
-   - name: set_fact
+  tasks:
+    - name: set_fact
       set_fact:
-        test_int: 123
+        test_vars:
+          test_int: 123
+          test_string: "123"
+          test_bool: true
+          test_list:
+            - 1
+            - "a"
+          test_dict:
+            bob: "male"
+            kate: "female"
+          test_none:
+          
 
-    - name: check_type
+    - name: check_type_test_int
       debug:
-        var: test_int | type_debug 
+        var: test_vars[item] | type_debug
+      loop: "{{ test_vars.keys() }}"
+
 ```
-このplaybookは変数に入っている値の型を確認する内容になっている。
+
+```
+TASK [check_type_test_int] ************************************************************************************************************
+ok: [localhost] => (item=test_int) => {
+    "msg": "int"
+}
+ok: [localhost] => (item=test_string) => {
+    "msg": "AnsibleUnicode"
+}
+ok: [localhost] => (item=test_bool) => {
+    "msg": "bool"
+}
+ok: [localhost] => (item=test_list) => {
+    "msg": "list"
+}
+ok: [localhost] => (item=test_dict) => {
+    "msg": "dict"
+}
+```
 
 ## ■default
 
@@ -101,10 +133,10 @@ playbookは以下のようになる。
 ## ■ternary
 
 ---
-- true, false, nullに応じて返す値を変えるフィルター。
+- 渡される値がtrue, false, nullか評価して、それぞれ定義した値を返すフィルター。
+value | ternary('valueがtrueの時に返す値', 'valueがfalseの時に返す値', 'valueがnullの時に返す値(オプション引数)')
 playbookは以下のようになる。
 ```yaml
----
 ---
 - name: ternary_exam
   hosts: localhost
@@ -113,14 +145,33 @@ playbookは以下のようになる。
   tasks:
     - name: set flag
       set_fact:
-        flag: 'test'
-
+        test_vars:
+          bool_var_01: true
+          bool_var_02: false
+          int_var_01: 1
+          int_var_02: -1
+          int_var_03: 0
+          str_var_01: "test"
+          str_var_02: "0"
+          str_var_03: "false"
+          str_var_04: ""
+          none_var_01: null
+          none_var_02:
+          list_var_01: [true, false]
+          list_var_02: [false, false]
+          list_var_03: [false]
+          list_var_04: [0]
+          list_var_05: []
+          dict_var_01: {}
 
     - name: debug flag
       debug:
-        msg: "{{ flag | ternary('flag is true', 'flag is false', 'flag is null') }}"
+        msg: "{{ test_vars[item] | ternary('this var is true', 'this var is false', 'this var is null') }}"
+      loop: "{{ test_vars.keys() }}"
+
 ```
-このplaybookは、変数に値が入っている場合は'flag is true'、値が正しくない場合は'flag is false'、値が入っていない場合は'flag is null'を返すようになっている。
+このplaybookは、test_vars内の変数のtrue or false or nullを評価して、それぞれメッセージを返します。
+
 
 # 6-3. filterの実習(ハンズオン)
 
@@ -313,16 +364,13 @@ interfaces:
 
 ### Q3 以下の条件でplaybookを作成して下さい。
 
-vrrp groupe service_nw01のpriorityを100に変更する。
+vrrp group service_nw01のpriorityを100に変更する。
 
  ternaryフィルターを使用して、configに変更があった場合は以下のコマンドを
-<br>
 - show configuration commands
-<br>
 - show vrrp
 
 変更がなかった場合は以下のコマンドの結果が出力されるようにする。
-<br>
 - show vrrp
 
 ---

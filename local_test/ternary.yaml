@@ -1,0 +1,57 @@
+---
+- name: ternary_exam
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set flag
+      set_fact:
+        test_vars:
+          bool_var_01: true
+          bool_var_02: false
+          int_var_01: 1
+          int_var_02: -1
+          int_var_03: 0
+          str_var_01: "test"
+          str_var_02: "0"
+          str_var_03: "false"
+          str_var_04: ""
+          none_var_01: null
+          none_var_02:
+          list_var_01: [true, false]
+          list_var_02: [false, false]
+          list_var_03: [false]
+          list_var_04: [0]
+          list_var_05: []
+          dict_var_01: {}
+
+# {"test_vars":{"true_var_01": true, "true_var_02":"test"}}
+
+    - name: debug flag
+      debug:
+        msg: "{{ test_vars.keys() }}"
+
+    - name: debug flag
+      debug:
+        msg: "{{ test_vars.keys() | type_debug }}"
+
+    - name: debug flag
+      debug:
+        var: test_vars[item]
+      loop: "{{ test_vars.keys() }}"
+      # loop: "{{ test_vars.keys() | list }}"
+
+    - name: debug flag
+      debug:
+        var: test_vars[item] | type_debug
+      loop: "{{ test_vars.keys() }}"
+
+    - name: debug flag
+      debug:
+        # msg: "{{ test_vars[item] | ternary('this var is true', 'this var is false', 'this var is null') }}"
+        msg: "{{ test_vars[item] | ternary('this var is true', 'this var is false') }}"
+      loop: "{{ test_vars.keys() }}"
+
+    - name: debug flag
+      debug:
+        var: (1/0) | ternary('this var is true', 'this var is false', 'this var is null')

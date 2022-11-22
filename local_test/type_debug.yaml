@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set_fact
+      set_fact:
+        test_vars:
+          test_int: 123
+          test_string: "123"
+          test_bool: true
+          test_list:
+            - 1
+            - "a"
+          test_dict:
+            bob: "male"
+            kate: "female"
+
+    - name: check_type_test_int
+      debug:
+        msg: "{{ test_vars[item] | type_debug }}"
+      loop: "{{ test_vars.keys() }}"
