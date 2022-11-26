@@ -6,9 +6,26 @@
   tasks:
     - name: set flag
       set_fact:
-        flag: ''
-
+        test_vars:
+          bool_var: true
+          bool_var: false
+          int_var: 1
+          int_var: -1
+          int_var: 0
+          str_var_01: "test"
+          str_var_02: "0"
+          str_var_03: "false"
+          str_var_04: ""
+          none_var_01: null
+          none_var_02:
+          list_var_01: [true, false]
+          list_var_02: [false, false]
+          list_var_03: [false]
+          list_var_04: [0]
+          list_var_05: []
+          dict_var_01: {}
 
     - name: debug flag
       debug:
-        msg: "{{ flag | ternary('flag is true', 'flag is false', 'flag is null') }}"
+        msg: "{{ test_vars[item] | ternary('this var is true', 'this var is false', 'this var is null') }}"
+      with_items: "{{ test_vars.keys() }}"

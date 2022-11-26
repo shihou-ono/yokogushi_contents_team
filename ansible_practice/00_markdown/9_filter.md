@@ -539,3 +539,35 @@ ok: [vyos01] => {
 PLAY RECAP *****************************************************************************************************************************************************************
 vyos01                     : ok=4    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+もう一度同じplaybookを実行すると結果は以下になります。
+
+```yaml
+PLAY [ternary] ************************************************************************************************
+
+TASK [show_config] ********************************************************************************************
+ok: [vyos01]
+
+TASK [config] *************************************************************************************************
+[WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at /usr/bin/python, but
+future installation of another Python interpreter could change this. See
+https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
+ok: [vyos01]
+
+TASK [exec_show_commands] *************************************************************************************
+ok: [vyos01]
+
+TASK [debug_result] *******************************************************************************************
+ok: [vyos01] => {
+    "result.stdout_lines": [
+        [
+            "Name          Interface      VRID  State      Priority  Last Transition", 
+            "------------  -----------  ------  -------  ----------  -----------------", 
+            "service_nw01  eth1             10  MASTER          100  2h5m48s", 
+            "service_nw02  eth2             20  MASTER          150  2h5m48s"
+        ]
+    ]
+}
+
+PLAY RECAP ****************************************************************************************************
+vyos01                     : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
