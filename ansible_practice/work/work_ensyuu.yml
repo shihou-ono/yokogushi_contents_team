@@ -1,0 +1,35 @@
+---
+- name: work
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: "show"
+      vyos_command:
+        commands: "{{ item }}"
+      loop:
+        - "show version"
+        - "show configuration commands"
+        - "show vrrp"
+      register: show_result
+     
+    - name: "debug show version on terminal"
+      debug:
+	      var: item.stdout_lines[0]
+      loop: "{{ show_result.results }}"
+      when: item.item == "show version"
+
+    - name: "mkdir each host"
+      file:
+	      path: "./log/{{ inventory_hostname }}"
+	      state: "directory"
+	      mode: 0775
+
+    - name: "output show_result to file(except show version)"
+      copy:
+        dest: "./log/{{ inventory_hostname }}/{{ item.item | replace[' ','_'] }}.log"
+	      content: "{{ item.stdout[0] }}"
+        mode: 0664
+      loop: "{{ show_result.results }}"
+      when:
+        - item.item != 'show version'
