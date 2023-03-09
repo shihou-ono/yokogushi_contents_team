@@ -320,12 +320,11 @@ paginate: true
     1. vyos02のeth1のinterfaceに"to_service_nw01"、eth2のinterfaceに"to_service_nw02"というdescriptionを設定し、active configに反映されたことを確認する。
     ```
     (venv) [ec2-user@ip-172-31-42-108 yokogushi_contents_team]$ docker exec -it vyos02 su - vyos
-     vyos@vyos02:~$ show configuration commands 
+     vyos@vyos02:~$ show configuration
      <skip>
      interfaces {
     ethernet eth1 {
         address 192.168.1.253/24
-        description to_service_nw01
         ipv6 {
             address {
                 no-default-link-local
@@ -334,7 +333,6 @@ paginate: true
     }
     ethernet eth2 {
         address 192.168.2.253/24
-        description to_service_nw02
         ipv6 {
             address {
                 no-default-link-local
@@ -363,13 +361,88 @@ paginate: true
      [edit]
      vyos@vyos02# exit
      exit
-     vyos@vyos02:~$ show configuration commands 
+     vyos@vyos02:~$ show configuration
      <skip>
-     set interfaces ethernet eth1 address '192.168.1.253/24'
-     set interfaces ethernet eth1 description 'to_service_nw01'
-     set interfaces ethernet eth1 ipv6 address no-default-link-local
-     set interfaces ethernet eth2 address '192.168.2.253/24'
-     set interfaces ethernet eth2 description 'to_service_nw02'
-     set interfaces ethernet eth2 ipv6 address no-default-link-local
+     interfaces {
+    ethernet eth1 {
+        address 192.168.1.253/24
+        description to_service_nw01
+        ipv6 {
+            address {
+                no-default-link-local
+            }
+        }
+    }
+    ethernet eth2 {
+        address 192.168.2.253/24
+        description to_service_nw02
+        ipv6 {
+            address {
+                no-default-link-local
+            }
      <skip>
     ```
+    2. 上記設定の削除
+    ```
+    (venv) [ec2-user@ip-172-31-42-108 yokogushi_contents_team]$ docker exec -it vyos02 su - vyos
+     vyos@vyos02:~$ show configuration
+     <skip>
+     interfaces {
+    ethernet eth1 {
+        address 192.168.1.253/24
+        description to_service_nw01
+        ipv6 {
+            address {
+                no-default-link-local
+            }
+        }
+    }
+    ethernet eth2 {
+        address 192.168.2.253/24
+        description to_service_nw02
+        ipv6 {
+            address {
+                no-default-link-local
+            }
+     <skip> 
+     vyos@vyos02:~$ 
+     vyos@vyos02:~$ configure 
+     [edit]
+     vyos@vyos02# delete interfaces ethernet eth1 description
+     [edit]
+     vyos@vyos02# delete interfaces ethernet eth2 description
+     [edit]
+     vyos@vyos02# compare 
+     [edit interfaces ethernet eth1]
+     -description to_service_nw01
+     [edit interfaces ethernet eth2]
+     -description to_service_nw02
+     [edit]
+     vyos@vyos02# commit
+     [edit]
+     vyos@vyos02# save
+     Saving configuration to '/config/config.boot'...
+     Done
+     [edit]
+     vyos@vyos02# 
+     [edit]
+     vyos@vyos02# exit
+     exit
+     vyos@vyos02:~$ show configuration
+     <skip>
+     interfaces {
+    ethernet eth1 {
+        address 192.168.1.253/24
+        ipv6 {
+            address {
+                no-default-link-local
+            }
+        }
+    }
+    ethernet eth2 {
+        address 192.168.2.253/24
+        ipv6 {
+            address {
+                no-default-link-local
+            }
+     <skip>    
