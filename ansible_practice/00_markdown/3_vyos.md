@@ -302,18 +302,6 @@ paginate: true
     1. vyos02のeth1のinterfaceに"to_service_nw01"、eth2のinterfaceに"to_service_nw02"というdescriptionを設定し、active configに反映されたことを確認する。
     2. 1で設定した内容を削除する
 
-2. vrrpのpriority値変更による経路変更
-参考: 構成図
-    1. show vrrpコマンドにてvyos01,02の事前状態を確認する
-    2. vrrpのpriority値を変更して往復の通信がvyos02を通るように設定する
-    3. show vrrpコマンドにてvyos01,02の事後状態を確認する
-    4. vrrpのpriority値を元に戻して、vyos01を通るように設定し、状態確認をする。
-    5. ここまでやって余裕がある人は、各hostにloginしてtracerouteにて経路が変化することも確認する。
-    host01へのlogin方法は以下
-    ```
-    docker exec -it host01 /bin/bash
-    ```
-
 # 解答例
 
 1. vyos02のinterfaceのdescription設定
