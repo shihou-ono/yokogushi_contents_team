@@ -7,8 +7,27 @@
 
 | モジュール名 | 説明 |
 | :-----: | :------------------------------------------------------------------------------------------------------------ |
-| vyos_config | vyosの設定変更などを行う時に使用。<br>コンフィギューレーションモード移行後の設定変更コマンドを実行 |
 | vyos_command | vyosで主にshow系コマンドを実行する時に使用。| 
+| vyos_config | vyosの設定変更などを行う時に使用。<br>コンフィギューレーションモード移行後の設定変更コマンドを実行。 |
+
+vyos_commandのよく使うパラメータ
+| パラメータ | 説明 |
+| :-----: | :------------------------------------------------------------------------------------------------------------ |
+| commands | 取得するコマンドを指定するときに使用。show interfaces やshow versionなど。 |
+
+vyos_configのよく使うパラメータ
+| パラメータ | 説明 |
+| :-----: | :------------------------------------------------------------------------------------------------------------ |
+| lines | 取得するコマンドを指定するときに使用。vyos_commandでいう、commandsにあたる。<br>set system XX やdelete system XX など。|
+| save | linesで実行した内容を保存するときに使用。commitして、saveと同義。<br>true または false を指定。デフォルトではfalseになる。|
+
+
+
+
+
+
+
+
 
 - vyos_configのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/collections/vyos/vyos/vyos_config_module.html)
 
@@ -17,14 +36,20 @@
 ---
 
 # 2.vyosのモジュールの説明
+
+
+
+
 - vyos_configの説明
   - 以下は、vyosのeth1を無効化しているplaybookである。
 ```yaml
+---
+- name:
   tasks:
     - name: set interfaces
       vyos_config:
         lines: 
-        - set interfaces ethernet eth1 disable
+          - set interfaces ethernet eth1 disable
 ```
 - vyos_commandの説明
   - 以下は、vyosに対して「show interfaces」コマンドを実行しているplaybookである。
@@ -32,7 +57,8 @@
   tasks:
     - name: show commands
       vyos_command:
-        commands: show interfaces
+        commands: 
+          - show interfaces
 ```
 ---
 
