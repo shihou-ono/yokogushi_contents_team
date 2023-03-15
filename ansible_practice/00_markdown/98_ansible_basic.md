@@ -53,3 +53,18 @@ ansible_password=test_password
         lines:                                
           - set system XX                     
 ```
+
+## playbookを実行するとき
+- playbookを実行する際は仮想環境(venv)で実行する必要があるので、以下を実行しておく。
+```yaml
+[ec2-user@ip-172-31-42-108 03_vyos]$ source /home/ec2-user/venv/bin/activate
+(venv)[ec2-user@ip-172-31-42-108 03_vyos]$
+```
+
+- playbookを実行する際は以下コマンドを実行する
+```yaml
+ansible-playbook -i <インベントリファイル> <playbook名>.yml
+
+使用例
+(venv)[ec2-user@ip-172-31-42-108 03_vyos]$ ansible-playbook -i inventory.ini test.yml
+```
