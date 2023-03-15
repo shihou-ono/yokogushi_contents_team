@@ -1,7 +1,7 @@
 # vyosのモジュール
 ---
 
-# 1.  vyosのモジュールとは？
+## 1. vyosのモジュールとは？
 - 前章:vyosとは の後に読み進めていくことをお勧めする。
 - vyosを操作するために使用する。vyosに関するモジュールは主に以下の2つがある
 
@@ -10,28 +10,30 @@
 | vyos_command | vyosで主にshow系コマンドを実行する時に使用。| 
 | vyos_config | vyosの設定変更などを行う時に使用。<br>コンフィギューレーションモード移行後の設定変更コマンドを実行。 |
 
-vyos_commandのよく使うパラメータ
+# vyos_commandのパラメータ
 | パラメータ | 説明 |
 | :-----: | :------------------------------------------------------------------------------------------------------------ |
-| commands | 取得するコマンドを指定するときに使用。show interfaces やshow versionなど。 |
+| commands | オペレーションモードで実行させるコマンドを記載。<br>show interfaces やshow versionなど。 |
+- commands以外もパラメータはあります。
+- vyos_commandのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/collections/vyos/vyos/vyos_command_module.html)
 
-vyos_configのよく使うパラメータ
+# vyos_configのパラメータ
 | パラメータ | 説明 |
 | :-----: | :------------------------------------------------------------------------------------------------------------ |
-| lines | 取得するコマンドを指定するときに使用。vyos_commandでいう、commandsにあたる。<br>set system XX やdelete system XX など。|
-| save | linesで実行した内容を保存するときに使用。commitして、saveと同義。<br>true または false を指定。デフォルトではfalseになる。|
-
-
-
-
-
-
-
-
-
+| lines | コンフィギュレーションモードで実行させるコマンドを記載。<br>set system XX やdelete system XX など。 |
+| save | linesで実行した内容を保存する。commitして、saveと同義。<br>true または false を指定。デフォルトではfalseになる。|
+- lines,save以外もパラメータはあります。
 - vyos_configのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/collections/vyos/vyos/vyos_config_module.html)
 
-- vyos_commandのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/collections/vyos/vyos/vyos_command_module.html)
+
+
+
+
+
+
+
+
+
 
 ---
 
