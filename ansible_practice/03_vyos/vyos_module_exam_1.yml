@@ -1,0 +1,10 @@
+---
+- name: exam1
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: check interface
+      ■■■■■■:
+        commands: 
+          - show interfaces
