@@ -1,0 +1,10 @@
+---
+- name: exam2_answer
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: disable interface
+      vyos_config:
+        lines: 
+          - delete interfaces ethernet eth0 disable
