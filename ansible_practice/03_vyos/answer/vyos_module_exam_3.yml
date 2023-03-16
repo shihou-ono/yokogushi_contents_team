@@ -1,5 +1,5 @@
 ---
-- name: exam3
+- name: exam3_answer
   hosts: vyos
   gather_facts: false
 
