@@ -2,7 +2,6 @@
 
 ## inventoryファイルの中身
 ```yaml
-cat inventory.ini
 [vyos]                                                   #グループ名vyos
 vyos01 ansible_host=10.0.0.2                             #ホスト変数、ホスト変数名vyos01のIPは10.0.0.2 
 vyos02 ansible_host=10.0.0.3                             #ホスト変数、ホスト変数名vyos02のIPは10.0.0.3
