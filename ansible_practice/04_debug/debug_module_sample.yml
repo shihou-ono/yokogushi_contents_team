@@ -1,0 +1,16 @@
+---
+- name: sample
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    var_message: Hello message!
+
+  tasks:
+    - name: debug msg
+      debug:
+        msg: Hello Ansible!
+
+    - name: debug var_message
+      debug:
+        var: var_message

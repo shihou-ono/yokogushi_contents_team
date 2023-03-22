@@ -1,0 +1,31 @@
+---
+- name: exam3
+  hosts: vyos02
+  gather_facts: false
+
+  tasks:
+    - name: before show interfaces
+      vyos_command:
+        commands:
+          - show interfaces
+      register: before_show_interfaces
+
+    - name: debug before show interfaces
+      debug:
+        var: before_show_interfaces.stdout_lines[0]
+
+    - name: set description
+      vyos_config:
+        lines:
+          - set interfaces ethernet eth1 description debug_exam
+        save: true
+
+    - name: after show interfaces
+      vyos_command:
+        commands:
+          - show interfaces
+      register: after_show_interfaces
+
+    - name: debug after show interfaces
+      debug:
+        var: after_show_interfaces.stdout_lines[0]

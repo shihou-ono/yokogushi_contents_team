@@ -1,9 +1,8 @@
 ---
-- name: debug_exam_4
+- name: exam1
   hosts: localhost
   gather_facts: false
 
   tasks:
     - name: debug
       debug:
-        msg: "APC"
