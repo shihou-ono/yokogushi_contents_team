@@ -53,7 +53,7 @@
 | :-: | :- |
 | dest | 必須のパラメータ。操作するファイルを指定する。 |
 | mode | ファイルのパーミッションを指定する。 |
-| state | ・directory<br>pathにディレクトリを作成する。<br>・absent<br>操作対象を削除する。 |
+| state | ・file<br>現在の状態を。<br>・absent<br>操作対象を削除する。 |
 - copyモジュールのAnsible documentは[こちら](https://docs.ansible.com/ansible/2.9/modules/file_module.html)
 
 <br>
@@ -66,7 +66,66 @@
 
 ### copyモジュールの使用例
 
+#### パラメータ「src/dest/mode」の使用例
 
+- 以下は、localhostのsample.txtというファイルを、copy_sample.txtというファイルにコピーし、権限を644に設定している。
+- コピー先にファイルが無ければ新規作成される。
+- 同名のファイルが存在する場合は上書きされる。
+```yaml
+---
+- name: sample_copy_1
+  hosts: localhost
+  gather_facts: false
+  
+  tasks:
+  - name: copy file and change mode
+    copy:
+      src: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file_modules/sample.txt
+      dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file_modules/copy_sample.txt
+      mode: 0644
+```
+
+#### パラメータ「content」の使用例
+
+- sample.txtにcontentで指定した内容を上書き記載する
+```yaml
+---
+- name: sample_copy_1
+  hosts: localhost
+  gather_facts: false
+  
+  tasks:
+  - name: write message
+    copy:
+      content: contentのテストです
+      dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file_modules/sample.txt
+      mode: 0644
+```
+
+<br>
+<br>
+<br>
+
+---
+
+### fileモジュールの使用例
+
+#### パラメータ「state」の使用例
+
+- 以下は、localhostのsample.txtというファイルを削除する
+- 
+
+```yaml
+- name: sample_file_1
+  hosts: localhost
+  gather_facts: false
+
+tasks:
+  - name: delete file
+    file:
+      path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file_modules/sample.txt
+      state: absent
+```
 
 
 
