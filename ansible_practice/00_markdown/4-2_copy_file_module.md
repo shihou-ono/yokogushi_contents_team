@@ -103,6 +103,11 @@
       mode: 0644
 ```
 
+```yaml
+[ec2-user@ip-172-31-42-108]$ cat sample.txt
+contentのテストです
+```
+
 <br>
 <br>
 <br>
