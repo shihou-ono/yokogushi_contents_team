@@ -300,7 +300,6 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
   - copyするときにパーミッションなどを変更してコピーすることが可能
 
 - fileモジュールは、ファイルやディレクトリを操作するときに使用
-  - 
 
 <br>
 <br>
