@@ -139,7 +139,8 @@ tasks:
 ### copyモジュールの演習[ハンズオン]
 
 #### 目的
-  - localhostの「handson.txt」を指定のディレクトリにコピーする。
+  - localhostの「handson.txt」に変数「sample_handson」の内容を出力する
+  - 
 
 #### 1.ディレクトリ移動
   - 使用するplaybook,inventoryファイルが存在するディレクトリに移動
@@ -155,17 +156,7 @@ tasks:
 ```
 
 
-#### 3.ファイル確認(事前確認)
-```yaml
-[ec2-user@ip-172-31-42-108 04-2_copy_file]$ ls -l handson.txt 
--rw-rw-r-- 1 ec2-user ec2-user 50 Mar 23 01:26 handson.txt
-
-(venv) [ec2-user@ip-172-31-42-108 04-2_copy_file]$ ls -l copy_directory/
-total 0
-```
-
-
-#### 4.playbookの内容を確認
+#### 3.playbookの内容を確認
 
 ```yaml
 ---
@@ -173,15 +164,18 @@ total 0
   hosts: localhost
   gather_facts: false
 
+  vars:
+    sample_handson: テスト文です 
+
   tasks:
     - name: copy text file
       copy:
-        src: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/handson.txt
+        content: "{{ sample_handson }}"
         dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/copy_directory/handson.txt
 ```
 
 
-#### 5.playbookを実行
+#### 4.playbookを実行
 
 ```yaml
 (venv) [ec2-user@ip-172-31-42-108 04-2_copy_file]$ ansible-playbook copy_module_sample.yml 
@@ -200,7 +194,7 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
 ```
 
 
-#### 6.ファイル確認(事後確認)
+#### 5.ファイル確認(事後確認)
 ```yaml
 [ec2-user@ip-172-31-42-108 04-2_copy_file]$ ls -l handson.txt 
 -rw-rw-r-- 1 ec2-user ec2-user 50 Mar 23 01:26 handson.txt
@@ -209,6 +203,10 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
 total 4
 -rw-rw-r-- 1 ec2-user ec2-user 50 Mar 23 01:36 handson.txt
 total 0
+```
+- handson.txtの内容
+```yaml
+テスト文です
 ```
 
 <br>
@@ -392,6 +390,12 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
         path: /home/ec2-user/test.txt
         state: absent
 ```
+
+- 選択肢の解説
+1. absent 指定したファイルを削除するので、正しい
+2. mode パーミッションを設定するので、正しい
+3. permission 存在しない
+4. delete 存在しない
 
 <br>
 <br>
