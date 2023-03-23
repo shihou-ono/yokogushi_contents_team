@@ -1,0 +1,13 @@
+---
+- name: sample
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    sample_handson: テスト文です 
+
+  tasks:
+    - name: copy text file
+      copy:
+        content: "{{ sample_handson }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/copy_directory/handson.txt

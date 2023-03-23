@@ -1,0 +1,10 @@
+---
+- name: sample
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: make directory
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/file_directory
+        state: directory
