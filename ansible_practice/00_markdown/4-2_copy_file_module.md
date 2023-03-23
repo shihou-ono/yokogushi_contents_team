@@ -53,7 +53,7 @@
 | :-: | :- |
 | path | 必須のパラメータ。操作するファイルを指定する。 |
 | mode | ファイルのパーミッションを指定する。 |
-| state | state:file(デフォルト) 既存のファイルを操作。<br>state:absent 既存のファイルを削除する。<br>state:touch pathに指定のファイルを作成する。<br>state:directory pathに指定のディレクトリを作成する。  |
+| state | state:absent 既存のファイルを削除する。<br>state:touch pathに指定のファイルを作成する。<br>state:directory pathに指定のディレクトリを作成する。  |
 
 - fileモジュールのAnsible documentは[こちら](https://docs.ansible.com/ansible/2.9/modules/file_module.html)
 
