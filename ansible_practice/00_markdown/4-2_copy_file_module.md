@@ -31,7 +31,7 @@
 | :-: | :- |
 | src  | コピー元を指定する。 |
 | dest | コピー先を指定する。<br>コピー先にファイルが無ければ新規作成する。 |
-| mode | ファイルのパーミッションを指定する。 |
+| mode | パーミッションを指定する。 |
 | content | コピー先ファイルに記述する内容を指定する。<br>変数の内容を書き込こむこともできる。 |
 - copyモジュールのAnsible documentは[こちら](https://docs.ansible.com/ansible/2.9/modules/copy_module.html)
 
