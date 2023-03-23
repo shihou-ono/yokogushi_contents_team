@@ -118,8 +118,7 @@ contentのテストです
 
 #### パラメータ「state」の使用例
 
-- 以下は、localhostのsample.txtというファイルを削除する
-- 
+- 以下は、localhostのsample.txtを削除する
 
 ```yaml
 - name: sample_file_1
@@ -144,8 +143,7 @@ tasks:
 ### copyモジュールの演習[ハンズオン]
 
 #### 目的
-  - localhostの「handson.txt」に変数「sample_handson」の内容を出力する
-  - 
+  - localhostの「handson.txt」に変数「sample_handson」の内容を記述する。
 
 #### 1.ディレクトリ移動
   - 使用するplaybook,inventoryファイルが存在するディレクトリに移動
