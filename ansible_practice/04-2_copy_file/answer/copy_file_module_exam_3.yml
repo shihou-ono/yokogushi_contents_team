@@ -4,19 +4,19 @@
   gather_facts: false
 
   tasks:
-    - name: get show interfaces
+    - name: get show commands
       vyos_command:
         commands:
           - show interfaces
           - show ip route
-      register: vyos01_show_interfaces
+      register: vyos01_show_commands
 
-    - name: vyos01_show_interfaces.log touch
+    - name: vyos01_show_ip_route.log touch
       file:
-        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_interfaces.log
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_ip_route.log
         state: touch
 
-    - name: vyos01_show_interfaces.log writing
+    - name: vyos01_show_ip_route.log writing
       copy:
-        content: "{{ vyos01_show_interfaces.stdout[1] }}"
-        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_interfaces.log
+        content: "{{ vyos01_show_commands.stdout[1] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_ip_route.log
