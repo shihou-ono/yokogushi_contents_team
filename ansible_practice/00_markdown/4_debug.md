@@ -224,10 +224,10 @@ vyos01                     : ok=2    changed=0    unreachable=0    failed=0    s
 - 上記のように、registerの内容を変数に保存すると、stdoutとstdout_linesの2つのデータ形式が保存される
 - ターミナルに出力させる場合に、出力方法が複数あります
 
-|  | 変数名.stdout | 変数名.stdout[0] | 変数名.stdout_lines | 変数名.stdout_lines[0] |
+|  | 変数名.stdout<br>(stdoutすべて) | 変数名.stdout[0]<br>(stdoutの1つめの要素) | 変数名.stdout_lines<br>(stdout_linesすべて) | 変数名.stdout_lines[0]<br>(stdout_linesの1つめの要素) |
 | - | :-: | :-: | :-: | :-: |
 | ターミナル出力 | 改行されない | 改行されない | 改行される | 改行される |
-| 出力内容 | stdoutすべて | stdoutの1つめの要素 | stdout_linesすべて | stdout_linesの1つめの要素 |
+| ファイル出力 | 改行されない | 改行される | 改行されない | 改行されない |
 
 #### 変数名.stdout
 
