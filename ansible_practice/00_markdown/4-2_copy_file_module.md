@@ -362,9 +362,9 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
 - playbook名：「vyos_module_exam_3.yml」で作成
 - 実行対象ノード：vyos01
 - 処理内容：
-  - 「show interfaces」を実行
-  - playbook作成先ディレクトリ配下に「vyos01_show_interfaces.log」を作成
-  - 「show interfaces」の実行結果を、「vyos01_show_interfaces.log」に記述する
+  - 「show interfaces」「show ip route」を実行
+  - playbook作成先ディレクトリ配下に「vyos01_show_ip_route.log」を作成
+  - 「show ip route」のみの実行結果を、「vyos01_show_ip_route.log」に記述する
 
 <br>
 <br>
