@@ -1,0 +1,16 @@
+---
+- name: exam1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: content dest
+      copy:
+        content: exam1です
+        dest: /home/ec2-user/test.txt
+        mode: 0644
+
+    - name: file delete
+      file:
+        path: /home/ec2-user/test.txt
+        state: absent

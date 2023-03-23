@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: false
+
+  tasks:
+  - name: make file
+    file:
+      path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/exam3.txt
+      state: touch
+
+  - name: copy file
+    copy:
+      src: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/exam3.txt
+      dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/copy_directory
