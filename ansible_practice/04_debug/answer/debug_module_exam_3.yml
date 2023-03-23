@@ -12,7 +12,7 @@
 
     - name: debug before show interfaces
       debug:
-        var: before_show_interfaces.stdout_lines[0]
+        var: before_show_interfaces.stdout_lines
 
     - name: set description
       vyos_config:
@@ -28,4 +28,4 @@
 
     - name: debug after show interfaces
       debug:
-        var: after_show_interfaces.stdout_lines[0]
+        var: after_show_interfaces.stdout_lines
