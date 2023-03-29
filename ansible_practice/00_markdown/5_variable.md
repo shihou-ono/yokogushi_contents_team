@@ -393,11 +393,11 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
   hosts: vyos01
 
   tasks:
-    - name: debug
+    - name: debug ansible_facts
       debug:
         var: ansible_facts
 
-    - name: debug
+    - name: debug ansible_facts.net_hostname
       debug:
         var: ansible_facts.net_hostname
 ```
@@ -418,7 +418,7 @@ but future installation of another Python interpreter could change this. See
 https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
 ok: [vyos01]
 
-TASK [debug] **********************************************************************************************
+TASK [debug ansible_facts] **********************************************************************************************
 ok: [vyos01] => {
     "ansible_facts": {
         "discovered_interpreter_python": "/usr/bin/python",
@@ -571,7 +571,7 @@ ok: [vyos01] => {
     }
 }
 
-TASK [debug] **********************************************************************************************
+TASK [debug ansible_facts.net_hostname] **********************************************************************************************
 ok: [vyos01] => {
     "ansible_facts.net_hostname": "vyos01"
 }
