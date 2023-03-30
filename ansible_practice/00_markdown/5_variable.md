@@ -169,7 +169,8 @@ ansible_password=vyos
   tasks:
     - name: get show version
       vyos_command:
-        commands: 'show version'
+        commands: 
+          - show version
       register: result
 
     - name: debug result
