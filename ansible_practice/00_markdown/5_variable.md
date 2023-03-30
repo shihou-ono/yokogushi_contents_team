@@ -175,7 +175,7 @@ ansible_password=vyos
 
     - name: debug result
       debug:
-        msg: "{{ result.stdout_lines[0] }}"            
+        var: result.stdout_lines[0]           
 ```
 
 - 前ページのplaybook実行例を以下に記載。
