@@ -226,7 +226,7 @@ vyos01                     : ok=2    changed=0    unreachable=0    failed=0    s
   - 1. Varsセクションにて`vars`を使用して変数定義を行い、変数の中身をdebugで出力する
   - 2. `set_fact`を使用して変数定義を行い、変数の中身をdebugで出力する
   - 3. マジック変数の中身をdebugで出力する
-  - 4. ファクト変数の中身の一部をdebugで出力する
+  - 4. ファクト変数の中身、また一部をdebugで出力する
 
 ### 1.ディレクトリ移動
   - 使用するplaybook,inventoryファイルが存在するディレクトリに移動
@@ -256,7 +256,7 @@ ansible_password=vyos
 ### 目的1 Varsセクションにて`vars`を使用して変数定義を行い、変数の中身をdebugで出力する
 
 ### 4.playbookの内容を確認
-- 「test1」という変数に「Hello Ansible!」という文字列を定義
+- 「test」という変数に「Hello Ansible!」という文字列を定義
 - Varsセクションで定義した「test」の変数の中身を出力
 ```yaml
 ---
