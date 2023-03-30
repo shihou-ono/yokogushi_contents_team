@@ -138,7 +138,7 @@ $ python3
 | `ansible_connection` | ターゲットホストへの接続方式。 |
 | `ansible_user` | SSH接続するときのユーザ情報。 |
 | `ansible_password` | SSH接続するときのパスワード情報。 |
-| `become` | root権限昇格の有無。`false`を指定することで昇格する。 |
+| `become` | root権限昇格の有無。 |
 
 ### 接続変数
 - 接続変数は以下のインベントリファイルのように`vars`として設定することができる。
