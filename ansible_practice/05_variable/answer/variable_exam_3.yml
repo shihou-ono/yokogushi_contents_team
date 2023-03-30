@@ -1,5 +1,5 @@
 ---
-- name: variable_exam_3
+- name: exam3
   hosts: localhost
   gather_facts: false
 
@@ -8,6 +8,6 @@
       set_fact:
         test_hostname: "vyos01"
 
-    - name: debug
+    - name: debug test_hostname
       debug:
         var: test_hostname

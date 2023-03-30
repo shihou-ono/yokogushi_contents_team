@@ -1,5 +1,5 @@
 ---
-- name: variable_sample_1
+- name: sample1
   hosts: localhost
   gather_facts: false
 
@@ -7,6 +7,6 @@
     test: "Hello Ansible!"
 
   tasks:
-    - name: debug
+    - name: sample1 debug vars
       debug:
         var: test
