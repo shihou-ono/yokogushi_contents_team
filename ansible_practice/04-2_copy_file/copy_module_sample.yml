@@ -10,4 +10,4 @@
     - name: copy text file
       copy:
         content: "{{ sample_handson }}"
-        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/handson.txt
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/handson.txt
