@@ -1,5 +1,5 @@
 ---
-- name: variable_exam_1
+- name: exam1
   hosts: localhost
   gather_facts: false
 

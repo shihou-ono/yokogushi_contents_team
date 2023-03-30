@@ -3,10 +3,10 @@
   hosts: vyos01
 
   tasks:
-    - name: debug
+    - name: debug ansible_facts
       debug:
         var: ansible_facts
 
-    - name: debug
+    - name: debug ansible_facts.net_hostname
       debug:
         var: ansible_facts.net_hostname
