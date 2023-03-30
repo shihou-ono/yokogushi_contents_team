@@ -612,344 +612,18 @@ vyos01                     : ok=3    changed=0    unreachable=0    failed=0    s
 ---
 
 
-### Q1 
+### Q1 以下のplaybookを実行し、出力された実行結果の空欄に当てはまるものは何でしょう。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 1. Varsセクションにて`vars`を使用して変数定義を行い、変数の中身をdebugで出力する
-
-以下のplaybookを作成する。
-
-```yaml
-$ vi variable_sample_1.yml
----
-- name: variable_sample_1
-  hosts: localhost
-  gather_facts: false
-  
-  vars:
-    test: "Hello Ansible!"  # <-「test1」という変数に「Hello Ansible!」という文字列を定義
-
-  tasks:
-    - name: debug
-      debug:
-        var: test  # <-Varsセクションで定義した「test1」の変数の中身を出力
-```
-
----
-
-# 5-3. 変数の実習
-
-以下は作成したplaybookを実行/出力例である。
-
-<br>
-
-```yaml
-$ ansible-playbook -i inventory.ini variable_sample_1.yml 
-
-PLAY [variable_sample_1] ****************************************************************************
-
-TASK [debug] ***************************************************************************************
-ok: [localhost] => {
-    "test": "Hello Ansible!"  # <-想定通りの出力を確認
-}
-
-PLAY RECAP *****************************************************************************************
-localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
-```
-
----
-
-# 5-3. 変数の実習
-
-## 2. `set_fact`を使用して変数定義を行い、変数の中身をdebugで出力する
-
-以下のplaybookを作成する。
-
-```yaml
-$ vi variable_sample_2.yml
----
-- name: variable_sample_2
-  hosts: localhost
-  gather_facts: false
-  
-  tasks:
-    - name: variable definition
-      set_fact:                   
-        test: "Hello Ansible!"  # <-「set_fact」を使用して「test2」という変数に「Hello Ansible!」という文字列を定義
-
-    - name: debug
-      debug:
-        var: test  # <-「set_fact」で定義した「test2」の変数の中身を出力
-```
-
----
-
-# 5-3. 変数の実習
-
-以下は作成したplaybookを実行/出力例である。
-
-<br>
-
-```yaml
-$ ansible-playbook -i ../inventory.ini variable_sample_2.yml 
-
-PLAY [variable_sample_2] ********************************************************************************************************
-
-TASK [variable definition] ********************************************************************************************
-ok: [localhost]
-
-TASK [debug] *******************************************************************************************
-ok: [localhost] => {
-    "test": "Hello Ansible!"  # <-想定通りの出力を確認
-}
-
-PLAY RECAP *********************************************************************************************
-localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
-```
-
----
-
-# 5-3. 変数の実習
-
-## 3. マジック変数の中身をdebugで出力する
-
-以下のplaybookを作成する。
-
-```yaml
-$ vi variable_sample_3.yml
----
-- name: variable_sample_3
-  hosts: localhost
-  gather_facts: false
-  
-  tasks:
-    - name: debug
-      debug:
-        var: ansible_play_name  # <-「ansible_play_name」はマジック変数のため、変数定義の必要なし
-```
-
----
-
-# 5-3. 変数の実習
-
-以下は作成したplaybookを実行/出力例である。
-
-<br>
-
-```yaml
-$ ansible-playbook -i ../inventory.ini variable_sample_3.yml 
-
-PLAY [variable_sample_3] **************************************************************************************************
-
-TASK [debug] *************************************************************************************************************
-ok: [localhost] => {
-    "ansible_play_name": "variable_sample_3"  # <-「ansible_play_name」に格納されたplaybookの名前が出力されていることを確認
-}
-
-PLAY RECAP ***************************************************************************************************************
-localhost : ok=1  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
-```
-
----
-
-# 5-3. 変数の実習
-
-## 4. ファクト変数の中身の一部をdebugで出力する
-
-以下のplaybookを作成する。
-
-```yaml
----
-- name: variable_sample_4-1
-  hosts: vyos01 
-                            # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
-  tasks:
-    - name: debug
-      debug:
-        var: ansible_facts  # <-「ansible_facts」の中身を出力
-```
-
----
-
-# 5-3. 変数の実習
-
-以下は作成したplaybookを実行/出力例である。
-
-```yaml
-PLAY [variable_sample_4-1] ********************************************************************************************
-
-TASK [Gathering Facts] *********************************************************************************************
-[WARNING]: Ignoring timeout(10) for vyos_facts
-[WARNING]: default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards
-[WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at /usr/bin/python, but future installation of another Python interpreter could change this.
-See https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
-ok: [vyos01]
-
-TASK [debug] *******************************************************************************************************
-ok: [vyos01] => {
-    "ansible_facts": {       # <-「ansible_facts」の中身全てを出力すると量が多すぎる
-        "discovered_interpreter_python": "/usr/bin/python",
-        "net_api": "cliconf",
-        "net_commits": [
-
----------------------------------(snip)---------------------------------
-
-        "net_hostname": "vyos01",
-        "net_neighbors": {},
-        "net_python_version": "2.7.18",
-        "net_serialnum": null,
-        "net_system": "vyos",
-        "net_version": "VyOS 1.4-rolling-202108071508",
-        "network_resources": {}
-    }
-}
-
-PLAY RECAP **********************************************************************************************************
-vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
-```
-
----
-
-# 5-3. 変数の実習
-
-`ansible_facts`の中身全てを出力すると膨大な量があったため、今回は`ansible_facts`に格納されているディクショナリの中の`net_hostname`の値(value)を取り出してみる。以下はそのplaybookである。
-
-```yaml
----
-- name: variable_sample_4-2
-  hosts: vyos01 
-                            # <-「gather_facts: no」を省略した場合は「ansible_facts」にファクト情報が格納される。
-  tasks:
-    - name: debug
-      debug:
-        var: ansible_facts.net_hostname  # <-「ansible_facts」の中身を出力
-```
-
----
-
-# 5-3. 変数の実習
-
-以下は作成したplaybookを実行/出力例である。
-
-<br>
-
-```yaml
-PLAY [variable_sample_4-2] *****************************************************************************************
-
-TASK [Gathering Facts] ******************************************************************************************
-[WARNING]: Ignoring timeout(10) for vyos_facts
-[WARNING]: default value for `gather_subset` will be changed to `min` from `!config` v2.11 onwards
-[WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at /usr/bin/python, but future
-installation of another Python interpreter could change this.
-See https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more information.
-ok: [vyos01]
-
-TASK [debug] ****************************************************************************************************
-ok: [vyos01] => {
-    "ansible_facts.net_hostname": "vyos01"  # <-想定通りの出力になっていることを確認
-}
-
-PLAY RECAP ******************************************************************************************************
-vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0 
-```
-
----
-
-# 5-4.  演習
-
-**Q1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"Hello":【 】」の【 】として表示される文字列を
-　　1つ選択してください。**
-
+- playbook
 ```yaml
 ---
 - name: variable_exam_1
   hosts: localhost
   gather_facts: false
-  
-  tasks:
-    - set_fact:
-        HelIo: "Hello Ansible!"
 
-    - debug:
-        var: Hello
-```
-
-1. “VARIABLE IS NOT DEFINED!”
-1. "Hello"
-1. "Hello Ansible!"
-1. "error"
-
----
-
-# 5-4.  演習
-
-**Q2. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"ansible_play_name":【 】」の【 】として
-　　表示される文字列を1つ選択してください。**
-
-```yaml
----
-- name: variable_exam_2
-  hosts: localhost
-  gather_facts: false
-  
   tasks:
     - name: set_fact
       set_fact:
-        ansible_play_name: "Hello Ansible!"
-
-    - name: debug
-      debug:
-        var: ansible_play_name
-```
-
-1. Hello Ansible!
-1. "Hello Ansible!"
-1. "error"
-1. "variable_exercise2"
-
----
-
-# 5-4.  演習
-
-**Q3. debugモジュールの`var`パラメータを使用し、playbook実行時に`TASK [debug]`にて「vyos01」と
-　　表示させるplaybookを作成してください。**
-
-
----
-
-# 5-4.  演習
-
-**Q4. vyos01から`show vrrp`の結果を取得し、registerモジュールを使用して取得結果を出力させる
-　　playbookを作成してください。**
-
-
----
-
-# 5-4.  演習
-
-**A1. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"Hello":【 】」の【 】として表示される文字列を
-　　1つ選択してください**
-
-```yaml
-- name: variable_exam_1
-  hosts: localhost
-  gather_facts: false
-  
-  tasks:
-    - name: set_fact
-    set_fact:
         HelIo: "Hello Ansible!"
 
     - name: debug
@@ -957,226 +631,139 @@ vyos01 : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored
         var: Hello
 ```
 
-1. **“VARIABLE IS NOT DEFINED!”**
-1. ~~"Hello"~~
-1. ~~"Hello Ansible!"~~
-1. ~~"error"~~
-
----
-
-# 5-4.  演習
-
-実際の出力結果を以下に記載。
-
-<br>
-
+- 実行結果
 ```yaml
-TASK [set_fact] *******************************************************************************
-ok: [localhost]
+(venv) [ec2-user@ip-172-31-42-108 ansible_practice]$ ansible-playbook 05_variable/variable_exam_1.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
 
-TASK [debug] **********************************************************************************
-ok: [localhost] => {
-    "Hello": "VARIABLE IS NOT DEFINED!"
-}
-
-PLAY RECAP ************************************************************************************
-localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0
-```
-
----
-
-# 5-4.  演習
-
-よく変数部分をみてみると`set_fact`で定義している変数名が「Hello」ではなく、「HelIo」になっていることが分かる。変数名が間違えていたため、「Hello」は定義されていません(VARIABLE IS NOT DEFINED!)と表示されている。
-
-<br>
-
-```yaml
-- name: variable_exam_1
-  hosts: localhost
-  gather_facts: false
-  
-  tasks:
-    - set_fact:
-        HelIo: "Hello Ansible!"  # <-「Hello」ではなく、「HelIo」になっている。
-
-    - debug:
-        var: Hello
-```
-
----
-
-# 5-4.  演習
-
-**A2. 以下のplaybookを実行した場合に、`TASK [debug]`にて「"ansible_play_name":【 】」の【 】として
-　　表示される文字列を1つ選択してください。**
-
-```yaml
----
-- name: variable_exam_2
-  hosts: localhost
-  gather_facts: no
-  
-  tasks:
-    - name: set_fact
-      set_fact:
-        ansible_play_name: "Hello Ansible!"
-
-    - name: debug
-      debug:
-        var: ansible_play_name
-```
-
-1. ~~Hello Ansible!~~
-1. ~~"Hello Ansible!"~~
-1. ~~"error"~~
-1. **"variable_exercise2"**
-
----
-
-# 5-4.  演習
-
-実際の出力結果を以下に記載。
-
-<br>
-
-```yaml
-PLAY [variable_exam_2] ******************************************************************************
+PLAY [variable_exam_1] *********************************************************************************
 
 TASK [set_fact] ****************************************************************************************
 ok: [localhost]
 
 TASK [debug] *******************************************************************************************
 ok: [localhost] => {
-    "ansible_play_name": "variable_exercise2"
+    "Hello": ■■■■
 }
 
 PLAY RECAP *********************************************************************************************
-localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0 
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 ansible_practice]$
 ```
 
----
-
-# 5-4.  演習
-
-`set_fact`で定義した`ansible_play_name`という変数はマジック変数であり、現在実行されているplaybookの名前を変数の中に格納する。今回`set_fact`で「Hello Ansible!」という文字列を定義したが、それよりもマジック変数が優先されるため、出力結果は`variable_exercise2`となる。
+1. “VARIABLE IS NOT DEFINED!”
+2. "Hello"
+3. "Hello Ansible!"
+4. "error"
 
 <br>
+<br>
+<br>
 
+---
+
+### Q2 以下のplaybookを実行し、出力された実行結果の空欄に当てはまるものは何でしょう。
+
+- playbook
 ```yaml
 ---
-- name: variable_exam_2  # <-ここに記載されているplaybook名が「ansible_play_name」というマジック変数に格納される
+- name: exam2
   hosts: localhost
   gather_facts: false
-  
-  tasks:
-    - set_fact:
-        ansible_play_name: "Hello Ansible!"
 
-    - debug:
-        var: ansible_play_name
-```
-
----
-
-# 5-4.  演習
-
-**A3. debugモジュールの`var`パラメータを使用し、playbook実行時に`TASK [debug]`にて「vyos01」と
-　　表示させるplaybookを作成してください。**
-
-以下に例として要件を満たすplaybookを記載。
-
-```yaml
----
-- name: variable_exam_3
-  hosts: localhost
-  gather_facts: false
-  
   tasks:
     - name: set_fact
       set_fact:
-        test_hostname: "vyos01"  # <-「set_fact」を使用して「test」という変数に「vyos01」という文字列を定義
+        ansible_play_name: "Hello Ansible!"
 
     - name: debug
       debug:
-        var: test_hostname  # <-「set_fact」で定義した「test」の変数の中身を出力
+        var: ansible_play_name
 ```
 
----
-
-# 5-4.  演習
-
-実際の出力結果を以下に記載。
-
-<br>
-
+- 実行結果
 ```yaml
-PLAY [variable_exam_3] ****************************************************************************************************
+(venv) [ec2-user@ip-172-31-42-108 ansible_practice]$ ansible-playbook 05_variable/variable_exam_2.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
 
-TASK [set_fact] ************************************************************************************
+PLAY [exam2] *******************************************************************************************
+
+TASK [set_fact] ****************************************************************************************
 ok: [localhost]
 
-TASK [debug] ***************************************************************************************
+TASK [debug] *******************************************************************************************
 ok: [localhost] => {
-    "test_hostname": "vyos01"
+    "ansible_play_name": ■■■■
 }
 
-PLAY RECAP *****************************************************************************************
-localhost : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0 
+PLAY RECAP *********************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 ansible_practice]$ 
 ```
 
+1. Hello Ansible!
+2. "Hello Ansible!"
+3. "variable_exam_2"
+4. "exam2"
+
+<br>
+<br>
+<br>
+
 ---
 
-# 5-4.  演習
+### Q3 以下の条件のplaybookを作成して、実行してください
+- 使用インベントリファイル：「/home/ec2-user/yokogushi_contents_team/ansible_practice/05_variable」配下のinventory.ini
+- playbook作成先ディレクトリ：「/home/ec2-user/yokogushi_contents_team/ansible_practice/05_variable」配下
+- playbook名：「variable_exam_3.yml」で作成
+- 実行対象ノード：処理内容を満たしていれば何でも可
+- 処理内容：
+  - debugモジュールの`var`パラメータを使用し、playbook実行時に`TASK [debug]`にて「vyos01」と表示させる
 
-**A4. vyos01から`show vrrp`の結果を取得し、registerモジュールを使用して取得結果を出力させる
-　　playbookを作成してください。**
+<br>
+<br>
+<br>
 
-以下に例として要件を満たすplaybookを記載。
+---
 
+### A1 正解：「“VARIABLE IS NOT DEFINED!”」
+
+- 以下、正しい実行結果
 ```yaml
----
-- name: variable_exam_4
-  hosts: vyos01
-  gather_facts: false
-  
-  tasks:
-    - name: get show vrrp
-      vyos_command:
-        commands: 'show vrrp'
-      register: result
+(venv) [ec2-user@ip-172-31-42-108 05_variable]$ ansible-playbook variable_exam_1.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
 
-    - name: debug result
-      debug:
-        msg: "{{ result.stdout_lines[0] }}"
-```
+PLAY [exam1] *******************************************************************************************
 
----
+TASK [set_fact] ****************************************************************************************
+ok: [localhost]
 
-# 5-4.  演習
-
-実際の出力結果を以下に記載。
-
-```yaml
-
-PLAY [variable_exam_4] **************************************************************************
-
-TASK [get show vrrp] *******************************************************************************
-ok: [vyos01]
-
-TASK [debug result] ********************************************************************************
-ok: [vyos01] => {
-    "msg": [
-        "Name          Interface      VRID  State      Priority  Last Transition",
-        "------------  -----------  ------  -------  ----------  -----------------",
-        "service_nw01  eth1             10  MASTER          150  1h20m44s",
-        "service_nw02  eth2             20  MASTER          150  1h20m44s"
-    ]
+TASK [debug] *******************************************************************************************
+ok: [localhost] => {
+    "Hello": "VARIABLE IS NOT DEFINED!"
 }
 
-PLAY RECAP *****************************************************************************************
-vyos01  : ok=2  changed=0  unreachable=0  failed=0  skipped=0  rescued=0  ignored=0   
+PLAY RECAP *********************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
+(venv) [ec2-user@ip-172-31-42-108 05_variable]$ 
 ```
+- よく変数部分をみてみると`set_fact`で定義している変数名が「Hello」ではなく、「HelIo」になっている。
+- 変数名が間違えていたため、「Hello」は定義されない。
+- 定義されていない変数を出力しようとすると、(VARIABLE IS NOT DEFINED!)と表示される。
+
+<br>
+<br>
+<br>
 
 ---
+
+### A2 正解：「4.exam」
+
+
+
