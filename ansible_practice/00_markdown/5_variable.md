@@ -6,9 +6,9 @@
 - 目次
   - 1.variable(変数)とは？
   - 2.variable(変数)の説明
-  - 3.
-  - まとめ
-  - 4.
+  - 3.variable(変数)の実習[ハンズオン]
+  - variable(変数)のまとめ
+  - 4.variable(変数)の演習問題
 
 <br>
 <br>
@@ -51,52 +51,54 @@ $ python3
 
 ## 2.variable(変数)の説明
 
-- 変数は任意の値を定義することが多いが、デフォルトで定義されているものも存在する。
 - playbookにおいて任意の値を定義する方法は以下の2つである。
 
-### 変数「vars」の使用例
+| 変数名 | 説明 |
+| :----- | :---------------------- | 
+| `vars` | Varsセクションで変数定義する。 |
+| `set_fact` | Tasksセクションで変数定義する。 |
+
+
+### 「vars」の使用例
 - varは「variable(変数)」の略で、`vars`とは変数を集めておく場所のようなもの。
-- 以下にplaybook内のVarsセクションにてよく使用される`vars`について紹介する。 - 下記のパラメータにより定義された変数はTasksセクションで使用することができる。
+- 以下にplaybook内のVarsセクションにてよく使用される`vars`について紹介する。 
+- 下記のパラメータにより定義された変数はTasksセクションで使用することができる。
 
-<br>
+- varsの使用例を以下に記載。
+```yaml
+---
+- name: vars_sample
+  hosts: vyos01
+  gather_facts: no
+  
+  vars:
+    sample: "Hello!!"
+    
+  tasks:
+    - name: debug sample
+      debug:
+        var: sample
+```
 
-| パラメータ | 説明 |
-| :----- | :---------------------- | 
-| `vars` | playbook内で変数定義する際に使用するパラメータ。 |
-| `vars_files` | playbook外から変数定義されたyamlファイルを読み込む際に使用するパラメータ。複数ファイルを読み込むことも可能。 |
-| `vars_prompt` | playbook実行時に定義した変数の値を対話的にユーザへ求めるようにするパラメータ。記録として残したくない情報(パスワードなど)などを使用したい時に使用することが多い。 |
+### 「set_factモジュール」の使用例
 
-
-- その他にもplaybook外でディレクトリを作成し、グループ/ホスト共通で使用する変数ファイルを作成することもできる。
-
-| ディレクトリ名 | 説明 |
-| :----- | :---------------------- | 
-| `group_vars` | 対象のグループが共通で使用することのできる変数ファイルを格納するディレクトリ。 |
-| `host_vars` | 対象のホストが共通で使用することのできる変数ファイルを格納するディレクトリ。 |
-
-
-- `group_vars`について横地さんが記事にされているため紹介する。ブログの内容は[こちら](https://tekunabe.hatenablog.jp/entry/2018/12/15/ansible_group_vars_dir)をクリック。
-
-
-### 変数「set_fact」の使用例
-
-- Tasksセクションで変数定義をしたい時に使用するパラメータ。
-- 使用方法は先程紹介したVarsセクションで使用するパラメータの中の`vars`と似ている。
+- Tasksセクションで変数定義をしたい時に使用する。
 
 - `set_fact`の使用例を以下に記載。
 ```yaml
 ---
-- name: variable_sample
+- name: set_fact_sample
   hosts: vyos01
   gather_facts: no
   
   tasks:
     - name: test
       set_fact:                   
-        test: "Hello Ansible!"  # <-「set_fact:」配下で「<変数名>: <値>」で変数定義を行う  
+        test: "Hello!!"
 ```
 
-- 次にデフォルトで定義されているものとして、以下にAnsibleが用意している変数を紹介する。
+### Ansibleが用意している、デフォルトで定義されている変数
+- 変数は任意の値を定義することが多いが、デフォルトで定義されているものも存在する。
 
 | 変数の種類 | 説明 |
 | :----- | :---------------------- | 
@@ -113,8 +115,6 @@ $ python3
 
 | 変数名 | 説明 |
 | :----- | :---------------------- | 
-| `group_names` | 現在実行中のホストが所属するグループの一覧。 |
-| `groups` | インベントリー内の全グループを含むディクショナリーマップ。 |
 | `inventory_hostname` | 現在実行中のホストのイベントリー名。 |
 | `ansible_play_name` | 現在実行されているplaybookの名前。 |
 | `playbook_dir` | 現在実行されているplaybookのディレクトリパス。 |
@@ -169,7 +169,7 @@ ansible_password=vyos
 
 
 ### register
-- 実行タスクの様々な結果を格納する`register`というものがある。
+- 実行タスクの結果を格納する
 - 主な使用方法は、実行結果を`register`で変数に詰めて、その変数の内容から処理を変えたりエラーメッセージを出力するなど多岐にわたる。
 - 以下はplaybook作成例である。
 
@@ -183,7 +183,7 @@ ansible_password=vyos
     - name: get show version
       vyos_command:
         commands: 'show version'
-      register: result              # <-vyos_commandで取得したshowコマンドをresultという変数へ格納
+      register: result
 
     - name: debug result
       debug:
@@ -201,7 +201,7 @@ ok: [vyos01]
 TASK [debug result] ****************************************************************************************************************
 ok: [vyos01] => {
     "msg": [
-        "Version:          VyOS 1.4-rolling-202108071508",      # <-取得したshowコマンドの結果が表示されている
+        "Version:          VyOS 1.4-rolling-202108071508",      
         "Release Train:    sagitta",
         "",
         "Built by:         vyos_bld@ae1b2315b0ae",
@@ -753,9 +753,11 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 
 (venv) [ec2-user@ip-172-31-42-108 05_variable]$ 
 ```
-- よく変数部分をみてみると`set_fact`で定義している変数名が「Hello」ではなく、「HelIo」になっている。
-- 変数名が間違えていたため、「Hello」は定義されない。
-- 定義されていない変数を出力しようとすると、(VARIABLE IS NOT DEFINED!)と表示される。
+- 解説
+  - よく変数部分をみてみると`set_fact`で定義している変数名が「Hello」ではなく、「HelIo」になっている。
+  - 変数名が間違えていたため、「Hello」は定義されない。
+  - 定義されていない変数を出力しようとすると、(VARIABLE IS NOT DEFINED!)と表示される。
+
 
 <br>
 <br>
@@ -763,7 +765,78 @@ localhost                  : ok=2    changed=0    unreachable=0    failed=0    s
 
 ---
 
-### A2 正解：「4.exam」
+### A2 正解：「4.exam2」
+- 以下、正しい実行結果
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 05_variable]$ ansible-playbook variable_exam_2.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
+
+PLAY [exam2] *******************************************************************************************
+
+TASK [set_fact] ****************************************************************************************
+ok: [localhost]
+
+TASK [debug] *******************************************************************************************
+ok: [localhost] => {
+    "ansible_play_name": "exam2"
+}
+
+PLAY RECAP *********************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 05_variable]$ 
+```
+- `set_fact`で定義した`ansible_play_name`という変数はマジック変数であり、現在実行されているplaybookの名前を変数の中に格納する。
+- 今回`set_fact`で「Hello Ansible!」という文字列を定義したが、それよりもマジック変数が優先されるため、出力結果は`exam2`となる。
+
+<br>
+<br>
+<br>
+
+---
+
+### A3 以下、解答例
+
+- playbook
+```yaml
+---
+- name: exam3
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: set_fact
+      set_fact:
+        test_hostname: "vyos01"
+
+    - name: debug test_hostname
+      debug:
+        var: test_hostname
+```
+
+- playbookの実行結果
+```
+(venv) [ec2-user@ip-172-31-42-108 05_variable]$ ansible-playbook variable_exam_3.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
+
+PLAY [exam3] *******************************************************************************************
+
+TASK [set_fact] ****************************************************************************************
+ok: [localhost]
+
+TASK [debug test_hostname] *****************************************************************************
+ok: [localhost] => {
+    "test_hostname": "vyos01"
+}
+
+PLAY RECAP *********************************************************************************************
+localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 05_variable]$ 
+```
+
 
 
 
