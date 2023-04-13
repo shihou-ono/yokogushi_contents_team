@@ -8,4 +8,4 @@
       vyos_command:
         commands:
           - show configuration
-      when: ■■■
+      when: inventory_hostname == 'vyos01'

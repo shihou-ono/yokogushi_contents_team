@@ -1,17 +1,9 @@
 ---
-- name: command
-  hosts: localhost
-  gather_facts: false
+- name: exam2
+  hosts: all
 
   tasks:
-    - name: when/loop
+    - name: exam2 playbook
       debug:
-        var: item
-      loop:
-        - 3
-        - 10
-        - 25
-        - 140
-        - 233
-        - 350
-      when: item < 26
+        msg: "exam2 playbook test!!"
+      when: "'RedHat' in ansible_distribution or 'CentOS' in ansible_distribution"
