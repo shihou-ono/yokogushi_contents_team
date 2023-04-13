@@ -1,15 +1,17 @@
 ---
-- name: when_sample_1
+- name: sample1
   hosts: vyos
   gather_facts: false
 
   tasks:
-    - name: show commands
+    - name: vyos01 only show commands
       vyos_command:
-        commands: show ip route
+        commands: 
+          - show ip route
+          - show interface
       register: result
       when: inventory_hostname == 'vyos01'
 
-    - name: debug result
-      debug:
+    - name: vyos debug show commands
+      debug: 
         var: result.stdout_lines

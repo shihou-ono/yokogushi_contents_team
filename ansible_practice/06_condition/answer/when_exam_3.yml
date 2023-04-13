@@ -1,0 +1,11 @@
+---
+- name: exam3
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: vyos show ip route
+      vyos_command:
+        commands:
+          - show ip route
+      when: inventory_hostname in ['vyos01','vyos02']
