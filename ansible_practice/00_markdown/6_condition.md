@@ -5,10 +5,10 @@
 
 - 目次
   - 1.condition(条件分岐)とは？
-  - 2.condition(条件分岐)の説明
-  - 3.condition(条件分岐)の実習[ハンズオン]
+  - 2.whenディレクティブの使用例
+  - 3.whenディレクティブの実習(ハンズオン)
   - condition(条件分岐)のまとめ
-  - 4.condition(条件分岐)の演習問題
+  - 4.whenディレクティブの演習問題
 
 <br>
 <br>
@@ -142,7 +142,7 @@
 
 ---
 
-# 6-3. whenディレクティブの実習(ハンズオン)
+## 3. whenディレクティブの実習(ハンズオン)
 
 ### 目的
   - vyos01に、「show ip route」「show interface」を実行させる(但しhosts: vyosとする)
@@ -275,7 +275,7 @@ vyos02                     : ok=1    changed=0    unreachable=0    failed=0    s
 ## condition(条件分岐)についてのまとめ
 
 - 条件分岐をさせるときは、whenディレクティブを使用する。
-- 
+- 比較演算子、論理演算子、in演算子、is演算子などの条件式を用いて、whenディレクティブが使用されている。
 
 
 <br>
@@ -285,7 +285,7 @@ vyos02                     : ok=1    changed=0    unreachable=0    failed=0    s
 ---
 
 
-## 4.condition(条件分岐)の演習
+## 4.whenディレクティブの演習
 
 ---
 
