@@ -47,7 +47,7 @@
   gather_facts: false
 
   tasks:
-    - name: 
+    - name: sample1
       yum: 
         name: httpd
         state: latest
@@ -72,7 +72,7 @@
   gather_facts: false
 
   tasks:
-    - name: 
+    - name: sample2
       yum: 
         name: httpd
         state: latest
@@ -94,7 +94,7 @@
   gather_facts: false
 
   tasks:
-    - name: 
+    - name: sample3
       yum: 
         name: httpd
         state: latest
@@ -118,7 +118,7 @@
   gather_facts: false
 
   tasks:
-    - name: yum httpd host
+    - name: sample4
       yum: 
         name: httpd
         state: latest
