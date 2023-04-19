@@ -1,65 +1,133 @@
 
-# 7. loop ディレクティブ
+# day7 loopディレクティブ
+
+- loopディレクティブについて学習する
+
+- 目次
+  - 1.loopディレクティブとは？
+  - 2.loopディレクティブの使用例
+  - 3.loopディレクティブの実習(ハンズオン)
+  - loopディレクティブのまとめ
+  - 4.loopディレクティブの演習問題
+
+<br>
+<br>
+<br>
+
 ---
-# 7-1. loop ディレクティブとは？
 
-■同一のタスクを複数回実行したい、繰り返したいときに使用する。
-- 一般的に使用されるループの例
-  - ファイルモジュールを使用して複数のファイルやディレクトリの
-  所有権を変更する
-  - ユーザーモジュールを使用して複数のユーザーを作成する
-  - 特定の結果に達するまでポーリング手順を繰り返す
+## 1.loopディレクティブとは？
 
-■メモ
-loopは、「with_list」で代用することも可能。
+- 同一のタスクを複数回実行したい、繰り返したいときに使用する。
+- loopディレクティブを使用する例
+  - 複数のファイルを作成、削除する
+  - 特定の結果に達するまで手順を繰り返す ...etc
 
-loopのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html)
+- 補足
+  - loopは、「with_list」で代用することも可能。
+
+- loopのAnsible documentは[こちら](https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html)
 
 ---
 
-# 7-2. loop ディレクティブの説明
-## 標準ループ
-以下は、繰り返しのタスクを行う場合のplaybookである。
+## 2.loop ディレクティブの説明
 
+- 以下の2つの種類に分けてloopの説明を実施する
+  - 標準loop
+  - 複数のloop
+
+### 標準loop
+
+- 以下は、loopで「Apple」「Banana」「Peach」を定義し、debug moduleを使用してmsgを出力させているplaybookである。
+- loopで繰り返すリストを定義することができる。
+- loopで定義した内容は、変数「item」に格納されるようになっている。
 ```yaml
-tasks:
-  - name: add users
-    user:
-      name: "{{ item }}"
-      state: present
-      groups: "testgroup"
+---
+- name: sample
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+  - name: debug fruits 
+    debug:
+      msg: "{{ item }}"
     loop:
-      - testuser1
-      - testuser2
+      - Apple
+      - Banana
+      - Peach
 ```
 
----
-
-    
-| 項目 | 説明                                                                                                          |
-| :-----: | :------------------------------------------------------------------------------------------------------------ |
-| loop  | 繰り返すリストを定義する。ここでは、testuser1,testuser2が渡されている。 |
-| "{{ item }}"  | loopで定義したリストが1つずつ代入される。ここでは、testuser1,testuser2がitemに代入される。|
-
-以上のルールに則り、このplaybookは、userモジュールを使用して、<br>ユーザー「testuser1」,「testuser2」を、
-グループ「testgroup」に追加するという内容になっている。<br>
-
----
-
-## 複数のループ
-以下は、複数の変数で繰り返しのタスクを行う場合のplaybookである。
-loopをDict型で定義することができる。
+- このplaybookを実行すると、以下のような実行結果となる。
+- loopで定義したリストが1つずつ代入され、msgが3回出力されている。
 ```yaml
-tasks:
-  - name: add users2
-    user:
-      name: "{{ item.name }}"
-      state: present
-      groups: "{{ item.groups }}"
-    loop:
-      - { name: 'testuser1', groups: 'testgroup1' }
-      - { name: 'testuser2', groups: 'testgroup2' }
+$ ansible-playbook playbook.yaml
+
+PLAY [sample] ******************************************************************
+
+TASK [debug fruits] *************************************************************
+ok: [localhost] => (item=Apple) => {
+    "msg": "Apple"
+}
+ok: [localhost] => (item=Banana) => {
+    "msg": "Banana"
+}
+ok: [localhost] => (item=Peach) => {
+    "msg": "Peach"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
+
+
+### 複数のloop
+
+- 以下は、loopで「fruits: 'Apple', color: 'Red'」「fruits: 'Banana', color: 'Yellow'」「fruits: 'Peach', color: 'Pink'」を定義し、debug moduleを使用してmsgを出力させているplaybookである。
+- loopをDict型で定義することができる。
+- loopをDict型で定義したとき、変数「item.key」(fruits: 'xxxx')「item.value」(color: 'yyyy')に格納されるようになっている。
+```yaml
+---
+- name: sample
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+  - name: debug fruits 
+    debug:
+      msg: "The {{ item.key }} is {{ item.value }}"
+    loop:
+      - { fruits: 'Apple', color: 'Red' }
+      - { fruits: 'Banana', color: 'Yellow' }
+      - { fruits: 'Peach', color: 'Pink' }
+```
+
+- このplaybookを実行すると、以下のような実行結果となる。
+- loopで定義したリストが1つずつ代入され、msgが3回出力されている。
+```yaml
+PLAY [Sample] ******************************************************************
+
+TASK [Debug fruits] *************************************************************
+ok: [localhost] => (item={'fruits': 'Apple', 'color': 'Red'}) => {
+    "msg": "The Apple is Red"
+}
+ok: [localhost] => (item={'fruits': 'Banana', 'color': 'Yellow'}) => {
+    "msg": "The Banana is Yellow"
+}
+ok: [localhost] => (item={'fruits': 'Peach', 'color': 'Pink'}) => {
+    "msg": "The Peach is Pink"
+}
+
+PLAY RECAP **********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
+
+
+
+
+
+
+
 
 ---
 
