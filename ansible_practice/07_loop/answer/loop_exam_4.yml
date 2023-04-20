@@ -1,0 +1,33 @@
+---
+- name: exam4
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: check before interface description #任意の実施
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+
+    - name: check before interface description debug #任意の実施
+      debug:
+        var: result.stdout_lines
+
+    - name: set descriptions
+      vyos_config:
+        lines:
+          - set interfaces ethernet {{ item.ethernet }} description {{ item.description }}
+      loop: 
+        - { ethernet: 'eth1', description: 'loop_test1' }
+        - { ethernet: 'eth2', description: 'loop_test2' }
+
+    - name: check after interface description #任意の実施
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+
+    - name: check after interface description debug #任意の実施
+      debug:
+        var: result.stdout_lines

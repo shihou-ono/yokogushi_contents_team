@@ -1,11 +1,16 @@
 ---
-- name: loop_sample_1
+- name: sample1
   hosts: localhost
   gather_facts: false
 
+  vars:
+    dir_names:
+      - loop_dir1
+      - loop_dir2
+
   tasks:
-    - name: chmod text
-      file: path={{ playbook_dir }}/{{ item }}.txt mode=777
-      loop:
-        - test1
-        - test2
+    - name: make directory
+      file:
+        path: /home/ec2-user/{{ item }}
+        state: directory
+      loop: "{{ dir_names }}"

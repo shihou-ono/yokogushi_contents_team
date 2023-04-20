@@ -1,0 +1,16 @@
+---
+- name: exam1
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    fruits:
+      - Apple
+      - Banana
+      - Peach
+
+  tasks:
+    - name: debug fruits
+      debug:
+        msg: "{{ item }}"
+      loop: "{{ fruits }}"
