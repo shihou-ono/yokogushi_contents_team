@@ -130,7 +130,7 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 ## 3.loop ディレクティブの実習
 
 ### 目的
-  - loopディレクティブを使用して、test1.txt、test2.txt、test3.txtを新規作成する
+  - loopディレクティブを使用して、ディレクトリ loop_dir1、loop_dir2を新規作成する
 
 ### 1.ディレクトリ移動
   - 使用するplaybook,inventoryファイルが存在するディレクトリに移動
@@ -145,9 +145,9 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 ```
 
 ### 3.playbookの内容を確認
-- varsで変数「file_names」に「test1.txt」「test2.txt」「test3.txt」を定義
+- varsで変数「dir_names」に「loop_dir1」「loop_dir2」を定義
 - loopで変数も指定することができる
-- loopで変数「file_names」を指定させて、file moduleのpathパラメータに代入
+- loopで変数「dir_names」を指定させて、file moduleのpathパラメータに代入
 ```yaml
 ---
 - name: sample1
@@ -155,33 +155,31 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
   gather_facts: false
 
   vars:
-    file_names:
-      - test1.txt
-      - test2.txt
-      - test3.txt
+    dir_names:
+      - loop_dir1
+      - loop_dir2
 
   tasks:
-    - name: Create files
+    - name: make directory
       file:
-        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/{{ item }}
-        state: touch
-      loop: "{{ file_names }}"
+        path: /home/ec2-user/{{ item }}
+        state: directory
+      loop: "{{ dir_names }}"
 ```
 
 ### 4.playbookを実行
 ```yaml
 (venv) [ec2-user@ip-172-31-42-108 07_loop]$ ansible-playbook loop_sample_1.yml 
-[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
-does not match 'all'
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit
+localhost does not match 'all'
 
-PLAY [sample1] ********************************************************************************************
+PLAY [sample1] **************************************************************************************
 
-TASK [Create files] ***************************************************************************************
-changed: [localhost] => (item=test1.txt)
-changed: [localhost] => (item=test2.txt)
-changed: [localhost] => (item=test3.txt)
+TASK [Create files] *********************************************************************************
+changed: [localhost] => (item=loop_dir1)
+changed: [localhost] => (item=loop_dir2)
 
-PLAY RECAP ************************************************************************************************
+PLAY RECAP ******************************************************************************************
 localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 (venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
@@ -189,16 +187,13 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
 
 ### 5.事後確認
 ```yaml
-(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ls -l /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/
-total 20
--rw-rw-r-- 1 ec2-user ec2-user 218 Mar  3 10:50 loop_exam_1.yml
--rw-rw-r-- 1 ec2-user ec2-user 337 Mar  3 10:50 loop_exam_2.yml
--rw-rw-r-- 1 ec2-user ec2-user 302 Mar  3 10:50 loop_exam_3.yml
--rw-rw-r-- 1 ec2-user ec2-user 749 Mar  3 10:50 loop_exam_4.yml
--rw-rw-r-- 1 ec2-user ec2-user 328 Apr 20 04:20 loop_sample_1.yml
--rw-rw-r-- 1 ec2-user ec2-user   0 Apr 20 04:22 test1.txt
--rw-rw-r-- 1 ec2-user ec2-user   0 Apr 20 04:22 test2.txt
--rw-rw-r-- 1 ec2-user ec2-user   0 Apr 20 04:22 test3.txt
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ls -l /home/ec2-user/
+total 0
+drwxrwxr-x 2 ec2-user ec2-user  6 Apr 20 06:21 loop_dir1
+drwxrwxr-x 2 ec2-user ec2-user  6 Apr 20 06:21 loop_dir2
+drwxr-xr-x 5 ec2-user ec2-user 77 Mar  3 10:52 venv
+drwxrwxr-x 5 ec2-user ec2-user 63 Mar 15 11:58 yokogushi_contents_team
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
 ```
 
 <br>
