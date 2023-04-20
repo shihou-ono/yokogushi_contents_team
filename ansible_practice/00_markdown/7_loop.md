@@ -83,8 +83,8 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 ### 複数のloop
 
 - 以下は、loopで「fruits: 'Apple', color: 'Red'」「fruits: 'Banana', color: 'Yellow'」「fruits: 'Peach', color: 'Pink'」を定義し、debug moduleを使用してmsgを出力させているplaybookである。
-- loopをDict型で定義することができる。
-- loopをDict型で定義したとき、変数「item.key」(fruits: 'xxxx')「item.value」(color: 'yyyy')に格納されるようになっている。
+- loopを辞書型(Dict型)で定義することができる。
+- loopを辞書型(Dict型)で定義したとき、変数「item.key」(fruits: 'xxxx')「item.value」(color: 'yyyy')に格納されるようになっている。
 ```yaml
 ---
 - name: sample
@@ -102,7 +102,7 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 ```
 
 - このplaybookを実行すると、以下のような実行結果となる。
-- loopで定義した辞書(ディクト)が1つずつ代入され、要素を順番に処理することができる。
+- loopで定義した辞書型(Dict型)が1つずつ代入され、要素を順番に処理することができる。
 ```yaml
 PLAY [Sample] ******************************************************************
 
@@ -146,7 +146,8 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 
 ### 3.playbookの内容を確認
 - varsで変数「file_names」に「test1.txt」「test2.txt」「test3.txt」を定義
-- file_namesをloopさせ、file moduleのpathパラメータに代入
+- loopで変数も指定することができる
+- loopで変数「file_names」を指定させて、file moduleのpathパラメータに代入
 ```yaml
 ---
 - name: sample1
@@ -210,8 +211,9 @@ total 20
 - loopディレクティブは以下のときに使用する 
   - 同一のタスクを複数回実行
   - 複数の変数やファイルを扱ったりする
-- 
-
+- loopで定義した内容は、変数「item」に格納されるようになっている。
+- loopで変数も指定することができる
+- リストや辞書型(Dict型)を扱う場合、要素を順番に処理することができる。
 
 <br>
 <br>
