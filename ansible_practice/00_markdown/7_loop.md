@@ -362,6 +362,9 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 ### A2 正解：以下、解答例
 
 - **item > 26** などでもOK。そのほか解答あれば教えてください。 
+
+
+- playbook
 ```yaml
 ---
 - name: exam2
@@ -380,6 +383,37 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
         - 233
         - 350
       when: item < 26 #解答例
+```
+
+- 実行結果
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ansible-playbook answer/loop_exam_2.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit
+localhost does not match 'all'
+
+PLAY [exam2] ****************************************************************************************
+
+TASK [when/loop] ************************************************************************************
+ok: [localhost] => (item=3) => {
+    "ansible_loop_var": "item",
+    "item": 3
+}
+ok: [localhost] => (item=10) => {
+    "ansible_loop_var": "item",
+    "item": 10
+}
+ok: [localhost] => (item=25) => {
+    "ansible_loop_var": "item",
+    "item": 25
+}
+skipping: [localhost] => (item=140) 
+skipping: [localhost] => (item=233) 
+skipping: [localhost] => (item=350) 
+
+PLAY RECAP ******************************************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
 ```
 
 <br>
