@@ -121,373 +121,471 @@ PLAY RECAP *********************************************************************
 localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 ```
 
-
-
-
-
-
-
-
+<br>
+<br>
+<br>
 
 ---
 
-| 項目 | 説明                                                                                                          |
-| :-----: | :------------------------------------------------------------------------------------------------------------ |
-| {{ item.name }}  | loopのname:のみが渡される。<br>ここでは、testuser1,testuser2が渡される。　|
-| {{ item.groups }}  | loopのgroups:のみが渡される。<br>ここでは、testgroup1,testgroup2が渡される。　| 
+## 3.loop ディレクティブの実習
 
-以上のルールに則り、このplaybookは、
-ユーザー「testuser1」をグループ「testgroup1」に追加、
-ユーザー「testuser2」をグループ「testgroup2」に追加する
-という内容になっている。
+### 目的
+  - loopディレクティブを使用して、test1.txt、test2.txt、test3.txtを新規作成する
 
----
-
-# 7-3. loop ディレクティブの実習
-## 目的
-text1.txt、text2.txtのパーミッションを変更する。
-### 1.事前確認
-test1.txt、test2.txtのパーミッションを確認する。
-2つのテキストファイルのパーミッションは現在、test1.txtは644、test2.txtは755。
-
+### 1.ディレクトリ移動
+  - 使用するplaybook,inventoryファイルが存在するディレクトリに移動
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 ~]$ cd /home/ec2-user/yokogushi_contents_team/ansible_practice/loop/
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ls -l
-total 4
--rw-rw-r-- 1 ec2-user ec2-user 198 Feb 15 07:41 loop_1.yml
--rw-r--r-- 1 ec2-user ec2-user   0 Feb 15 07:29 test1.txt
--rwxr-xr-x 1 ec2-user ec2-user   0 Feb 15 07:29 test2.txt
--rw-rw-r-- 1 ec2-user ec2-user   0 Feb 15 07:29 test3.txt
+[ec2-user@ip-172-31-42-108]$ cd /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop
 ```
 
----
-
-### 2.playbookを作成
-test1.txt、test2.txtのパーミッションを777に変更する。
-
+### 2.仮想環境(venv)に入る 
 ```yaml
-$ vi loop_sample_1.yml
+[ec2-user@ip-172-31-42-108]$ source /home/ec2-user/venv/bin/activate
+(venv)[ec2-user@ip-172-31-42-108]$
+```
+
+### 3.playbookの内容を確認
+- varsで変数「file_names」に「test1.txt」「test2.txt」「test3.txt」を定義
+- file_namesをloopさせ、file moduleのpathパラメータに代入
+```yaml
+---
+- name: sample1
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    file_names:
+      - test1.txt
+      - test2.txt
+      - test3.txt
+
+  tasks:
+    - name: Create files
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/{{ item }}
+        state: touch
+      loop: "{{ file_names }}"
+```
+
+### 4.playbookを実行
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ansible-playbook loop_sample_1.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
+
+PLAY [sample1] ********************************************************************************************
+
+TASK [Create files] ***************************************************************************************
+changed: [localhost] => (item=test1.txt)
+changed: [localhost] => (item=test2.txt)
+changed: [localhost] => (item=test3.txt)
+
+PLAY RECAP ************************************************************************************************
+localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
+```
+
+### 5.事後確認
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ls -l /home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop/
+total 20
+-rw-rw-r-- 1 ec2-user ec2-user 218 Mar  3 10:50 loop_exam_1.yml
+-rw-rw-r-- 1 ec2-user ec2-user 337 Mar  3 10:50 loop_exam_2.yml
+-rw-rw-r-- 1 ec2-user ec2-user 302 Mar  3 10:50 loop_exam_3.yml
+-rw-rw-r-- 1 ec2-user ec2-user 749 Mar  3 10:50 loop_exam_4.yml
+-rw-rw-r-- 1 ec2-user ec2-user 328 Apr 20 04:20 loop_sample_1.yml
+-rw-rw-r-- 1 ec2-user ec2-user   0 Apr 20 04:22 test1.txt
+-rw-rw-r-- 1 ec2-user ec2-user   0 Apr 20 04:22 test2.txt
+-rw-rw-r-- 1 ec2-user ec2-user   0 Apr 20 04:22 test3.txt
+```
+
+<br>
+<br>
+<br>
 
 ---
-- name: loop_sample_1
+
+## loopディレクティブについてのまとめ
+
+
+
+<br>
+<br>
+<br>
+
+---
+
+## 4.loopディレクティブの演習
+
+---
+
+
+### Q1 実行結果から、以下のplaybookの空欄に当てはまるものを考えてください。
+- playbook
+```yaml
+---
+- name: exam1
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    fruits:
+      - Apple
+      - Banana
+      - Peach
+
+  tasks:
+    - name: debug fruits
+      debug:
+        msg: "{{ ■■■ }}"
+      loop: "{{ ■■■ }}"
+```
+
+- 実行結果
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ansible-playbook loop_exam_1.yml 
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost
+does not match 'all'
+
+PLAY [exam1] **********************************************************************************************
+
+TASK [debug fruits] ***************************************************************************************
+ok: [localhost] => (item=Apple) => {
+    "msg": "Apple"
+}
+ok: [localhost] => (item=Banana) => {
+    "msg": "Banana"
+}
+ok: [localhost] => (item=Peach) => {
+    "msg": "Peach"
+}
+
+PLAY RECAP ************************************************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
+```
+
+<br>
+<br>
+<br>
+
+---
+
+### Q2 出力結果をloopの中から3つだけ出力させたいとき、■■■にはどんな条件式が入るでしょうか。
+- playbook
+```yaml
+---
+- name: exam2
   hosts: localhost
   gather_facts: false
 
   tasks:
-    - name: chmod text
-      file: path={{ playbook_dir }}/{{ item }}.txt mode=777
-      loop: 
-        - test1
-        - test2
-```
----
-
-### 3.playbookを実行
-ok=1 change=1 であることを確認。(正常に実行され、問題なく変更できたこと)
-```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_sample_1.yml
-[WARNING]: provided hosts list is empty, only localhost is available. Note that
-the implicit localhost does not match 'all'
-
-PLAY [loop_sample_1] **************************************************************
-
-TASK [chmod text] **************************************************************
-changed: [localhost] => (item=test1)
-changed: [localhost] => (item=test2)
-
-PLAY RECAP *********************************************************************
-localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+    - name: when/loop
+      debug: 
+        var: item
+      loop:
+        - 3
+        - 10
+        - 25
+        - 140
+        - 233
+        - 350
+      when: ■■■
 ```
 
+<br>
+<br>
+<br>
+
 ---
 
-### 4.事後確認
-test1.txt、test2.txtのパーミッションを確認する。
-test1.txt、test2.txtどちらもパーミッションは777であることを確認。
+### Q3 以下の条件のplaybookを作成して、実行してください
+- 使用インベントリファイル：「/home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop」配下のinventory.ini
+- playbook作成先ディレクトリ：「/home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop」配下
+- playbook名：「loop_exam_3.yml」で作成
+- 実行対象ノード：host01、host02
+- 処理内容：
+  - host01、host02の「/tmp」配下に、「loop_test1.txt」「loop_test2.txt」を作成する(パーミッション等は特に指定なし)
 
+<br>
+<br>
+<br>
+
+---
+
+### Q4 以下の条件のplaybookを作成して、実行してください
+- 使用インベントリファイル：「/home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop」配下のinventory.ini
+- playbook作成先ディレクトリ：「/home/ec2-user/yokogushi_contents_team/ansible_practice/07_loop」配下
+- playbook名：「loop_exam_4.yml」で作成
+- 実行対象ノード：vyos01、vyos02
+- 処理内容：
+  - loopディレクティブを使用して、vyos01、vyos02の eth1・eth2にそれぞれdescriptionを設定する
+  - eth1→「loop_test1」eth2→「loop_test2」と設定する
+  - 事前、事後で「show interfaces」を実施し、実行結果を出力させる（余力があれば）
+
+<br>
+<br>
+<br>
+
+---
+
+### A1 正解：以下、解答例
+
+- playbook
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ls -l
-total 4
--rw-rw-r-- 1 ec2-user ec2-user 198 Feb 15 07:48 loop_1.yml
--rwxrwxrwx 1 ec2-user ec2-user   0 Feb 15 07:29 test1.txt
--rwxrwxrwx 1 ec2-user ec2-user   0 Feb 15 07:29 test2.txt
--rw-rw-r-- 1 ec2-user ec2-user   0 Feb 15 07:29 test3.txt
-```
-
 ---
-
-# 7-4 loopディレクティブの演習
-### Q1 以下のplaybookを実行した時、出力結果はどうなるでしょうか。実際に作成してみてください。
-```yaml
----
-- name: loop_exam_1
+- name: exam1
   hosts: localhost
   gather_facts: false
-  become: true
 
-tasks:
-  - name: add users
-    user:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - taro
-      - hanako
+  vars:
+    fruits:
+      - Apple
+      - Banana
+      - Peach
+
+  tasks:
+    - name: debug fruits
+      debug:
+        msg: "{{ item }}" #解答
+      loop: "{{ fruits }}" #解答
 ```
 
+<br>
+<br>
+<br>
+
 ---
 
-### Q2 以下のplaybookを実行したとき、実行結果はどうなるでしょうか。<br>実際に作成してみてください。
+### A2 正解：以下、解答例
+
+- **item > 26** などでもOK。そのほか解答あれば教えてください。 
 ```yaml
 ---
-- name: loop_exam_2
-  hosts: vyos01
+- name: exam2
+  hosts: localhost
   gather_facts: false
 
   tasks:
-    - name: show commands
+    - name: when/loop
+      debug: 
+        var: item
+      loop:
+        - 3
+        - 10
+        - 25
+        - 140
+        - 233
+        - 350
+      when: item < 26 #解答例
+```
+
+<br>
+<br>
+<br>
+
+---
+
+### A3 以下、解答例
+
+- playbook
+```yaml
+---
+- name: exam3
+  hosts: centos7
+  gather_facts: false
+
+  tasks:
+    - name: make file
+      file:
+        path: /tmp/{{ item }}
+        state: touch
+      loop:
+        - loop_test1.txt
+        - loop_test2.txt
+```
+
+- 実行結果
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ansible-playbook -i inventory.ini loop_exam_3.yml 
+
+PLAY [exam3] ****************************************************************************************
+
+TASK [make file] ************************************************************************************
+changed: [host01] => (item=loop_test1.txt)
+changed: [host02] => (item=loop_test1.txt)
+changed: [host02] => (item=loop_test2.txt)
+changed: [host01] => (item=loop_test2.txt)
+
+PLAY RECAP ******************************************************************************************
+host01                     : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+host02                     : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
+```
+
+- ファイルが作成されているか確認
+```yaml
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ docker exec -it host01 /bin/bash
+[root@host01 /]# ls -l /tmp/
+total 0
+drwx------ 2 root root 37 Apr 13 04:54 ansible_yum_payload_Vc17Y3
+-rw-r--r-- 1 root root  0 Apr 20 04:55 loop_test1.txt
+-rw-r--r-- 1 root root  0 Apr 20 04:55 loop_test2.txt
+-rw-r--r-- 1 root root  0 Apr 13 09:16 test_exam4.txt
+[root@host01 /]# 
+[root@host01 /]# exit
+exit
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ docker exec -it host02 /bin/bash
+[root@host02 /]# ls -l /tmp/
+total 0
+drwx------ 2 root root 37 Apr 13 04:54 ansible_yum_payload_FWE23G
+-rw-r--r-- 1 root root  0 Apr 20 04:55 loop_test1.txt
+-rw-r--r-- 1 root root  0 Apr 20 04:55 loop_test2.txt
+[root@host02 /]# 
+[root@host02 /]# exit
+exit
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ 
+```
+
+<br>
+<br>
+<br>
+
+---
+
+### A4 以下、解答例
+
+- playbook
+```yaml
+---
+- name: exam4
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: check before interface description #任意の実施
       vyos_command:
-        commands: "{{ item }}"
-      loop: 
-        - show version
-        - show interfaces
+        commands:
+          - show interfaces
       register: result
 
-    - name: debug result
+    - name: check before interface description debug #任意の実施
       debug:
-        var: result.results|map(attribute='stdout_lines') | list
+        var: result.stdout_lines
+
+    - name: set descriptions
+      vyos_config:
+        lines:
+          - set interfaces ethernet {{ item.ethernet }} description {{ item.description }}
+      loop: 
+        - { ethernet: 'eth1', description: 'loop_test1' }
+        - { ethernet: 'eth2', description: 'loop_test2' }
+
+    - name: check after interface description #任意の実施
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+
+    - name: check after interface description debug #任意の実施
+      debug:
+        var: result.stdout_lines
 ```
 
----
-
-### Q3 localhostに、loopを使用してファイルを作成して下さい
-作成するファイル: data1.txt,data2.txt,data3.txt
-作成先ディレクトリ：/home/ec2-user/home/ec2-user/yokogushi_contents_team/ansible_practice/loop
-
----
-
-### Q4 vyos01にユーザー名「guest1」「guest2」「guest3」を追加し、<br>それぞれパスワードを設定して、ユーザーが追加されていることが<br>分かることを確認できるplaybookを、loopを使用して作成して下さい。
-
----
-
-### A1.以下のような実行結果になります。
+- 実行結果
 ```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_exam_1.yml 
-[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$ ansible-playbook -i inventory.ini loop_exam_4.yml 
 
-PLAY [loop_exam_1] ********************************************************************************************************************
+PLAY [exam4] ****************************************************************************************
 
-TASK [add users] *******************************************************************************************************************
-changed: [localhost] => (item=taro)
-changed: [localhost] => (item=hanako)
-
-PLAY RECAP *************************************************************************************************************************
-localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-```
-ユーザ「taro」「hanako」がlocalhostに追加されました。
-```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ cat /etc/passwd
-…(省略)…
-taro:x:1007:1009::/home/taro:/bin/bash
-hanako:x:1008:1010::/home/hanako:/bin/bash
-```
-
----
-
-### A2.以下のような実行結果になります。
-show version,show interfaceの実行結果が表示されます。
-```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook -i /home/ec2-user/yokogushi_contents_team/ansible_practice/inventory.ini loop_exam_2.yml 
-
-PLAY [loop_exam_2] ****************************************************************************************
-
-TASK [show commands] **********************************************************************************
-ok: [vyos01] => (item=show version)
-ok: [vyos01] => (item=show interfaces)
+TASK [check before interface description] ***********************************************************
 [WARNING]: Platform linux on host vyos01 is using the discovered Python interpreter at
 /usr/bin/python, but future installation of another Python interpreter could change this. See
 https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more
 information.
-
-TASK [debug result] ***********************************************************************************
-ok: [vyos01] => {
-    "result.results|map(attribute='stdout_lines')|list": [
-        [
-            [
-                "Version:          VyOS 1.4-rolling-202108071508",
-                "Release Train:    sagitta",
-                "",
-                "Built by:         vyos_bld@ae1b2315b0ae",
-                "Built on:         Sat 07 Aug 2021 15:08 UTC",
-                "Build UUID:       e7077035-649b-47d4-8eb2-cd6f1fc399cc",
-                "Build Commit ID:  4f6c9346247bd6",
-                "",
-                "Architecture:     x86_64",
-                "Boot via:         installed image",
-                "System type:      Xen HVM guest",
-                "",
-                "Hardware vendor:  Xen",
-                "Hardware model:   HVM domU",
-                "Hardware S/N:     ec2b85f7-3bc5-3377-1fa9-ae989708ede7",
-                "Hardware UUID:    ec2b85f7-3bc5-3377-1fa9-ae989708ede7",
-                "",
-                "Copyright:        VyOS maintainers and contributors"
-            ]
-        ],
-        [
-            [
-                "Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down",
-                "Interface        IP Address                        S/L  Description",
-                "---------        ----------                        ---  -----------",
-                "eth0             10.0.0.2/24                       u/u  ",
-                "eth1             192.168.1.252/24                  u/u  ",
-                "eth2             192.168.2.252/24                  u/u  ",
-                "lo               127.0.0.1/8                       u/u"
-            ]
-        ]
-    ]
-}
-
-PLAY RECAP ********************************************************************************************
-vyos01                     : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-```
-
----
-
-### A3.playbookの例は以下です。(これだけが正解ではありません)
-```yaml
----
-- name: loop_exam_3
-  hosts: localhost
-  gather_facts: false
-
-  tasks:
-    - name: create text
-      file: 
-        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/loop/{{ item }}.txt
-        state: touch
-        mode: '644'
-      loop: 
-        - data1
-        - data2
-        - data3
-```
-
----
-以下ような実行結果になります。
-```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook loop_exam_3.yml 
-[WARNING]: provided hosts list is empty, only localhost is available. Note that
-the implicit localhost does not match 'all'
-
-PLAY [loop_exam_3] *************************************************************
-
-TASK [create text] *************************************************************
-changed: [localhost] => (item=data1)
-changed: [localhost] => (item=data2)
-changed: [localhost] => (item=data3)
-
-PLAY RECAP *********************************************************************
-localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
-```
-data1.txt,data2.txt,data3.txtが作成されました。
-```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ls -l /home/ec2-user/yokogushi_contents_team/ansible_practice/loop/
-total 28
--rw-rw-r-- 1 ec2-user ec2-user   0 Mar  8 10:38 data1.txt
--rw-rw-r-- 1 ec2-user ec2-user   0 Mar  8 10:38 data2.txt
--rw-rw-r-- 1 ec2-user ec2-user   0 Mar  8 10:38 data3.txt
-```
-
----
-
-### A4.playbookの例は以下です。(これだけが正解ではありません)
-```yaml
----
-- name: loop_exam_4
-  hosts: vyos01
-  gather_facts: false
-  become: true
-    
-  tasks:
-    - name: user check
-      vyos_command:
-        commands: show system login users
-      register: result
-
-    - name: before users
-      debug:
-        var: result.stdout_lines
-
-    - name: add users
-      vyos_user:
-        name: "{{ item.name }}"
-        configured_password: "{{ item.password }}"
-        state: present
-      loop:
-        - { name: 'guest1', password: 'pass1' }
-        - { name: 'guest2', password: 'pass2' }
-        - { name: 'guest3', password: 'pass3' }
-
-    - name: user check
-      vyos_command:
-        commands: show system login users
-      register: result
-
-    - name: after users
-      debug:
-        var: result.stdout_lines
-```
-
----
-以下ような実行結果になります。
-```yaml
-(venv) [ec2-user@ip-172-31-44-135 loop]$ ansible-playbook -i/home/ec2-user/yokogushi_contents_team/ansible_practice/inventory.ini loop_exam_4.yml 
-
-PLAY [loop_exam_4] ****************************************************************
-
-TASK [user check] **************************************************************
-[WARNING]: Platform linux on host vyos01 is using the discovered Python
-interpreter at /usr/bin/python, but future installation of another Python
-interpreter could change this. See https://docs.ansible.com/ansible/2.9/referen
-ce_appendices/interpreter_discovery.html for more information.
 ok: [vyos01]
+[WARNING]: Platform linux on host vyos02 is using the discovered Python interpreter at
+/usr/bin/python, but future installation of another Python interpreter could change this. See
+https://docs.ansible.com/ansible/2.9/reference_appendices/interpreter_discovery.html for more
+information.
+ok: [vyos02]
 
-TASK [before users] ************************************************************
+TASK [check before interface description debug] *****************************************************
 ok: [vyos01] => {
     "result.stdout_lines": [
         [
-            "Username    Type    Locked    Tty    From      Last login",
-            "----------  ------  --------  -----  --------  ------------------------",
-            "vyos        vyos    False     pts/1  10.0.0.1  Tue Mar  8 09:20:44 2022"
+            "Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down",
+            "Interface        IP Address                        S/L  Description",
+            "---------        ----------                        ---  -----------",
+            "eth0             10.0.0.2/24                       u/u  ",
+            "eth1             192.168.1.252/24                  u/u  vyos_config-test1",
+            "                 192.168.1.254/24                       ",
+            "eth2             192.168.2.252/24                  u/u  vyos_config-test2",
+            "                 192.168.2.254/24                       ",
+            "lo               127.0.0.1/8                       u/u"
+        ]
+    ]
+}
+ok: [vyos02] => {
+    "result.stdout_lines": [
+        [
+            "Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down",
+            "Interface        IP Address                        S/L  Description",
+            "---------        ----------                        ---  -----------",
+            "eth0             10.0.0.3/24                       u/u  ",
+            "eth1             192.168.1.253/24                  u/u  debug_exam",
+            "eth2             192.168.2.253/24                  u/u  vyos_config-test2",
+            "lo               127.0.0.1/8                       u/u"
         ]
     ]
 }
 
-TASK [add users] ***************************************************************
-changed: [vyos01] => (item={'name': 'guest1', 'password': 'pass1'})
-changed: [vyos01] => (item={'name': 'guest2', 'password': 'pass2'})
-changed: [vyos01] => (item={'name': 'guest3', 'password': 'pass3'})
-[WARNING]: Module did not set no_log for update_password
+TASK [set descriptions] *****************************************************************************
+changed: [vyos01] => (item={'ethernet': 'eth1', 'description': 'loop_test1'})
+changed: [vyos02] => (item={'ethernet': 'eth1', 'description': 'loop_test1'})
+changed: [vyos01] => (item={'ethernet': 'eth2', 'description': 'loop_test2'})
+changed: [vyos02] => (item={'ethernet': 'eth2', 'description': 'loop_test2'})
 
-TASK [user check] **************************************************************
+TASK [check after interface description] ************************************************************
+ok: [vyos02]
 ok: [vyos01]
 
-TASK [after users] *************************************************************
+TASK [check after interface description debug] ******************************************************
 ok: [vyos01] => {
     "result.stdout_lines": [
         [
-            "Username    Type    Locked    Tty    From      Last login",
-            "----------  ------  --------  -----  --------  ------------------------",
-            "vyos        vyos    False     pts/1  10.0.0.1  Tue Mar  8 09:20:44 2022",
-            "guest1      vyos    False                      never logged in",
-            "guest2      vyos    False                      never logged in",
-            "guest3      vyos    False                      never logged in"
+            "Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down",
+            "Interface        IP Address                        S/L  Description",
+            "---------        ----------                        ---  -----------",
+            "eth0             10.0.0.2/24                       u/u  ",
+            "eth1             192.168.1.252/24                  u/u  loop_test1",
+            "                 192.168.1.254/24                       ",
+            "eth2             192.168.2.252/24                  u/u  loop_test2",
+            "                 192.168.2.254/24                       ",
+            "lo               127.0.0.1/8                       u/u"
+        ]
+    ]
+}
+ok: [vyos02] => {
+    "result.stdout_lines": [
+        [
+            "Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down",
+            "Interface        IP Address                        S/L  Description",
+            "---------        ----------                        ---  -----------",
+            "eth0             10.0.0.3/24                       u/u  ",
+            "eth1             192.168.1.253/24                  u/u  loop_test1",
+            "eth2             192.168.2.253/24                  u/u  loop_test2",
+            "lo               127.0.0.1/8                       u/u"
         ]
     ]
 }
 
-PLAY RECAP *********************************************************************
-vyos01                     : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
-```
+PLAY RECAP ******************************************************************************************
+vyos01                     : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vyos02                     : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
+(venv) [ec2-user@ip-172-31-42-108 07_loop]$
+```
