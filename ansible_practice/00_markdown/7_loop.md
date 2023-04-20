@@ -323,7 +323,7 @@ localhost                  : ok=1    changed=0    unreachable=0    failed=0    s
 - 処理内容：
   - loopディレクティブを使用して、vyos01、vyos02の eth1・eth2にそれぞれdescriptionを設定する
   - eth1→「loop_test1」eth2→「loop_test2」と設定する
-  - 事前、事後で「show interfaces」を実施し、実行結果を出力させる（余力があれば）
+  - 事前、事後で「show interfaces」を実施し、実行結果を出力させる（余力があればでOK）
 
 <br>
 <br>
