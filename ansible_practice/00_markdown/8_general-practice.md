@@ -39,7 +39,7 @@ exit
 
 2. 以下のplaybookを作成してください。
 - 内容：
-  - １. 「/home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice」配下に、
+  - １. localhostの「/home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice」配下に、
         「/before/vyos01」 「/before/vyos02」「/after/vyos01」「/after/vyos02」のディレクトリを作成する
   - ２. パーミッションは「0644」で作成する
 
