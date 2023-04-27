@@ -30,6 +30,9 @@
  
 <br>
 
+### 目的
+- vyos01のvrrpのプライオリティ値を変更する際に、ディレクトリ作成・ファイル出力・メッセージ出力をする。
+
 2-1. 以下のplaybookを作成してください。
 - 内容：
   - １. localhostの「/home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice」配下に、
