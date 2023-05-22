@@ -2,7 +2,7 @@
 - name: exam2-1_mode-0644
   hosts: localhost
   gather_facts: false
-  become: true #mode: 0644で作成する場合権限昇格が必要
+  become: true #パーミッション「0644」で作成する場合権限昇格が必要
 
   tasks:
     - name: make dirictory 

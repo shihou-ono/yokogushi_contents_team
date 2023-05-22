@@ -7,11 +7,11 @@
     - name: show vrrp before
       vyos_command:
         commands: "show vrrp"
-      register: result
+      register: show_vrrp_result_before
 
     - name: vrrp state before
       debug:
-        var: result.stdout_lines[0]
+        var: show_vrrp_result_before.stdout_lines[0]
 
     - name: change priority of vrrp
       vyos_config:
@@ -24,8 +24,8 @@
     - name: show vrrp after
       vyos_command:
         commands: "show vrrp"
-      register: result
+      register: show_vrrp_result_after
 
     - name: vrrp state after
       debug:
-        var: result.stdout_lines[0]
+        var: show_vrrp_result_after.stdout_lines[0]

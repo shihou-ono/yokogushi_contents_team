@@ -8,18 +8,13 @@
       vyos_command:
         commands:
           - show vrrp
-      register: result
+      register: show_result
 
     - name: debug show_commands
       debug:
-        var: result.stdout_lines
-
-    - name: text touch
-      file:
-        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/answer/before/{{ inventory_hostname }}/test2.txt
-        state: touch
+        var: show_result.stdout_lines
 
     - name: text show_command
       copy:
-        content: "{{ result.stdout_lines[0] }}"
-        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/answer/before/{{ inventory_hostname }}/test2.txt
+        content: "{{ show_result.stdout[0] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/answer/before/{{ inventory_hostname }}/{{ inventory_hostname }}_show_result.txt
