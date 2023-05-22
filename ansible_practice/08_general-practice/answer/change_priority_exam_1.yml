@@ -1,5 +1,5 @@
 ---
-- name: exam1
+- name: exam1 #問題1
   hosts: vyos
   gather_facts: false
 

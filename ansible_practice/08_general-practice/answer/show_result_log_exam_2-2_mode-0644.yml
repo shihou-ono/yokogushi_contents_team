@@ -1,8 +1,8 @@
 ---
-- name: exam2-2_mode-0644
+- name: exam2-2_mode-0644 #問題2-2 問題2-1で作成したディレクトリのパーミッション「0644」のとき
   hosts: vyos
   gather_facts: false
-  become: true
+  become: true #権限昇格が必要
 
   tasks:
     - name: show commands vyos
@@ -11,12 +11,12 @@
           - show vrrp
       register: show_result
 
-    - name: debug show_commands
+    - name: debug show commands
       debug:
         var: show_result.stdout_lines
 
-    - name: text show_command
+    - name: debug text show commands
       copy:
         content: "{{ show_result.stdout[0] }}"
         dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/before/{{ inventory_hostname }}/{{ inventory_hostname }}_show_result.txt
-      delegate_to: localhost
+      delegate_to: localhost #localhostに対して実行

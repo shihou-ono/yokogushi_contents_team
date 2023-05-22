@@ -1,5 +1,5 @@
 ---
-- name: exam2-3_failed_pattern
+- name: exam2-3_failed_pattern #問題2-3 failedパターン
   hosts: vyos
   gather_facts: false
 
