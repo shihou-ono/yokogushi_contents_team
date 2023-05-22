@@ -1,5 +1,5 @@
 ---
-- name: exam2-2
+- name: exam2-2_mode-0775
   hosts: vyos
   gather_facts: false
 
