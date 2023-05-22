@@ -1,5 +1,5 @@
 ---
-- name: exam2-1_mode-0775 #問題2-1 パーミッション「0755」で作成した場合 
+- name: exam2-1_mode-0775 #問題2-1 パーミッション「0775」で作成した場合 
   hosts: localhost
   gather_facts: false
 
