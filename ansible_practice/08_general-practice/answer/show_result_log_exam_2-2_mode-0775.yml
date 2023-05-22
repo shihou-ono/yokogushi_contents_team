@@ -17,4 +17,4 @@
     - name: text show_command
       copy:
         content: "{{ show_result.stdout[0] }}"
-        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/answer/before/{{ inventory_hostname }}/{{ inventory_hostname }}_show_result.txt
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/before/{{ inventory_hostname }}/{{ inventory_hostname }}_show_result.txt
