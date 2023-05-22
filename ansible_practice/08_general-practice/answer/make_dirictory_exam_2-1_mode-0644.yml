@@ -1,0 +1,17 @@
+---
+- name: exam2-1_mode-0644
+  hosts: localhost
+  gather_facts: false
+  become: true #mode: 0644で作成する場合権限昇格が必要
+
+  tasks:
+    - name: make dirictory 
+      file:
+        path: "{{ playbook_dir }}{{ item }}"
+        state: directory
+        mode: '0644'
+      loop:
+        - /before/vyos01
+        - /before/vyos02
+        - /after/vyos01
+        - /after/vyos02

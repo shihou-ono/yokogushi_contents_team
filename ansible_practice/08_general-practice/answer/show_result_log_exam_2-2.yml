@@ -1,0 +1,25 @@
+---
+- name: exam2-2
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: show commands vyos
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result
+
+    - name: debug show_commands
+      debug:
+        var: result.stdout_lines
+
+    - name: text touch
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/answer/before/{{ inventory_hostname }}/test2.txt
+        state: touch
+
+    - name: text show_command
+      copy:
+        content: "{{ result.stdout_lines[0] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/answer/before/{{ inventory_hostname }}/test2.txt

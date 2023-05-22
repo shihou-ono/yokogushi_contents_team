@@ -1,0 +1,37 @@
+---
+- name: exam2-3_success_pattern
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: show vrrp before #問題に無いので任意
+      vyos_command:
+        commands: "show vrrp"
+      register: result
+
+    - name: vrrp state before #問題に無いので任意
+      debug:
+        var: result.stdout[0]
+
+    - name: change priority of vrrp
+      vyos_config:
+        lines:
+          - "set high-availability vrrp group service_nw01 priority '200'" #プライオリティ値を正常値の200に変更
+          - "set high-availability vrrp group service_nw02 priority '200'" #プライオリティ値を正常値の200に変更
+        save: true
+      when: inventory_hostname == 'vyos01' #vyos01のみ実施
+      register: result
+
+    - name: show vrrp after #問題に無いので任意
+      vyos_command:
+        commands: "show vrrp"
+      register: result
+
+    - name: vrrp state after #問題に無いので任意
+      debug:
+        var: result.stdout[0]
+
+    - name: change priority result msg
+      debug:
+        msg: "success change priority !!"
+      when: result is succeeded #resultの実行結果がsuccessのときにタスクを実行する

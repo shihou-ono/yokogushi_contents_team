@@ -1,0 +1,16 @@
+---
+- name: exam2-1_mode-0775
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: make dirictory 
+      file:
+        path: "{{ playbook_dir }}{{ item }}"
+        state: directory
+        mode: '0775'
+      loop:
+        - /before/vyos01
+        - /before/vyos02
+        - /after/vyos01
+        - /after/vyos02
