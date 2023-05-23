@@ -1,15 +1,15 @@
 ---
-- name: exam2-1_mode-0644 #問題2-1 パーミッション「0644」で作成した場合
+- name: exam2-1_mode-0644  # 問題2-1 パーミッション「0644」で作成した場合
   hosts: localhost
   gather_facts: false
-  become: true #権限昇格が必要
+  become: true  # 権限昇格が必要
 
   tasks:
-    - name: make dirictory 
+    - name: make dirictory
       file:
         path: "{{ playbook_dir }}{{ item }}"
         state: directory
-        mode: '0644' 
+        mode: '0644'
       loop:
         - /before/vyos01
         - /before/vyos02

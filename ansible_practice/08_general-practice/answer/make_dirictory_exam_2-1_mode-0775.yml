@@ -1,10 +1,10 @@
 ---
-- name: exam2-1_mode-0775 #問題2-1 パーミッション「0775」で作成した場合 
+- name: exam2-1_mode-0775  # 問題2-1 パーミッション「0775」で作成した場合
   hosts: localhost
   gather_facts: false
 
   tasks:
-    - name: make dirictory 
+    - name: make dirictory
       file:
         path: "{{ playbook_dir }}{{ item }}"
         state: directory

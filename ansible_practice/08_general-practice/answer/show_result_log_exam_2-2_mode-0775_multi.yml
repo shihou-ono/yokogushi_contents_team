@@ -1,5 +1,5 @@
 ---
-- name: exam2-2_mode-0775_multi #実行するshowコマンドが複数のとき
+- name: exam2-2_mode-0775_multi  # 実行するshowコマンドが複数のとき
   hosts: vyos
   gather_facts: false
 
@@ -18,5 +18,6 @@
 
     - name: debug text show commands
       copy:
-        content: "{{ show_result.stdout_lines | to_nice_json }}" #to_nice_jsonフィルターで改行された形で出力させる。
-        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/before/{{ inventory_hostname }}/{{ inventory_hostname }}_show_result.txt
+        content: "{{ show_result.stdout_lines | to_nice_json }}"  # to_nice_jsonフィルターで改行された形で出力させる。
+        dest: /before/{{ inventory_hostname }}/{{ inventory_hostname }}_show_result.txt
+        mode: '0775'  # 問題に無いので任意

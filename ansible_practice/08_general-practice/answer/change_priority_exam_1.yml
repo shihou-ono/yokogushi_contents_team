@@ -1,5 +1,5 @@
 ---
-- name: exam1 #問題1
+- name: exam1  # 問題1
   hosts: vyos
   gather_facts: false
 
@@ -16,10 +16,10 @@
     - name: change priority of vrrp
       vyos_config:
         lines:
-          - "set high-availability vrrp group service_nw01 priority '50'" #vrrpのプライオリティ値を50に変更
-          - "set high-availability vrrp group service_nw02 priority '50'" #vrrpのプライオリティ値を50に変更
+          - "set high-availability vrrp group service_nw01 priority '50'"  # vrrpのプライオリティ値を50に変更
+          - "set high-availability vrrp group service_nw02 priority '50'"  # vrrpのプライオリティ値を50に変更
         save: true
-      when: inventory_hostname == 'vyos01' #vyos01のみ実施
+      when: inventory_hostname == 'vyos01'  # vyos01のみ実施
 
     - name: show vrrp after
       vyos_command:

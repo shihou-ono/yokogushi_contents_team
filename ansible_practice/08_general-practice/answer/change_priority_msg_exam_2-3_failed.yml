@@ -1,38 +1,38 @@
 ---
-- name: exam2-3_failed_pattern #問題2-3 failedパターン
+- name: exam2-3_failed_pattern  # 問題2-3 failedパターン
   hosts: vyos
   gather_facts: false
 
   tasks:
-    - name: show vrrp before #問題に無いので任意
+    - name: show vrrp before  # 問題に無いので任意
       vyos_command:
         commands: "show vrrp"
       register: result
 
-    - name: vrrp state before #問題に無いので任意
+    - name: vrrp state before  # 問題に無いので任意
       debug:
         var: result.stdout_lines[0]
 
-    - name: change priority of vrrp 
+    - name: change priority of vrrp
       vyos_config:
         lines:
-          - "set high-availability vrrp group service_nw01 priority '300'" #プライオリティ値を異常値の300に変更
-          - "set high-availability vrrp group service_nw02 priority '300'" #プライオリティ値を異常値の300に変更
+          - "set high-availability vrrp group service_nw01 priority '300'"  # プライオリティ値を異常値の300に変更
+          - "set high-availability vrrp group service_nw02 priority '300'"  # プライオリティ値を異常値の300に変更
         save: true
-      when: inventory_hostname == 'vyos01' #vyos01のみ実施
-      register: result #実行結果、内容の保存
-      ignore_errors: true #実行結果がfailedでも次のタスクを実行させる
+      when: inventory_hostname == 'vyos01'  # vyos01のみ実施
+      register: result  # 実行結果、内容の保存
+      ignore_errors: true  # 実行結果がfailedでも次のタスクを実行させる
 
-    - name: show vrrp after #問題に無いので任意
+    - name: show vrrp after  # 問題に無いので任意
       vyos_command:
         commands: "show vrrp"
       register: result
 
-    - name: vrrp state after #問題に無いので任意
+    - name: vrrp state after  # 問題に無いので任意
       debug:
         var: result.stdout_lines[0]
 
     - name: change priority result msg
       debug:
         msg: "failed change priority !!"
-      when: result is failed #resultの実行結果がfailedのときにタスクを実行する
+      when: result is failed  # resultの実行結果がfailedのときにタスクを実行する
