@@ -1,0 +1,33 @@
+---
+- name: exam_3
+  hosts: vyos02
+  gather_facts: false
+
+  tasks:
+    - name: get vyos02_interfaces
+      vyos_command:
+        commands:
+          - show interfaces
+      register: vyos02_show_interfaces
+
+    - name: debug vyos02_interfaces
+      debug:
+        var: vyos02_show_interfaces
+
+    - name: set vyos02_description
+      vyos_config:
+        lines:
+          - set interfaces ethernet eth1 description "debug_exam" #""はshow intで表示されない。
+        save: true
+
+    - name: re_get vyos02_interfaces
+      vyos_command:
+        commands:
+          - show interfaces
+      register: re_vyos02_show_interfaces #新しいregister変数を定義する。
+      #register: vyos02_show_interfaces #register変数を上書きする。
+
+    - name: re_debug vyos2_interfaces
+      debug:
+        var: re_vyos02_show_interfaces
+        #var: vyos02_show_interfaces # 上書きしたregister変数を表示する。

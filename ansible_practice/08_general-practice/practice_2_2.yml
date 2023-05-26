@@ -1,0 +1,65 @@
+#１. vyos01/vyos02でshowコマンドを実行する。(実行コマンドは何でも・何個でも可)
+#２. 2-2-1で確認した確認内容は実行結果に出力させる。
+#３．2-2-1で確認した確認内容の実行結果を、「/before/vyos01」 「/before/vyos02」に
+#テキストファイルで出力させる。
+---
+- name: change permission of directories
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: change permission of vyos01 and vyos02 directory
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item.parent_dir }}/{{ item.child_dir }}
+        mode: 0744 #after、beforeディレクトリそれぞれのvyos01、vyos02ディレクトリに実行権を付与する。
+      loop:
+        - { parent_dir: 'before', child_dir: 'vyos01'}
+        - { parent_dir: 'before', child_dir: 'vyos02'}
+        - { parent_dir: 'after', child_dir: 'vyos01'}
+        - { parent_dir: 'after', child_dir: 'vyos02'}
+
+
+- name: show interfaces and write in text file
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+  #設定前のshow interfacesの結果を出力＆ファイルに書き込む。
+    - name: show interfaces of vyos01 and vyos02 before
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result_before
+
+    - name: debug register bofore
+      debug:
+        var: result_before.stdout_lines
+
+    - name: write "result_before" in text file
+      copy:
+        content: "{{ result_before.stdout[0] }}" #ファイル出力の場合は、要素を指定しないと改行されない。
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/before/{{ inventory_hostname }}/text
+  
+  #vyos01、vyos02それぞれのinterfaceにdescriptionを設定する。
+    - name: set description on interfaces of vyos01 and vyos02
+      vyos_config:
+        lines:
+          #ansible-playbookコマンドで渡した引数desc1、desc2の値をdescriptionに設定する。
+          - set interfaces ethernet eth1 description {{ desc1 }}
+          - set interfaces ethernet eth2 description {{ desc2 }}
+
+  #設定後のshow interfacesの結果を出力＆ファイルに書き込む。
+    - name: show interfaces of vyos01 and vyos02 after
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result_after
+
+    - name: debug register after
+      debug:
+        var: result_after.stdout_lines
+
+    - name: write "result_after" in text file
+      copy:
+        content: "{{ result_after.stdout[0] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/after/{{ inventory_hostname }}/text

@@ -1,3 +1,6 @@
+#varsで変数「dir_names」に「loop_dir1」「loop_dir2」を定義
+#loopで変数も指定することができる
+#loopで変数「dir_names」を指定させて、file moduleのpathパラメータに代入
 ---
 - name: sample1
   hosts: localhost
@@ -12,5 +15,7 @@
     - name: make directory
       file:
         path: /home/ec2-user/{{ item }}
+        #path: /home/ec2-user/"{{ item }}"だとクォーテーション付きのディレクトリ名になる。
         state: directory
       loop: "{{ dir_names }}"
+      #loopに直接リストを定義するのではなく、リストを格納した変数を指定している。

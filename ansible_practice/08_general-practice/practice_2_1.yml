@@ -1,0 +1,33 @@
+#１. localhostの「/home/ec2-user/yokogushi_contents_team/ansible_practice
+#/08_general-practice」配下に、「/before/vyos01」 「/before/vyos02」
+#「/after/vyos01」「/after/vyos02」のディレクトリを作成する(※loopディレクティブを使用すること)
+#２. パーミッションは「0644」で作成する
+#３. hosts: localhost で作成すること。
+---
+- name: make directories and change permission
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    dirName:
+      - before/vyos01
+      - before/vyos02
+      - after/vyos01
+      - after/vyos02
+
+  tasks:
+    - name: change permission of "after" and "before" directory
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item }}
+        mode: 0744 #afterディレクトリとbeforeディレクトリに実行権を付与する。
+      loop:
+        - after
+        - before
+
+    - name: make directories in "after" and "before" directory
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item }}
+        state: directory
+        mode: 0644
+      loop: "{{ dirName }}"
+

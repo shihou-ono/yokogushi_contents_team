@@ -1,0 +1,26 @@
+---
+- name: exam_4
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: set description
+      vyos_config:
+        lines:
+          - set interfaces ethernet "{{ item.int }}" description "{{ item.desc }}"
+        save: true 
+      loop: #この書き方でも成功するがWarningが出る。→古い記法？
+        - int: eth1
+          desc: loop_test1
+        - int: 'eth2'
+          desc: 'loop_test2'
+    
+    - name: show interfaces after
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+
+    - name: debug result after
+      debug:
+        var: result.stdout_lines

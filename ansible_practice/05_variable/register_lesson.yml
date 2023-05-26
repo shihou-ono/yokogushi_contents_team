@@ -1,0 +1,15 @@
+---
+- name: variable_sample
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get show version
+      vyos_command:
+        commands:
+          - show version
+      register: result
+
+    - name: debug result
+      debug:
+        var: result.stdout_lines[0]

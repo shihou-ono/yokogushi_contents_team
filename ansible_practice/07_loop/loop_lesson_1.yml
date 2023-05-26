@@ -1,0 +1,17 @@
+#以下は、loopで「Apple」「Banana」「Peach」を定義し、debug moduleを使用してmsgを出力させているplaybookである。
+#loopで繰り返すリストを定義することができる。
+#loopで定義した内容は、変数「item」に格納されるようになっている。
+---
+- name: lesson_1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: debug fruits
+      debug:
+        msg: "{{ item }}" #クォーテーション必須（シングルも可）。
+      loop: #リスト型
+        - Apple
+        - Banana
+        - Peach
+      #loopで定義したリストを、ループごとに変数itemに代入して処理している。

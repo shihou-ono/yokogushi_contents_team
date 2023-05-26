@@ -1,0 +1,32 @@
+---
+- name: exam_2_ex
+  hosts: localhost
+  gather_facts: false
+  
+  vars:
+    int_list:
+      - 3
+      - 10
+      - 25
+      - 140
+      - 233
+      - 350
+
+  tasks:
+    - name: when/loop
+      debug:
+        var: item
+      loop: "{{ int_list }}"
+      when: item < 26
+
+    - name: when/loop even #偶数の場合。
+      debug:
+        var: item
+      loop: "{{ int_list }}"
+      when: item % 2 == 0 #2で割った余りが0のとき。
+
+    - name: when/loop odd #奇数の場合。
+      debug:
+        var: item
+      loop: "{{ int_list }}"
+      when: item % 2 != 0 #2で割った余りが0でないとき。

@@ -1,0 +1,32 @@
+---
+- name: lesson_2
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get vyos_command
+      vyos_command:
+        commands:
+          - show interfaces
+          - show ip route
+      register: vyos01_show_command
+
+    - name: debug vyos_command
+      debug:
+        var: vyos01_show_command
+
+    - name: debug vyos_command.stdout
+      debug:
+        var: vyos01_show_command.stdout
+
+    - name: debug vyos_command.stdout[0]
+      debug: 
+        var: vyos01_show_command.stdout[0]
+
+    - name: debug vyos_command.stdout_lines
+      debug:
+        var: vyos01_show_command.stdout_lines
+
+    - name: debug vyos_command.stdout_lines[0]
+      debug:
+        var: vyos01_show_command.stdout_lines[0]

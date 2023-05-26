@@ -1,0 +1,30 @@
+#hostにhttpdインストールを実施し、
+#httpdインストールが成功した場合「yum httpd succeess!!」
+#httpdインストールが失敗した場合「yum httpd error!!」というメッセージを出力する
+#httpdインストールが失敗してもplaybookが続行されるように「ignore_errors: true」を記述
+---
+- name: lesson_4
+  hosts: centos7
+  gather_facts: false
+
+  tasks:
+    - name: install htttpd in host-group 'centos7'
+      yum:
+        name: httpd
+        state: latest
+      register: result
+      ignore_errors: true
+
+    - name: yum httpd success msg
+      debug:
+        msg: "yum httpd success!!"
+      when: result is succeeded
+
+    - name: yum httpd error msg
+      debug:
+        msg: "yum httpd error!!"
+      when: result is not succeeded
+
+    - name: debug result
+      debug:
+        var: result

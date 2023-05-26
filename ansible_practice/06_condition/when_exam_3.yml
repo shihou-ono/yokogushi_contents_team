@@ -1,0 +1,19 @@
+#使用インベントリファイル：「/home/ec2-user/yokogushi_contents_team/ansible_practice/06_condition」配下のinventory.ini
+#playbook作成先ディレクトリ：「/home/ec2-user/yokogushi_contents_team/ansible_practice/06_condition」配下
+#playbook名：「when_exam_3.yml」で作成
+#実行対象ノード： hosts: all とすること。
+#処理内容：
+#vyos01,vyos02に「show ip route」を実行
+#実行したとき、host01,host02がskippingされることを確認する
+---
+- name: exam_3
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: show command vyos
+      vyos_command:
+        commands:
+          - show ip route
+      when: inventory_hostname in ['vyos01', 'vyos02'] #文字列はクォーテーションで囲む。
+  

@@ -1,0 +1,16 @@
+---
+- name: exam_2
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    var_message: APC
+
+  tasks:
+  - name: debug msg 
+    debug:
+      msg: "APC" # ""をつける必要はないが、""をつけても出力結果は"msg": "APC"となる。
+
+  - name: debug var_message
+    debug:
+      var: var_message #msgとvarはひとつのモジュールに並存できないので分ける必要がある。

@@ -1,0 +1,41 @@
+#使用インベントリファイル：「/home/ec2-user/yokogushi_contents_team/ansible_practice/05_variable」配下のinventory.ini
+#playbook作成先ディレクトリ：「/home/ec2-user/yokogushi_contents_team/ansible_practice/05_variable」配下
+#playbook名：「variable_exam_3.yml」で作成
+#実行対象ノード：処理内容を満たしていれば何でも可
+#処理内容：
+#debugモジュールのvarパラメータを使用し、playbook実行時にTASK [debug]にて「vyos01」と表示させる
+---
+- name: vyos01
+  hosts: vyos01
+  
+  vars:  #varsセクションで変数を定義。
+    var1: vyos01
+
+  tasks:
+    - name: debug vars
+      debug:
+        var: var1
+
+    - name: set_fact
+      set_fact:  #set_factモジュールで変数を定義。
+        var2: vyos01
+
+    - name: debug set_fact
+      debug:
+        var: var2
+
+    - name: debug magicVar1  #マジック変数でplaybook名を出力。
+      debug:
+        var: ansible_play_name
+
+    - name: debug magicVar2  #マジック変数でインベントリ名を出力。
+      debug:
+        var: inventory_hostname
+
+    - name: debug factVar_all  #ファクト変数をすべて出力。
+      debug:
+        var: ansible_facts
+
+    - name: debug factVar_net_hostname  #ファクト変数のなかから"net_hostname"の値だけ出力。
+      debug:
+        var: ansible_facts.net_hostname

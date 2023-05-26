@@ -1,0 +1,37 @@
+---
+- name: exam2
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: make file
+      #copy:
+        #dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/exam3.txt
+         #"src (or content) is required"とエラーになる。
+      #copy:
+        #src: exam.txt
+        #dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/
+          #"Could not find or access 'exam.txt'とエラーになる。
+
+      #file:
+        #path: ./exam.txt # メタキャラクタ使用可能。
+        #state: touch
+
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/exam2.txt
+        state: touch
+
+    - name: copy file
+      copy:
+        src: exam2.txt
+        dest: copy_directory/ #最後の"/"がないとファイルが作成されてしまう。
+
+    - name: copy file depth
+      copy:
+        src: exam2.txt
+        dest: dir1/dir2/ #中間ディレクトリも作成される。
+
+    - name: copy file to dir1
+      copy:
+        src: exam.txt
+        dest: dir1/

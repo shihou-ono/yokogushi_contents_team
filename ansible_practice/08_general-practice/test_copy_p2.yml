@@ -1,0 +1,42 @@
+---
+- name: show interfaces and write in text file
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+  #設定前のshow interfacesの結果を出力＆ファイルに書き込む。
+    - name: show interfaces of vyos01 and vyos02 before
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result_before
+
+    - name: debug register bofore
+      debug:
+        var: result_before.stdout_lines
+  
+    #vyos01、vyos02それぞれのinterfaceにdescriptionを設定する。
+    - name: set description on interfaces of vyos01 and vyos02
+      vyos_config:
+        lines:
+          - set interfaces ethernet eth1 description {{ desc1 }}
+          - set interfaces ethernet eth2 description {{ desc2 }}
+
+    #設定後のshow interfacesの結果を出力＆ファイルに書き込む。
+    - name: show interfaces of vyos01 and vyos02 after
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result_after
+
+    - name: debug register after
+      debug:
+        var: result_after.stdout_lines
+
+    - name: write "result" in text file
+      copy:
+        content: "{{ {{ item.var }}.stdout }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item.dir }}/{{ inventory_hostname }}/text
+      loop:
+        - { var: result_before, dir: before}
+        - { var: result_after, dir: after}

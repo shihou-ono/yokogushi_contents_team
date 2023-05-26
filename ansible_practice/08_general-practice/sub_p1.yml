@@ -1,0 +1,23 @@
+#VRRPルータのマスターとバックアップを切り戻す。
+- name: practice_1_sub
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: change vrrp priority of vyos01_eth1
+      vyos_config:
+        lines:
+          - set high-availability vrrp group service_nw01 priority 150
+          #vyosのeth1のプライオリティを150に戻す。
+        save: true
+      when: inventory_hostname == 'vyos01'
+
+    - name: show vrrp vyos_group after change priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result
+
+    - name: debug result of show vrrp
+      debug:
+        var: result.stdout_lines

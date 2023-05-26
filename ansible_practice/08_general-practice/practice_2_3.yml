@@ -1,0 +1,54 @@
+#１. vyos01のvrrpのプライオリティ値を任意の値に変更する。
+# その際、異常値が入力されてもplaybookがfailしないようにする。
+#２. 2-3-1のタスクが成功したときに"succeeded"のメッセージを出力する。
+#３. 2-3-1のタスクが失敗したときに"failed"のメッセージを出力する。
+#４. 2-3-1のvrrp priority値が正常な場合と異常な場合に、
+# 2-3-2,2-3-3で想定通りのmessageが表示されることを確認する。
+# なお、vrrp priorityの正常値は1-254の範囲。
+---
+- name: change vrrp priority and test process
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+  #設定前のVRRPプライオリティ値を出力。
+    - name: show vrrp of vyos01 before changing priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result_show_command
+
+    - name: debug result of show vrrp before changing priority
+      debug:
+        var: result_show_command.stdout_lines
+
+  #VRRPプライオリティ値を、ansible-playbookコマンドで渡した引数priの値に変更する。
+    - name: change vrrp priority of vyos01_eth1
+      vyos_config:
+        lines:
+          #service_nW01グループに所属するeth1のプライオリティを引数の値に変更。
+          - set high-availability vrrp group service_nw01 priority "{{ pri }}"
+      register: result_change_command #処理結果を格納する。
+      ignore_errors: true #エラーが発生しても処理を続行する。
+
+  #処理結果に応じてメッセージを表示する。
+    - name: debug success message if process was succeeded
+      debug:
+        msg: "succeeded"
+      when: result_change_command is succeeded
+
+    - name: debug error message if process was failed
+      debug:
+        msg: "failed"
+      when: result_change_command is failed
+
+  #設定後のVRRPプライオリティ値を出力。
+    - name: show vrrp of vyos01 after changing priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result_show_command
+
+    - name: debug result of show vrrp after changing priority
+      debug:
+        var: result_show_command.stdout_lines

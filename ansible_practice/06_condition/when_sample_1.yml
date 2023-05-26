@@ -1,6 +1,10 @@
+#「when」を使用して、実行対象ノードの条件分岐を実施
+#「when: inventory_hostname == 'vyos01'」とすることで、
+#実行対象ノードがvyos01のとき「show ip route」「show interface」を実行する
+#showコマンドをdebugさせる際は「when」を使用していない。
 ---
 - name: sample1
-  hosts: vyos
+  hosts: vyos #vyosグループには”vyos01”と”vyos02”が属している。
   gather_facts: false
 
   tasks:
@@ -9,9 +13,13 @@
         commands: 
           - show ip route
           - show interface
-      register: result
-      when: inventory_hostname == 'vyos01'
+      register: result #実行結果を変数resultに格納。
+      when: inventory_hostname == 'vyos01' #vyos01の出力結果のみを格納する。
 
     - name: vyos debug show commands
       debug: 
         var: result.stdout_lines
+        #vyos02の結果は"VARIABLE IS NOT DEFINED!"と表示される。
+        #vyos01と02それぞれに対してモジュールを実行し、結果は互いに独立しているため、
+        #vyos_commandモジュールを実行していないvyos02のほうは変数resultを定義していないことになる。
+

@@ -1,0 +1,43 @@
+#実行対象ノード：vyos01、vyos02
+#処理内容：
+#loopディレクティブを使用して、vyos01、vyos02の eth1・eth2にそれぞれdescriptionを設定する
+#eth1→「loop_test1」eth2→「loop_test2」と設定する
+#事前、事後で「show interfaces」を実施し、実行結果を出力させる（余力があればでOK）
+---
+- name: exam_4
+  hosts: vyos
+  gather_facts: false
+
+  vars:
+    int_desc:
+      - { int: 'eth1', desc: 'loop_test1' }
+      - { int: 'eth2', desc: 'loop_test2' }
+
+  tasks:
+    - name: show interfaces before
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+
+    - name: debug result before
+      debug:
+        var: result.stdout_lines
+
+    - name: set description
+      vyos_config:
+        lines:
+          - set interfaces ethernet {{ item.int }} description {{ item.desc }}
+          #クォーテーションはつけてもつけなくても良い。
+        save: true 
+      loop: "{{ int_desc }}"
+
+    - name: show interfaces after
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+
+    - name: debug result after
+      debug:
+        var: result.stdout_lines

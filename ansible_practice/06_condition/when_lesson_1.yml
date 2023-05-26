@@ -1,0 +1,12 @@
+#実行対象ノードが「host01」だった場合、httpdをインストールする
+---
+- name: lesson_1
+  hosts: centos7
+  gather_facts: false
+
+  tasks:
+    - name: install httpd in host01
+      yum:
+        name: httpd #パッケージ名を指定。
+        state: latest #パッケージが存在しないor最新でなければインストール。
+      when: inventory_hostname == 'host01' #マジック変数（ホスト名）を条件とする。

@@ -1,0 +1,12 @@
+---
+- name: vars_sample
+  hosts: vyos01
+  gather_facts: no
+
+  vars:
+    sample: "Hello!"
+
+  tasks:
+    - name: debug sample
+      debug:
+        var: sample

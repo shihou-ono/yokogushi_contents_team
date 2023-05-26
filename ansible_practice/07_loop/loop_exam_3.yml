@@ -1,0 +1,28 @@
+#実行対象ノード：host01、host02
+#処理内容：
+#host01、host02の「/tmp」配下に、
+#「loop_test1.txt」「loop_test2.txt」を作成する(パーミッション等は特に指定なし)
+---
+- name: exam_3
+  hosts: all #"hosts: centos7"として良い。Ansibleの仕組みそのものにループが組み込まれている。
+  gather_facts: false
+
+  tasks:
+    - name: make file1
+      file:
+        path: /tmp/loop_test1.txt
+        path: /tmp/loop_test2.txt
+        state: touch
+      when: inventory_hostname == "{{ item }}" #クォーテーション必須。
+      loop:
+        - host01
+        - host02
+
+    - name: make file2
+      file:
+        path: /tmp/{{ item }}
+        state: touch
+      when: inventory_hostname in ["host01", "host02"]
+      loop:
+        - loop_test1.txt
+        - loop_test2.txt

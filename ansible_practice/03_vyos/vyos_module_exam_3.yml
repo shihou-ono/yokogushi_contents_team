@@ -1,0 +1,14 @@
+---
+- name: exam3
+  hosts: vyos
+  gather_facts: false
+  
+  tasks:
+  - name: show commands
+    vyos_command: 
+     #- commands: # '-'をつけるとエラーになる。
+     commands: 
+      - show version
+      - show ip route
+      # - sh ve #省略形でも成功。
+      # - sh ip ro #省略形でも成功。

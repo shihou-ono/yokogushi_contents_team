@@ -1,0 +1,19 @@
+---
+- name: lesson_1
+  hosts: vyos01
+  gather_facts: false
+
+  vars: 
+    var1: This is Test Message
+
+  tasks:
+    - name: debug msg
+      debug:
+        msg: "みなさん{{ var1 }}ですよ。"
+
+    - name: debug var
+      debug:
+        var: var1
+
+    - name: debug dafault
+      debug:

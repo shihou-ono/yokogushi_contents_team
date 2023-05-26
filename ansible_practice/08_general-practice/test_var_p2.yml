@@ -1,0 +1,58 @@
+---
+- name: set variable
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    var1: apple
+
+  tasks:
+    - name: set variable
+      set_fact:
+        var2: banana
+
+
+- name: show interfaces and write in text file
+  hosts: vyos
+  gather_facts: false
+
+  vars:
+    var3: peech
+
+  tasks:
+    #設定前のvyos01のshow interfacesの結果をregisterに格納する。
+#    - name: show interfaces of vyos01 before
+#      vyos_command:
+#        commands:
+#          - show interfaces
+#      register: result_vyos01
+#      when: inventory_hostname == 'vyos01'
+
+    #設定前のvyos02のshow interfacesの結果をregisterに格納する。
+#    - name: show interfaces of vyos02 before
+#      vyos_command:
+#        commands:
+#          - show interfaces
+#      register: result_vyos02
+#      when: inventory_hostname == 'vyos02'
+
+    #- name: debug result bofore
+      #debug:
+        #var: "{{ item }}"
+      #loop:
+        #- result_vyos01.stdout_lines
+        #- result_vyos02.stdout_lines
+
+    - name: debug variable
+      debug:
+        var: var1
+
+    - name: debug variable
+      debug:
+        var: var2
+
+    - name: debug variable
+      debug:
+        var: var3
+
+

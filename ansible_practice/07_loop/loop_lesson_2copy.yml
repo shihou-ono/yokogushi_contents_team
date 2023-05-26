@@ -1,0 +1,13 @@
+---
+- name: sample
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+  - name: debug fruits 
+    debug:
+      msg: "The {{ item.key }} is {{ item.value }}"
+    loop:
+      - { fruits: 'Apple', color: 'Red' }
+      - { fruits: 'Banana', color: 'Yellow' }
+      - { fruits: 'Peach', color: 'Pink' }

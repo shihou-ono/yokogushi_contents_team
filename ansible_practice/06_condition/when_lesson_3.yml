@@ -1,0 +1,12 @@
+#実行対象ノードがリストに存在する「host01」か「host02」だった場合、httpdをインストールする
+---
+- name: lesson_3
+  hosts: centos7
+  gather_facts: false
+
+  tasks:
+    - name: install httpd in host01 or host02
+      yum:
+        name: httpd
+        state: latest
+      when: inventory_hostname in ['host01', 'host02']

@@ -1,0 +1,44 @@
+#使用インベントリファイル：「/home/ec2-user/yokogushi_contents_team/ansible_practice/06_condition」配下のinventory.ini
+#playbook作成先ディレクトリ：「/home/ec2-user/yokogushi_contents_team/ansible_practice/06_condition」配下
+#playbook名：「when_exam_4.yml」で作成
+#実行対象ノード： hosts: all とすること。
+#処理内容：
+#host01の「/tmp」配下に「test_exam4.txt」を作成
+#「test_exam4.txt」の作成に成功したら、「make success text!」というメッセージを出力させる。
+---
+- name: exam_4
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: make file
+      file:
+        path: /tmp/test_exam4.txt
+        state: touch
+      register: result
+      when: inventory_hostname == 'host01'
+
+    - name: debug message_1
+      debug:
+        msg: make success text! 
+      when: result is succeeded
+      #ターゲットノードは”all”であるため、
+      #whenで指定しないとすべてのホストに対してdebugモジュールが実行される。
+
+    - name: debug message_2
+      debug:
+        msg: make success text! 
+      when: result is succeeded
+      when: inventory_hostname == "host01"
+      
+    - name: debug message_3
+      debug:
+        msg: make success text! 
+      when: result is succeeded
+      when: inventory_hostname not in ["vyos01", "vyos02", "host02"]
+
+    - name: debug message_4
+      debug:
+        msg: make success text! 
+      when: result is succeeded and inventory_hostname == 'host01'
+      #when: inventory_hostname is "host01" エラーになる。

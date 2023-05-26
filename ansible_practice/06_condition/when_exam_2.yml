@@ -7,3 +7,9 @@
       debug:
         msg: "exam2 playbook test!!"
       when: "'RedHat' in ansible_distribution or 'CentOS' in ansible_distribution"
+      #when: ansible_distribution in ['RedHat', 'CentOS']でも可。
+
+    - name: debug ansible_distribution
+      debug:
+        var: ansible_distribution
+        #vyos01とvyos02には'ansible_distrubution'というファクト変数はない。

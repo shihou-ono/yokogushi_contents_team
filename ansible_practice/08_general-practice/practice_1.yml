@@ -1,0 +1,74 @@
+#現在host01→host02に通信をするとき、vyos01を経由する。
+#playbookでこれをvyos02を経由することに変更したい。
+#※playbookを実行する前後で、tracerouteを実行して通信経路が変化していることを確認すること。
+#内容：
+#１. vyos01のvrrpのプライオリティ値を150→50に変更する。
+#２. vyos01/vyos02の事前・事後で、「show vrrp」を実行する。
+#３. 1-2で確認した事前・事後確認内容は実行結果に出力させる。
+---
+#host02までのルートを事前確認。
+- name: tracert before
+  hosts: host01
+  gather_facts: false
+
+  tasks:
+    - name: traceroute to host02 
+      command: traceroute 192.168.2.2 #特にパラメータを指定せず、直接コマンドを記述できる。
+      register: route
+
+    - name: debug route from host01 to host02
+      debug:
+        var: route.stdout_lines
+
+#VRRPルータのマスターとバックアップを切り替える。
+- name: main
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+  #設定前のVRRPプライオリティ値を出力。
+    - name: show vrrp vyos_group before changing priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result
+
+    - name: debug result of show vrrp
+      debug:
+        var: result.stdout_lines
+    
+  #vyos01のVRRPプライオリティ値を変更する。
+    - name: change vrrp priority of vyos01_eth1 and eth2
+      vyos_config:
+        lines:
+          #service_nW01グループに所属するeth1のプライオリティを150→50に変更。
+          - set high-availability vrrp group service_nw01 priority 50
+          #service_nW02グループに所属するeth2のプライオリティを150→50に変更。
+          - set high-availability vrrp group service_nw02 priority 50
+        #save: true
+      when: inventory_hostname == 'vyos01'
+
+  #設定後のVRRPプライオリティ値を出力。
+    - name: show vrrp vyos_group after changing priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result
+
+    - name: debug result of show vrrp
+      debug:
+        var: result.stdout_lines
+
+#host02までのルートを事後確認。
+- name: tracert after
+  hosts: host01
+  gather_facts: false
+
+  tasks:
+    - name: traceroute to host02
+      command: traceroute 192.168.2.2
+      register: route
+
+    - name: debug route from host01 to host02
+      debug:
+        var: route.stdout_lines

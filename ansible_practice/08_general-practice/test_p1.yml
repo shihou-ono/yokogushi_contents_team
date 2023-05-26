@@ -1,0 +1,67 @@
+#host02までのルートを事前確認。
+- name: tracert before
+  hosts: host01
+  gather_facts: false
+
+  tasks:
+    - name: traceroute to host02 
+      command: traceroute 192.168.2.2
+      #特にパラメータを指定せず、直接コマンドを記述できる。
+      register: route
+
+    - name: debug route from host01 to host02
+      debug:
+        var: route.stdout_lines
+
+#VRRPルータのマスターとバックアップを切り替える。
+- name: main
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    #設定前のVRRPプライオリティ値を出力。
+    - name: show vrrp vyos_group before changing priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result
+
+    - name: debug result of show vrrp
+      debug:
+        var: result.stdout_lines
+    
+    #vyos01のVRRPプライオリティ値を変更する。
+    - name: change vrrp priority of vyos01_eth1
+      vyos_config:
+        lines:
+          #service_nW01グループに所属するeth1のプライオリティを引数pri1に変更。
+          - set high-availability vrrp group service_nw01 priority {{ pri1 }}
+          #service_nW02グループに所属するeth2のプライオリティを引数pri2に変更。
+          - set high-availability vrrp group service_nw02 priority {{ pri2 }}
+        #save: true
+      when: inventory_hostname == 'vyos01'
+
+    #設定後のVRRPプライオリティ値を出力。
+    - name: show vrrp vyos_group after changing priority
+      vyos_command:
+        commands:
+          - show vrrp
+      register: result
+
+    - name: debug result of show vrrp
+      debug:
+        var: result.stdout_lines
+
+#host02までのルートを事後確認。
+- name: tracert after
+  hosts: host01
+  gather_facts: false
+
+  tasks:
+    - name: traceroute to host02
+      command: traceroute 192.168.2.2
+      register: route
+
+    - name: debug route from host01 to host02
+      debug:
+        var: route.stdout_lines

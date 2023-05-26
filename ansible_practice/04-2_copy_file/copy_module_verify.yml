@@ -1,0 +1,12 @@
+---
+- name: verify copy_module
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: copy directory
+      copy:
+        src: verify_directory/dir_original
+        dest: verify_directory/dir_copy
+        # verify_directoryのなかにdir_copyが作られるのではなく、dir_copy/dir_originalが作られる。
+        # dir_originalが空の場合、dir_copyは作成されず何も変化がない。

@@ -1,0 +1,21 @@
+#以下は、loopで「fruits: 'Apple', color: 'Red'」「fruits: 'Banana', color: 'Yellow'」
+#「fruits: 'Peach', color: 'Pink'」を定義し、
+#debug moduleを使用してmsgを出力させているplaybookである。
+#loopを辞書型(Dict型)で定義することができる。
+#loopを辞書型(Dict型)で定義したとき、
+#変数「item.key」(fruits: 'xxxx')「item.value」(color: 'yyyy')に格納されるようになっている。
+---
+- name: lesson_2
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: debug fruits
+      debug:
+        msg: "The {{ item.fruits }} is {{ item.color }}"
+        #msg: "The {{ item.key }} is {{ item.value }}"
+        #"item."の後は、loopで定義した変数名を指定する。
+      loop: #list_of_dictionary
+        - { fruits: 'Apple', color: 'Red' }
+        - { fruits: 'Banana', color: 'Yellow' }
+        - { fruits: 'Peach', color: 'Pink' }

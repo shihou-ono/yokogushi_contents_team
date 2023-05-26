@@ -1,0 +1,10 @@
+---
+- name: lesson
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: delete file
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/sample.txt
+        state: absent # ファイルが存在しない場合でもエラーにならない。

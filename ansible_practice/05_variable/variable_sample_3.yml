@@ -1,5 +1,5 @@
 ---
-- name: sample3
+- name: sample3 # ←ここの名前がplaybook名として出力される。
   hosts: localhost
   gather_facts: false
 

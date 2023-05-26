@@ -1,0 +1,16 @@
+---
+- name: lesson
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: copy file and change mode
+      copy:
+        src: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/sample.txt
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/copy_sample.txt
+        mode: 0644
+    
+    - name: write message
+      copy:
+        content: "contentのテストです。"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/copy_sample.txt

@@ -1,0 +1,23 @@
+---
+- name: exam3
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get vyos01 show
+      vyos_command:
+        commands:
+          - show interfaces
+          - show ip route
+      register: get_vyos01_show
+
+    - name: make logfile
+      file:
+        #path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_ip_route.log
+        path: vyos01_show_ip_route.log #相対パスでOK。
+        state: touch
+
+    - name: write log
+      copy:
+       content: "{{ get_vyos01_show.stdout[1] }}" #変数は囲む必要がある。
+       dest: vyos01_show_ip_route.log

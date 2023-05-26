@@ -1,0 +1,25 @@
+---
+- name: debug variables
+  hosts: vyos02
+  gather_facts: false
+
+  tasks:
+    - name: debug magicVar1
+      debug:
+        var: inventory_hostname
+
+    - name: debug magicVar2
+      debug:
+        var: ansible_play_name
+
+    - name: debug magicVar3
+      debug:
+        var: playbook_dir
+
+    - name: debug magicVar4
+      debug:
+        var: inventory_dir
+
+    - name: debug factVar
+      debug:
+        var: ansible_facts #gather_facts: falseのため中身は空になる。

@@ -1,0 +1,13 @@
+---
+- name: set_fact_sample
+  hosts: vyos01
+  gather_facts: no
+
+  tasks:
+    - name: test
+      set_fact:
+        test: "Hello!"
+
+    - name: debug test
+      debug:
+        var: test

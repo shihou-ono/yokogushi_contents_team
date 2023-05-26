@@ -5,8 +5,8 @@
   tasks:
     - name: debug ansible_facts
       debug:
-        var: ansible_facts
+        var: ansible_facts # ←gather_facts:falseを指定しないとファクト情報が格納される。
 
     - name: debug ansible_facts.net_hostname
       debug:
-        var: ansible_facts.net_hostname
+        var: ansible_facts.net_hostname # ←該当のエントリの値だけ抽出。
