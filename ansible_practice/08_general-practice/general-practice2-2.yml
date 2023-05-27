@@ -1,0 +1,21 @@
+---
+- name: general-practice2-2
+  hosts: vyos
+  gather_facts: false
+
+
+  tasks:
+    - name: show command
+      vyos_command:
+        commands:
+          - show interfaces
+      register: show_command_result
+
+    - name: show command debug
+      debug:
+        var: show_command_result
+
+    - name: save show command log
+      copy:
+        content: "{{ show_command_result.stdout[0] }}"
+        dest: "/home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/before/{{ inventory_hostname }}/before_log.txt"

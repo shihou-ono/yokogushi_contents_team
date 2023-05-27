@@ -1,0 +1,21 @@
+---
+- name: general-practice2-1
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: make directory
+      file:
+      # loopを使うときにどうやら相対パスをサポートしていないので、絶対パスしかダメそう
+        path: "/home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item }}"
+        state: directory
+      # 644だとうまくいかないので755にした
+        mode: "0755"
+      # ec2-userを指定、rootだと後から権限が足りなくて怒られた
+        owner: ec2-user
+      # loop使うように指示があったが、with_itemsだと絶対パスを記載しないのでスッキリ。こちらを採用。
+      with_items:
+        - before/vyos01
+        - before/vyos02
+        - after/vyos01
+        - after/vyos02
