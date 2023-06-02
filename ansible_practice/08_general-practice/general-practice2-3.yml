@@ -1,0 +1,57 @@
+---
+- name: general-practice2-3
+  hosts: vyos01
+  gather_facts: false
+
+# 変数を実行時に入力できるように設定。1-254の範囲内で。ただここで範囲外の数字を入れても実行はされちゃう...
+  vars_prompt:
+    - name: vrrp_priority
+      prompt: "VRRPのプライオリティを入力してください。 (1-254): "
+      validate: "1 <= value <= 254"
+      private: no
+
+  tasks:
+# vrrpの変更。外から与えられた変数を入れつつ、service_nw01/02どちらにも変更処理をするためloop設定。
+    - name: Change VRRP Priority
+      vyos_config:
+        lines:
+          - set high-availability vrrp group {{ item.service }} priority {{ vrrp_priority }}
+      register: vrrp_result
+      ignore_errors: true
+      loop:
+        - { service: 'service_nw01' }
+        - { service: 'service_nw02' }
+
+# 成功メッセージ vrrp_resultにsuccess入ってれば表示
+    - name: Display Success Message
+      debug:
+        msg: "Succeeded"
+      when: vrrp_result is success
+
+# 失敗メッセージ vrrp_resultにfailed入ってれば表示。入っていなければSKIPする。
+    - name: Display Failure Message
+      debug:
+        msg: "Failed"
+      when: vrrp_result is failed
+
+# 範囲外の値を入力したときに、メッセージを出す。when文は変数の値を整数として読み取って、vrrp_priorityが1以上254以下にしている。
+    - name: Display Invalid Value Message
+      debug:
+        msg: "Invalid VRRP Priority Value"
+      when: vrrp_priority | int < 1 or vrrp_priority | int > 254
+
+# 個人的に実行結果出したいのでdebug入れる
+    - name: after show vrrp
+      vyos_command:
+        commands:
+          - show vrrp
+      register: after_vrrp_result
+
+    - name: after show vrrp debug
+      debug:
+        var: after_vrrp_result.stdout_lines
+
+    - name: save vrrp log
+      copy:
+        content: "{{ after_vrrp_result.stdout_lines }}"
+        dest: "/home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/after/{{ inventory_hostname }}/after_log.txt"
