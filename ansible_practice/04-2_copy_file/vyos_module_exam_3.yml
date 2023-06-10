@@ -1,0 +1,21 @@
+---
+- name: exam3
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: get show interfaces
+      vyos_command:
+        commands:
+          - show interfaces
+      register: vyos01_show_interfaces
+
+    - name: vyos01_show_interfaces.log touch
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_interfaces.log
+        state: touch
+
+    - name: vyos01_show_interfaces.log writing
+      copy:
+        content: "{{ vyos01_show_interfaces.stdout[0] }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/04-2_copy_file/vyos01_show_interfaces.log

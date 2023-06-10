@@ -1,0 +1,30 @@
+---
+- name: exam8-2_create_directory_and_chmod644
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Create directory before/after
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item }}
+        state: directory
+        recurse: yes
+      loop:
+        - before/vyos01
+        - before/vyos02
+        - after/vyos01
+        - after/vyos02
+
+    - name: chmod 
+      file:
+        path: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/{{ item }}
+        state: directory
+        mode: '0775'
+      loop:
+        - before/vyos01
+        - before/vyos02
+        - after/vyos01
+        - after/vyos02
+
+
+

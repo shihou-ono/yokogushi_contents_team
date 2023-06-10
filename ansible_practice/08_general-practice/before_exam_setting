@@ -1,0 +1,15 @@
+source /home/ec2-user/venv/bin/activate
+docker start $(docker ps -aq)
+
+
+(venv) [ec2-user@ip-172-31-42-108 yokogushi_contents_team]$ 
+
+
+ansible-playbook -i /home/ec2-user/yokogushi_contents_team/init_settings/inventory.ini /home/ec2-user/yokogushi_contents_team/init_settings/container_setting.yml
+
+===================================================
+ansible 実行例
+
+ansible-playbook -i inventory.ini exam_2-3.yml
+ 
+

@@ -1,0 +1,32 @@
+---
+- name: exam8-2_vrrp_vyos01
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show vrrp
+      vyos_command:
+        commands:
+          - show vrrp
+      register: before_show_vrrp
+
+    - name: debug before
+      debug:
+        var: before_show_vrrp.stdout_lines[0]
+
+    - name: change vrrp priority
+      vyos_config:
+        lines:
+          - set high-availability vrrp group service_nw01 priority 50
+          - set high-availability vrrp group service_nw02 priority 50
+        save: false
+
+    - name: show vrrp after vrrp change
+      vyos_command:
+        commands:
+          - show vrrp
+      register: after_show_vrrp
+
+    - name: debug after
+      debug:
+        var: after_show_vrrp.stdout_lines[0]

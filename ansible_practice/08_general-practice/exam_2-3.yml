@@ -1,0 +1,37 @@
+---
+- name: VRRP Priority Change
+  hosts: vyos01
+  gather_facts: false
+
+  vars_prompt:
+    - name: vrrp_priority
+      prompt: "Enter the VRRP priority value:"
+      private: no
+
+  tasks:
+    - name: check VRRP priority range
+      assert:
+        that:
+          - vrrp_priority|int >= 1
+          - vrrp_priority|int <= 254
+        fail_msg: "Invalid VRRP priority value. (VRRP Priority 1 - 254)."
+        success_msg: "OK (VRRP priority)"
+
+    - name: VYOS Set VRRP priority
+      vyos_config:
+        lines:
+          - set high-availability vrrp group service_nw01 priority {{ vrrp_priority }}
+          - set high-availability vrrp group service_nw02 priority {{ vrrp_priority }}
+        save: false
+      register: set_priority
+      ignore_errors: true
+
+    - name: Display success message
+      debug:
+        msg: "Succeeded"
+      when: set_priority is succeeded
+
+    - name: Display failure message
+      debug:
+        msg: "Failed"
+      when: set_priority is failed

@@ -1,0 +1,17 @@
+---
+- name: exam_4
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: touch test_exam_4.txt
+      file:
+        path: /tmp/test_exam4.txt
+        state: touch
+      register: result
+      when: inventory_hostname == 'host01'
+
+    - name: msg OK when touch OK
+      debug:
+        msg: "make success text!"
+      when: inventory_hostname == 'host01' and result is succeeded

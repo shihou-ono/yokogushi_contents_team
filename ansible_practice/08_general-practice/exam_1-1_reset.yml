@@ -1,0 +1,24 @@
+---
+- name: reset exam8-2_vrrp_vyos01
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: change vrrp priority
+      vyos_config:
+        lines:
+          - set high-availability vrrp group service_nw01 priority 150
+          - set high-availability vrrp group service_nw02 priority 150
+        save: false
+
+- name: reset exam8-2_vrrp_vyos02
+  hosts: vyos02
+  gather_facts: false
+
+  tasks:
+    - name: change vrrp priority
+      vyos_config:
+        lines:
+          - set high-availability vrrp group service_nw01 priority 100
+          - set high-availability vrrp group service_nw02 priority 100
+        save: false

@@ -1,0 +1,34 @@
+---
+- name: exam_4
+  hosts: vyos
+  gather_facts: false
+
+  tasks: 
+    - name: show interface before change
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+    
+    - name: debug show interfaces before
+      debug:
+        var: result.stdout_lines
+
+    - name: change description
+      vyos_config:
+        lines:
+          - set interfaces ethernet {{ item.ethernet }} description {{ item.description }}
+      loop:
+        - { ethernet: 'eth1', description: 'loop_test_1'}
+        - { ethernet: 'eth2', description: 'loop_test_2'}
+    
+    - name: show interface after change
+      vyos_command:
+        commands:
+          - show interfaces
+      register: result
+    
+    - name: debug show interfaces before
+      debug:
+        var: result.stdout_lines
+    

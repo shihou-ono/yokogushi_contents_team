@@ -1,0 +1,14 @@
+---
+- name: exam3
+  hosts: centos7
+  gather_facts: false
+
+  tasks:
+    - name: loop exam3
+      file: 
+        path: /tmp/{{ item }}
+        state: touch
+      loop:
+        - loop_test1.txt
+        - loop_test2.txt
+      

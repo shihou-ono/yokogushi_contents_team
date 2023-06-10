@@ -1,0 +1,12 @@
+---
+- name: exam3
+  hosts: vyos
+  gather_facts: false
+
+  tasks:
+    - name: show commands
+      vyos_command: 
+        commands:
+          - show version
+          - show ip route
+          

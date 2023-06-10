@@ -1,0 +1,54 @@
+---
+- name: exam8-3_vrrp_and_logfile
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: show vrrp
+      vyos_command:
+        commands:
+          - show vrrp
+      register: before_show_vrrp
+      when: inventory_hostname in ['vyos01', 'vyos02']
+
+    - name: debug before
+      debug:
+        var: before_show_vrrp.stdout_lines[0]
+      when: inventory_hostname in ['vyos01', 'vyos02']
+
+    - name: copy before log
+      copy:
+        content: "{{ before_show_vrrp.stdout_lines }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/before/{{ inventory_hostname }}/{{ inventory_hostname }}_before_log.txt
+        owner: ec2-user
+        force: yes
+      when: inventory_hostname in ['vyos01', 'vyos02']
+
+    - name: change vrrp priority
+      vyos_config:
+        lines:
+          - set high-availability vrrp group service_nw01 priority 50
+          - set high-availability vrrp group service_nw02 priority 50
+        save: false
+      when: inventory_hostname =='vyos01'
+
+    - name: show vrrp after vrrp change
+      vyos_command:
+        commands:
+          - show vrrp
+      register: after_show_vrrp
+      when: inventory_hostname in ['vyos01', 'vyos02']
+
+    - name: debug after
+      debug:
+        var: after_show_vrrp.stdout_lines
+      when: inventory_hostname in ['vyos01', 'vyos02']
+
+
+    - name: copy after log
+      copy:
+        content: "{{ after_show_vrrp.stdout_lines }}"
+        dest: /home/ec2-user/yokogushi_contents_team/ansible_practice/08_general-practice/after/{{ inventory_hostname }}/{{ inventory_hostname }}_after_log.txt
+        owner: ec2-user
+        force: yes
+      when: inventory_hostname in ['vyos01', 'vyos02']

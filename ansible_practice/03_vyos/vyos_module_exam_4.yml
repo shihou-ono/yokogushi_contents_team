@@ -1,0 +1,17 @@
+---
+- name: exam_4
+  hosts: vyos01
+  gather_facts: false
+
+  tasks:
+    - name: show interface
+      vyos_command:
+        commands:
+          - show interfaces
+
+    - name: none interfaces description
+      vyos_config:
+        lines:
+          - delete interfaces ethernet eth1 description
+          - delete interfaces ehternet eth2 description
+        save: true
